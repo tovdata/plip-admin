@@ -1,14 +1,14 @@
 import type { NextPage } from 'next';
 // Component
 import { StyledPageContainer } from '@/components/styles/Layout';
-import MainMenu from '@/components/Main';
+import { NewsManagement } from '@/components/News';
 
-const Home: NextPage = () => {
+const Page: NextPage = () => {
   return (
     <StyledPageContainer>
-      <MainMenu />
+      <NewsManagement />
     </StyledPageContainer>
   )
 }
 
-export default Home;
+export default Page;

@@ -1,13 +1,19 @@
 import type { NextPage } from 'next';
+import dynamic from 'next/dynamic';
+import type { ComponentType } from 'react';
 // Component
-import { StyledPageContainer } from '@/components/styles/Layout';
-import MainMenu from '@/components/Main';
+const MainMenu: ComponentType<any> = dynamic(() => import('@/components/Main'), { loading: () => (<></>), ssr: false });
+const Session: ComponentType<any> = dynamic(() => import('@/components/Session'), { loading: () => (<></>), ssr: false });
+// Component (style)
+const StyledPageContainer: ComponentType<any> = dynamic(() => import('@/components/styles/Layout').then((mod: any): any => mod.StyledPageContainer), { loading: () => (<></>) });
 
 const Home: NextPage = () => {
   return (
-    <StyledPageContainer>
-      <MainMenu />
-    </StyledPageContainer>
+    <Session>
+      <StyledPageContainer>
+        <MainMenu />
+      </StyledPageContainer>
+    </Session>
   )
 }
 

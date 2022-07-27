@@ -28,21 +28,24 @@ const Signin: React.FC<any> = (): JSX.Element => {
     // 결과 처리
     if (response.result && response.data) {
       setAccessToken(response.data);
-      // 사용자 ID 추출
-      const userId: string = extractUserId(response.data);
-      // 관리자 권한 확인
-      const isAdmin: boolean = await validateAdmin(userId);
-      // 권한에 따른 처리
-      if (isAdmin) {
-        Router.push('/');
-      } else {
-        // 로그아웃
-        await signout();
-        // 쿠키 삭제
-        setAccessToken('');
-        // 알림
-        errorNotification('권한 없음', '관리자 권한이 없습니다.');
-      }
+      // 액세스 토큰 저장까지 대기
+      setTimeout(async () => {
+        // 사용자 ID 추출
+        const userId: string = extractUserId(response.data);
+        // 관리자 권한 확인
+        const isAdmin: boolean = await validateAdmin(userId);
+        // 권한에 따른 처리
+        if (isAdmin) {
+          Router.push('/');
+        } else {
+          // 로그아웃
+          await signout();
+          // 쿠키 삭제
+          setAccessToken('');
+          // 알림
+          errorNotification('권한 없음', '관리자 권한이 없습니다.');
+        }
+      }, 250);
     } else {
       warningNotification('로그인 실패', '이메일 또는 비밀번호가 일치하지 않습니다.');
     }

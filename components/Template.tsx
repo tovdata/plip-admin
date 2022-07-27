@@ -75,7 +75,12 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
   ], []);
 
   /** [Event handler] 편집 취소 */
-  const onCancel = useCallback(() => setEdit(false), []);
+  const onCancel = useCallback(() => {
+    // 데이터 재설정
+    form.setFieldsValue({ ...template, regAt: template.publishAt ? transformToMoment(template.publishAt) : undefined });
+    // 상태 변경
+    setEdit(false);
+  }, [form, template]);
   /** [Event handler] 생성 */
   const onCreate = useCallback(async () => {
     // API 호출
@@ -120,7 +125,7 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
     } else {
       errorNotification('수정 실패', '템플릿을 수정하는 과정에서 문제가 발생하였습니다.');
     }
-  }, [form, isCreate, onSelect]);
+  }, [form, onSelect]);
   // 데이터 설정
   useEffect(() => form.setFieldsValue({ ...template, publishAt: template.publishAt ? transformToMoment(template.publishAt) : undefined }), [template]);
 
@@ -150,7 +155,9 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
     <StyledDetail>
       <PageHeader isBack onEvent={onInit} title={template.id === 'new' ? '자료 추가' : '자료 편집'} />
       <Form form={form} onFinish={isCreate ? onCreate : onSave }>
-        <Form.Item hidden name='id'>{template.id}</Form.Item>
+        <Form.Item hidden name='id'>
+          <Input disabled value={template.id} />
+        </Form.Item>
         <Descriptions bordered column={1} labelStyle={{ width: 160 }}>
           <Descriptions.Item label='카테고리'>
             <Form.Item name='category' rules={[{ required: true, message: '카테고리를 선택해주세요' }]}>
@@ -169,7 +176,7 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
                   <p className="ant-upload-drag-icon">
                     <IoCloudUploadOutline />
                   </p>
-                  <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                  <p className="ant-upload-text">업로드할 자료를 드래그 또는 선택해주세요</p>
                 </Upload.Dragger>
               ) : (<>{template.url}</>)}
             </Form.Item>

@@ -70,7 +70,12 @@ const NewDetail: React.FC<any> = ({ news, onInit, onSelect }): JSX.Element => {
   ], []);
 
   /** [Event handler] 편집 취소 */
-  const onCancel = useCallback(() => setEdit(false), []);
+  const onCancel = useCallback(() => {
+    // 데이터 재설정
+    form.setFieldsValue({ ...news, regAt: news.regAt ? transformToMoment(news.regAt) : undefined });
+    // 상태 변경
+    setEdit(false);
+  }, [form, news]);
   /** [Event handler] 생성 */
   const onCreate = useCallback(async () => {
     // API 호출
@@ -115,7 +120,7 @@ const NewDetail: React.FC<any> = ({ news, onInit, onSelect }): JSX.Element => {
     } else {
       errorNotification('수정 실패', '뉴스를 수정하는 과정에서 문제가 발생하였습니다.');
     }
-  }, [form, isCreate, onSelect]);
+  }, [form, onSelect]);
   // 데이터 설정
   useEffect(() => form.setFieldsValue({ ...news, regAt: news.regAt ? transformToMoment(news.regAt) : undefined }), [news]);
 
@@ -124,7 +129,9 @@ const NewDetail: React.FC<any> = ({ news, onInit, onSelect }): JSX.Element => {
     <StyledDetail>
       <PageHeader isBack onEvent={onInit} title={news.id === 'new' ? '뉴스 추가' : '뉴스 편집'} />
       <Form form={form} onFinish={isCreate ? onCreate : onSave }>
-        <Form.Item hidden name='id'>{news.id}</Form.Item>
+        <Form.Item hidden name='id'>
+          <Input disabled value={news.id} />
+        </Form.Item>
         <Descriptions bordered column={1} labelStyle={{ width: 160 }}>
           <Descriptions.Item label='카테고리'>
             <Form.Item name='category' rules={[{ required: true, message: '카테고리를 선택해주세요' }]}>
@@ -138,7 +145,7 @@ const NewDetail: React.FC<any> = ({ news, onInit, onSelect }): JSX.Element => {
           </Descriptions.Item>
           <Descriptions.Item label='URL'>
             <Form.Item name='url' rules={[{ required: true, message: '뉴스 기사에 대한 URL을 입력해주세요' }]}>
-              {edit ? (<Input allowClear autoComplete='off' placeholder='URL을 입력해주세요' />) : (<>{news.url}</>)}
+              {edit ? (<Input allowClear autoComplete='off' placeholder='URL을 입력해주세요' />) : (<a href={news.url} rel='noreferrer' target='_blank'>{news.url}</a>)}
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label='등록일'>

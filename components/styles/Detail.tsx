@@ -22,6 +22,7 @@ export const StyledDetail = styled.div`
   }
   .ant-upload-drag-icon {
     align-items: center;
+    color: #597EF7;
     display: flex;
     font-size: 42px;
     justify-content: center;
@@ -30,8 +31,11 @@ export const StyledDetail = styled.div`
   }
   .ant-upload-text {
     align-items: center;
+    color: #030852 !important;
     display: flex;
     flex: 1;
+    font-size: 14px !important;
+    font-weight: 600;
     justify-content: center;
     margin-bottom: 0 !important;
   }

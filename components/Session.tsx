@@ -20,7 +20,7 @@ const Session: React.FC<any> = ({ children }): JSX.Element => {
         setComponents(children);
       }
     }
-  }, [state, contents]);
+  }, [children, contents, state]);
 
   // 결과 반환
   return (<>{components}</>);

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 export const StyledPageContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
+  padding-bottom: 44px;
   padding-top: 86px;
   position: relative;
   width: 800px
@@ -12,6 +13,7 @@ export const StyledPageContainer = styled.div`
 export const StyledPageContainerXL = styled.div`
   margin-left: auto;
   margin-right: auto;
+  padding-bottom: 44px;
   padding-top: 86px;
   position: relative;
   width: 1046px

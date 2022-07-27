@@ -6,11 +6,12 @@ import { Button, Divider, Form, Input } from 'antd';
 import { StyledForm } from '@/components/styles/Signin';
 import { InputGroup } from '@/components/Input';
 // Query
-import { signin } from '@/models/apis/signin';
+import { signin, signout, validateAdmin } from '@/models/apis/signin';
 // State
 import { accessTokenSelector } from '@/models/session';
 // Util
-import { warningNotification } from 'utils/notification';
+import { errorNotification, warningNotification } from 'utils/notification';
+import { extractUserId } from 'utils/util';
 
 
 /** [Component] 로그인 */
@@ -22,15 +23,30 @@ const Signin: React.FC<any> = (): JSX.Element => {
 
   /** [Event handler] 로그인 */
   const onSignin = useCallback(async () => {
+    // API 호출
     const response = await signin(form.getFieldValue('email'), form.getFieldValue('password'));
     // 결과 처리
-    if (response.result) {
+    if (response.result && response.data) {
       setAccessToken(response.data);
-      Router.push('/');
+      // 사용자 ID 추출
+      const userId: string = extractUserId(response.data);
+      // 관리자 권한 확인
+      const isAdmin: boolean = await validateAdmin(userId);
+      // 권한에 따른 처리
+      if (isAdmin) {
+        Router.push('/');
+      } else {
+        // 로그아웃
+        await signout();
+        // 쿠키 삭제
+        setAccessToken('');
+        // 알림
+        errorNotification('권한 없음', '관리자 권한이 없습니다.');
+      }
     } else {
       warningNotification('로그인 실패', '이메일 또는 비밀번호가 일치하지 않습니다.');
     }
-  }, [form]);
+  }, [form, setAccessToken]);
 
   // 컴포넌트 반환
   return (

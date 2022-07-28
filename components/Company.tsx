@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 // Component
-import { Col, Row, Spin, Table } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import { StyledDashboard, StyledDashboardCard, StyledManager, StyledService, StyledServiceList, StyledUserList, StyledUserListHeader } from '@/components/styles/Company';
-import { PageHeader, TableFormHeader } from '@/components/Header';
+import { PageHeader } from '@/components/Header';
+import { BasicTable } from '@/components/Table';
 // Query
 import { getCompanies, getManager, getServices, getUsers } from '@/models/apis/company';
 // Query key
@@ -18,12 +19,12 @@ export const CompanyList: React.FC<any> = ({ onSelect }): JSX.Element => {
   // 컴포넌트 반환
   return (
     <>
-      <TableFormHeader title='가입 회사 목록' />
-      <Table columns={[
-        { dataIndex: 'companyName', key: 'companyName', title: '회사명' },
-        { dataIndex: 'url', key: 'url', title: 'URL' },
-        { dataIndex: 'createAt', key: 'createAt', title: '생성일자', render: (value: number): string => transformToDate(value) },
-      ]} dataSource={companies ? companies : []} loading={isLoading} onRow={(record: any) => ({ onClick: (): void => onSelect(record) })} />
+      <PageHeader isBack title='가입 회사 목록' />
+      <BasicTable columns={[
+        { dataIndex: 'companyName', key: 'companyName', title: '회사명', width: '40%' },
+        { dataIndex: 'url', key: 'url', title: 'URL', width: '40%' },
+        { dataIndex: 'createAt', key: 'createAt', title: '생성일자', render: (value: number): string => transformToDate(value), sortDirections: ['descend'], sorter: ((a: any, b: any): number => b.regAt - a.regAt), width: '20%' },
+      ]} dataSource={companies ? companies : []} loading={isLoading} onSelect={onSelect} />
     </>
   );
 }

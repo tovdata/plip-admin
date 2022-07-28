@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 // Company
-import { Button, DatePicker, Descriptions, Form, Input, Select, Table } from 'antd';
-import { PageHeader, TableFormHeader } from '@/components/Header';
+import { Button, DatePicker, Descriptions, Form, Input, Select } from 'antd';
+import { PageHeader } from '@/components/Header';
+import { BasicTable } from '@/components/Table';
 import { StyledDetail } from '@/components/styles/Detail';
 // Query
 import { createNews, deleteNews, getNews, updateNews } from '@/models/apis/news';
@@ -44,12 +45,12 @@ const NewsList: React.FC<any> = ({ onSelect }): JSX.Element => {
   // 컴포넌트 반환
   return (
     <>
-      <TableFormHeader title='뉴스 게시판' tools={tools} />
-      <Table columns={[
-        { dataIndex: 'category', key: 'category', title: '카테고리' },
-        { dataIndex: 'title', key: 'title', title: '뉴스 제목' },
-        { dataIndex: 'regAt', key: 'regAt', title: '등록일자', render: (value: number): string => transformToDate(value) },
-      ]} dataSource={news ? news : []} loading={isLoading} onRow={(record: any) => ({ onClick: (): void => onSelect(record) })} />
+      <PageHeader isBack title='뉴스 게시판' tools={tools} />
+      <BasicTable columns={[
+        { dataIndex: 'category', key: 'category', title: '카테고리', filters: [{ text: '정부자료', value: '정부자료' }, { text: '업계동향', value: '업계동향' }, { text: '정책동향', value: '정책동향' }, { text: '침해사례', value: '침해사례' }], onFilter: (value: any, record: any): boolean => record.category === value, width: '25%' },
+        { dataIndex: 'title', key: 'title', title: '뉴스 제목', width: '50%' },
+        { dataIndex: 'regAt', key: 'regAt', title: '등록일자', render: (value: number): string => transformToDate(value), sortDirections: ['descend'], sorter: ((a: any, b: any): number => b.regAt - a.regAt), width: '25%' },
+      ]} dataSource={news ? news : []} loading={isLoading} onSelect={onSelect} />
     </>
   );
 }

@@ -14,7 +14,6 @@ export const StyledMenu = styled.ul`
     font-weight: 600;
     line-height: 24px;
     margin-bottom: 32px;
-    padding: 24px; 32px;
     user-select: none;
     &:last-child {
       margin-bottom: 0;
@@ -24,6 +23,7 @@ export const StyledMenu = styled.ul`
       color: #0050B3;
       display: flex;
       justify-content: space-between;
+      padding: 24px; 32px;
       text-decoration: none;
       .label {
         cursor: pointer;

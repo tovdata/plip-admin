@@ -108,7 +108,7 @@ export const StyledUserListHeader = styled.div`
   font-size: 14px;
   font-weight: 500;
   line-height: 22px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   position: relative;
   user-select: none;
   text-align: center;

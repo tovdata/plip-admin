@@ -18,24 +18,29 @@ export const StyledDetail = styled.div`
   }
   .ant-upload-drag-container {
     display: flex !important;
-    padding: 18px 54px;
+    justify-content: center;
+    padding: 6px 12px;
   }
   .ant-upload-drag-icon {
     align-items: center;
     color: #597EF7;
     display: flex;
-    font-size: 42px;
+    font-size: 22px;
     justify-content: center;
     line-height: 52px;
+    margin-right: 12px;
     margin-bottom: 0 !important;
+  }
+  .ant-upload-list-item {
+    font-size: 13px;
+    margin-top: 14px;
   }
   .ant-upload-text {
     align-items: center;
     color: #030852 !important;
     display: flex;
-    flex: 1;
     font-size: 14px !important;
-    font-weight: 600;
+    font-weight: 400;
     justify-content: center;
     margin-bottom: 0 !important;
   }

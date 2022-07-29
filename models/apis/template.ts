@@ -6,8 +6,6 @@ import { api } from '@/models/apis/core';
  */
 export const createTemplate = async (data: any): Promise<boolean> => {
   try {
-    // 데이터에서 ID 제거
-    delete data.id;
     // API 호출
     const response: any = await api.post('/template/new', data);
     // 결과 반환
@@ -55,10 +53,9 @@ export const deleteTemplate = async (templateId: string): Promise<boolean> => {
  */
  export const updateTemplate = async (templateId: string, data: any): Promise<boolean> => {
   try {
-    // 데이터에서 ID 제거
-    delete data.id;
     // API 호출
     const response: any = await api.put(`/template/${templateId}`, data);
+    console.log(response);
     // 결과 반환
     return response.result;
   } catch (err) {

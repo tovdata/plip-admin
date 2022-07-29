@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 // Company
-import { Button, DatePicker, Descriptions, Form, Input, Select, Tag, Upload } from 'antd';
+import { Button, DatePicker, Descriptions, Form, Input, Popconfirm, Select, Tag, Upload } from 'antd';
 import { PageHeader } from '@/components/Header';
 import { BasicTable } from '@/components/Table';
 import { StyledDetail } from '@/components/styles/Detail';
@@ -65,9 +65,6 @@ const TemplateList: React.FC<any> = ({ onSelect }): JSX.Element => {
 }
 
 const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Element => {
-  // 액세스 토큰
-  const accessToken: string|undefined = useRecoilValue(accessTokenSelector);
-
   // Form
   const [form] = Form.useForm();
   // 생성 여부
@@ -94,18 +91,24 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
     if (emptyFiles(form)) {
       return warningNotification('업로드할 자료를 선택해주세요');
     }
-
-    console.log(form.getFieldsValue());
-    // // API 호출
-    // const response = await createTemplate({ ...form.getFieldsValue(), publishAt: form.getFieldValue('publishAt').unix() });
-    // // 결과 처리
-    // if (response) {
-    //   successNotification('추가 완료', '템플릿을 추가하였습니다.');
-    //   // 뉴스 선택 초기화
-    //   onInit();
-    // } else {
-    //   errorNotification('추가 실패', '템플릿을 추가하는 과정에서 문제가 발생하였습니다.');
-    // }
+    // 폼 데이터 생성
+    const formData: FormData = new FormData();
+    // 데이터 설정
+    formData.append('category', form.getFieldValue('category'));
+    formData.append('title', form.getFieldValue('title'));
+    formData.append('source', form.getFieldValue('source'));
+    formData.append('publishAt', form.getFieldValue('publishAt').unix());
+    formData.append('templateFile', form.getFieldValue('file').file);
+    // API 호출
+    const response = await createTemplate(formData);
+    // 결과 처리
+    if (response) {
+      successNotification('추가 완료', '템플릿을 추가하였습니다.');
+      // 뉴스 선택 초기화
+      onInit();
+    } else {
+      errorNotification('추가 실패', '템플릿을 추가하는 과정에서 문제가 발생하였습니다.');
+    }
   }, [form, onInit]);
   /** [Event handler] 삭제 */
   const onDelete = useCallback(async () => {
@@ -129,26 +132,33 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
     if (emptyFiles(form)) {
       return warningNotification('업로드할 자료를 선택해주세요');
     }
-
-    console.log({ ...form.getFieldsValue(), publishAt: form.getFieldValue('publishAt').unix() });
-    // // API 호출
-    // const response = await updateTemplate(form.getFieldValue('id'), { ...form.getFieldsValue(), publishAt: form.getFieldValue('publishAt').unix() });
-    // // 결과 처리
-    // if (response) {
-    //   successNotification('수정 완료', '템플릿을 수정하였습니다.');
-    //   // 데이터 수정
-    //   onSelect(form.getFieldsValue());
-    //   // 편집 상태 변경
-    //   setEdit(false);
-    // } else {
-    //   errorNotification('수정 실패', '템플릿을 수정하는 과정에서 문제가 발생하였습니다.');
-    // }
+    // 폼 데이터 생성
+    const formData: FormData = new FormData();
+    // 데이터 설정
+    formData.append('category', form.getFieldValue('category'));
+    formData.append('title', form.getFieldValue('title'));
+    formData.append('sources', form.getFieldValue('sources'));
+    formData.append('publishAt', form.getFieldValue('publishAt').unix());
+    formData.append('templateFile', form.getFieldValue('file').file);
+    // API 호출
+    const response = await updateTemplate(form.getFieldValue('id'), formData);
+    // 결과 처리
+    if (response) {
+      successNotification('수정 완료', '템플릿을 수정하였습니다.');
+      // 데이터 수정
+      onSelect(form.getFieldsValue());
+      // 편집 상태 변경
+      setEdit(false);
+    } else {
+      errorNotification('수정 실패', '템플릿을 수정하는 과정에서 문제가 발생하였습니다.');
+    }
   }, [form, onSelect]);
   // 데이터 설정
   useEffect(() => form.setFieldsValue({ ...template, publishAt: template.publishAt ? transformToMoment(template.publishAt) : undefined }), [template]);
 
   // 업로드 속성
   const props: UploadProps = useMemo(() => ({
+    beforeUpload: () => false,
     maxCount: 1,
     name: 'file',
     multiple: false,
@@ -158,19 +168,21 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
       }
     }
   }), [form]);
+  // 기본 업로드된 파일
+  const defaultFileList: any = useMemo(() => template.url ? [{ uid: '1', name: extractFileNameFromURL(template.url), status: 'done', url: template.url }] : undefined, [template]);
 
   // 컴포넌트 반환
   return (
     <StyledDetail>
       <PageHeader isBack onEvent={onInit} title={template.id === 'new' ? '자료 추가' : '자료 편집'} />
-      <Form form={form} onFinish={isCreate ? onCreate : onSave }>
+      <Form form={form} onFinish={isCreate ? onCreate : onSave } acceptCharset='UTF-8'>
         <Form.Item hidden name='id'>
           <Input disabled value={template.id} />
         </Form.Item>
         <Descriptions bordered column={1} labelStyle={{ width: 160 }}>
           <Descriptions.Item label='카테고리'>
             <Form.Item name='category' rules={[{ required: true, message: '카테고리를 선택해주세요' }]}>
-              {edit ? (<Select options={options} placeholder='카테고리를 선택해주세요' />) : (<>{template.category}</>)}
+              {edit ? (<Select options={options} placeholder='카테고리를 선택해주세요' />) : (<>{template.category === 'default' ? '기본 템플릿' : template.category === 'template' ? '템플릿' : '가이드라인'}</>)}
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label='제목'>
@@ -181,13 +193,13 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
           <Descriptions.Item label='파일업로드'>
             <Form.Item name='file'>
               {edit ? (
-                <Upload.Dragger {...props}>
+                <Upload.Dragger {...props} defaultFileList={defaultFileList}>
                   <p className="ant-upload-drag-icon">
                     <IoCloudUploadOutline />
                   </p>
                   <p className="ant-upload-text">업로드할 자료를 드래그 또는 선택해주세요</p>
                 </Upload.Dragger>
-              ) : template.url ? (<a href={template.url}>{template.fileName}</a>) : (<></>)}
+              ) : template.url ? (<a href={template.url}>{extractFileNameFromURL(template.url)}</a>) : (<></>)}
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label='게시일'>
@@ -196,15 +208,17 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label='출처(작성자)'>
-            <Form.Item name='source' rules={[{ required: true, message: '자료에 대한 출처를 입력해주세요' }]}>
-              {edit ? (<Input placeholder='출처를 입력해주세요' />) : (<>{template.source}</>)}
+            <Form.Item name='sources' rules={[{ required: true, message: '자료에 대한 출처를 입력해주세요' }]}>
+              {edit ? (<Input placeholder='출처를 입력해주세요' />) : (<>{template.sources}</>)}
             </Form.Item>
           </Descriptions.Item>
         </Descriptions>
         <div className='footer'>
           <div>
             {!isCreate && !edit ? (
-              <Button danger onClick={onDelete}>삭제</Button>
+              <Popconfirm cancelText='아니오' onConfirm={onDelete} okText='예' title='해당 자료를 삭제하시겠습니까?'>
+                <Button danger>삭제</Button>
+              </Popconfirm>
             ) : (<></>)}
           </div>
           {isCreate ? (
@@ -238,6 +252,17 @@ const emptyFiles = (form: FormInstance<any>): boolean => {
   const file: any = form.getFieldValue('file');
   // 확인 결과
   return file === undefined ? true : false;
+}
+/**
+ * [Internal Function] URL에서 파일 이름 추출
+ * @param url URL
+ * @returns 파일 이름
+ */
+const extractFileNameFromURL = (url: string): string => {
+  // 슬래시를 기준으로 문자열 분리
+  const split: string[] = url.split('/');
+  // 배열 마지막 내용(= 파일 이름) 반환
+  return split.length > 0 ? split[split.length - 1] : '';
 }
 
 export default TemplateManagement;

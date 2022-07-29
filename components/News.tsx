@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 // Company
-import { Button, DatePicker, Descriptions, Form, Input, Select } from 'antd';
+import { Button, DatePicker, Descriptions, Form, Input, Popconfirm, Select } from 'antd';
 import { PageHeader } from '@/components/Header';
 import { BasicTable } from '@/components/Table';
 import { StyledDetail } from '@/components/styles/Detail';
@@ -155,15 +155,17 @@ const NewDetail: React.FC<any> = ({ news, onInit, onSelect }): JSX.Element => {
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label='출처(작성자)'>
-            <Form.Item name='source' rules={[{ required: true, message: '뉴스에 대한 출처를 입력해주세요' }]}>
-              {edit ? (<Input allowClear placeholder='출처를 입력해주세요' />) : (<>{news.source}</>)}
+            <Form.Item name='sources' rules={[{ required: true, message: '뉴스에 대한 출처를 입력해주세요' }]}>
+              {edit ? (<Input allowClear placeholder='출처를 입력해주세요' />) : (<>{news.sources}</>)}
             </Form.Item>
           </Descriptions.Item>
         </Descriptions>
         <div className='footer'>
           <div>
             {!isCreate && !edit ? (
-              <Button danger onClick={onDelete}>삭제</Button>
+              <Popconfirm cancelText='아니오' onConfirm={onDelete} okText='예' title='해당 뉴스를 삭제하시겠습니까?'>
+                <Button danger>삭제</Button>
+              </Popconfirm>
             ) : (<></>)}
           </div>
           {isCreate ? (

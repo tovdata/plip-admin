@@ -40,9 +40,7 @@ export const signin = async (email: string, password: string): Promise<ResponseD
 export const signout = async (): Promise<boolean> => {
   try {
     // API 호출
-    const response: any = await api.post('/auth/signout');
-    console.log(response);
-    return response;
+    return await api.post('/auth/signout');
   } catch (err) {
     console.error(`[API ERROR] ${err}`);
     return false;

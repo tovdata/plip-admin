@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 /** [Styled Component] 메인 페이지 헤더 */
 export const StyledMainPageHeader = styled.h2`
-  color: #141414;
+  color: #262626;
   font-size: 32px;
   font-weight: 700;
   line-height: 42px;
@@ -23,6 +23,7 @@ export const StyledPageHeader = styled.div`
     position: relative;
     .back {
       align-items: center;
+      color: #262626;
       cursor: pointer;
       display: flex;
       font-size: 20px;

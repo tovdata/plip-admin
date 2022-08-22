@@ -1,16 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 // Component
-import { Col, Row, Spin } from 'antd';
-import { StyledDashboard, StyledDashboardCard, StyledManager, StyledService, StyledServiceList, StyledUserList, StyledUserListHeader } from '@/components/styles/Company';
+import { Col, Row, Spin, Table } from 'antd';
+import { StyledDashboard, StyledDashboardCard, StyledManager, StyledService, StyledServiceList } from '@/components/styles/Company';
 import { PageHeader } from '@/components/Header';
 import { BasicTable } from '@/components/Table';
+import { StyledPageContainerXL } from '@/components/styles/Layout';
+// Icon
+const IoCheckbox = dynamic(() => import('react-icons/io5').then((mod: any): any => mod.IoCheckbox));
+const IoSquareOutline = dynamic(() => import('react-icons/io5').then((mod: any): any => mod.IoSquareOutline));
 // Query
 import { getCompanies, getManager, getServices, getUsers } from '@/models/apis/company';
 // Query key
 import { KEY_COMPANIES, KEY_MANAGER, KEY_SERVICES, KEY_USERS } from '@/models/type';
 // Util
 import { transformToDate } from 'utils/util';
-import { StyledPageContainerXL } from './styles/Layout';
+import dynamic from 'next/dynamic';
 
 /** [Component] 가입된 회사 목록 테이블 */
 export const CompanyList: React.FC<any> = ({ onSelect }): JSX.Element => {
@@ -30,6 +34,12 @@ export const CompanyList: React.FC<any> = ({ onSelect }): JSX.Element => {
 }
 /** [Component] 회사 대시보드 */
 export const Dashboard: React.FC<any> = ({ company, onInit }): JSX.Element => {
+  // 서비스 목록 조회
+  const { isLoading: loadingServices, data: services } = useQuery([KEY_SERVICES], async () => await getServices(company.id));
+  // 서비스 목록 조회
+  const { isLoading: loadingUsers, data: users } = useQuery([KEY_USERS], async () => await getUsers(company.id));
+
+  // 컴포넌트 반환
   return (
     <StyledDashboard>
       <StyledPageContainerXL>
@@ -38,11 +48,19 @@ export const Dashboard: React.FC<any> = ({ company, onInit }): JSX.Element => {
           <Col span={24}>
             <Manager companyId={company.id} />
           </Col>
-          <Col span={12}>
-            <ServiceList companyId={company.id} />
+          <Col span={6}>
+            <Count count={services ? services.length : 0} isLoading={loadingServices} title='서비스 개수' />
           </Col>
-          <Col span={12}>
-            <UserList companyId={company.id} />
+          <Col span={6}>
+            <Count count={users ? users.length : 0} isLoading={loadingUsers} title='사용자 수' />
+          </Col>
+          <Col span={6}></Col>
+          <Col span={6}></Col>
+          <Col span={8}>
+            <ServiceList isLoading={loadingServices} services={services} />
+          </Col>
+          <Col span={16}>
+            <UserList isLoading={loadingUsers} users={users} />
           </Col>
         </Row>
       </StyledPageContainerXL>
@@ -55,7 +73,7 @@ const DashboardItem: React.FC<any> = ({ children, loading, title }): JSX.Element
   return (
     <StyledDashboardCard>
       <Spin spinning={loading}>
-        {title ? (<h4 className='title'>{title}</h4>) : (<></>)}
+        {title ? (<h4 className='header'>{title}</h4>) : (<></>)}
         {children}
       </Spin>
     </StyledDashboardCard>
@@ -88,6 +106,14 @@ const ManagerDetail: React.FC<any> = ({ label, text }): JSX.Element => {
     </div>
   );
 }
+/** [Internal Component] 서비스 개수 조회 */
+const Count: React.FC<any> = ({ count, isLoading, title }): JSX.Element => {
+  return (
+    <DashboardItem loading={isLoading} title={title}>
+      <div style={{ alignItems: 'center', display: 'flex', fontSize: 21, fontWeight: '600', justifyContent: 'flex-end', padding: '8px 20px' }}>{count}</div>
+    </DashboardItem>
+  );
+}
 /** [Internal Component] 서비스 아이템 */
 const Service: React.FC<any> = ({ createAt, serviceId, serviceName }): JSX.Element => {
   return (
@@ -98,10 +124,7 @@ const Service: React.FC<any> = ({ createAt, serviceId, serviceName }): JSX.Eleme
   );
 }
 /** [Internal Component] 회사 내 서비스 목록 */
-const ServiceList: React.FC<any> = ({ companyId }): JSX.Element => {
-  // 서비스 목록 조회
-  const { isLoading, data: services } = useQuery([KEY_SERVICES], async () => await getServices(companyId));
-  // 컴포넌트 반환
+const ServiceList: React.FC<any> = ({ isLoading, services }): JSX.Element => {
   return (
     <DashboardItem loading={isLoading} title='서비스 목록'>
       <StyledServiceList>
@@ -111,32 +134,16 @@ const ServiceList: React.FC<any> = ({ companyId }): JSX.Element => {
   );
 }
 /** [Internal Component] 회사 내 사용자 목록 */
-const UserList: React.FC<any> = ({ companyId }): JSX.Element => {
-  // 서비스 목록 조회
-  const { isLoading, data: users } = useQuery([KEY_USERS], async () => await getUsers(companyId));
-  // 컴포넌트 반환
+const UserList: React.FC<any> = ({ isLoading, users }): JSX.Element => {
   return (
     <DashboardItem loading={isLoading} title='사용자 목록'>
-      <StyledUserListHeader>
-        <Row gutter={8}>
-          <Col span={4}>이름</Col>
-          <Col span={8}>이메일</Col>
-          <Col span={6}>연락처</Col>
-          <Col span={6}>가입일</Col>
-        </Row>
-      </StyledUserListHeader>
-      <StyledUserList>
-        <Row gutter={[8, 8]}>
-          {users ? users.map((user: any): JSX.Element => (
-            <>
-              <Col span={4}>{user.userName}</Col>
-              <Col span={8}>{user.email}</Col>
-              <Col span={6}>{user.contact}</Col>
-              <Col span={6}>{transformToDate(user.createAt)}</Col>
-            </>
-          )) : (<></>)}
-        </Row>
-      </StyledUserList>
+      <Table columns={[
+        { dataIndex: 'userName', key: 'userName', title: '이름', width: '15%' },
+        { dataIndex: 'email', key: 'email', title: '이메일', width: '30%' },
+        { dataIndex: 'contact', key: 'contact', title: '연락처', width: '22%' },
+        { dataIndex: 'createAt', key: 'createAt', title: '가입일', render: (value: number): string => transformToDate(value), width: '22%' },
+        { dataIndex: 'marketing', key: 'marketing', title: '마케팅', width: '11%', render: (value: any): JSX.Element => value === true ? (<span className='icon'><IoCheckbox /></span>) : (<span className='icon'><IoSquareOutline /></span>) },
+      ]} dataSource={users ? users : []} size='small' />
     </DashboardItem>
   );
 }

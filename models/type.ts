@@ -1,4 +1,4 @@
-export const SERVER_URL = 'https://api-dev.plip.kr:8081/api';
+export const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 /** API 응답 상태 */
 export const RESPONSE_STATUS_OK = 'OK';
 export const RESPONSE_STATUS_ERROR = 'ERROR';

@@ -8,7 +8,6 @@ import { RESPONSE_STATUS_ERROR, RESPONSE_STATUS_INVALID_TOKEN, RESPONSE_STATUS_N
 // Axios 설정
 axios.defaults.baseURL = SERVER_URL;
 axios.defaults.withCredentials = true;
-axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 // 인스턴스 생성
 export const api = axios.create();
@@ -16,16 +15,21 @@ export const api = axios.create();
 api.interceptors.request.use(
   async (conf: any) => {
     let token: string | undefined = getAccessToken();
-    console.log('token');
     if (token === undefined || !validateExpires(token)) {
       token = await updateToken();
-      console.log('updated', token);
       // 토큰 저장
       if (token) setAccessToken(token);
     }
     // 토큰이 있을 경우
     if (token) {
       conf.headers.common['Authorization'] = token;
+    }
+    // 템플릿 생성/수정 일 경우, Content Type 변환
+    if ((conf.method === 'post' || conf.method === 'put') && (conf.url.includes('/template'))) {
+      conf.headers.post['Content-Type'] = 'multipart/form-data;charset=utf-8';
+      conf.headers.put['Content-Type'] = 'multipart/form-data;charset=utf-8';
+    } else {
+      conf.headers.common['Content-Type'] = 'application/json';
     }
     return conf;
   }
@@ -35,9 +39,9 @@ api.interceptors.response.use(
   (res: any) => ({ result: validateResponse(res.data), data: res.data.data }),
   (err: any) => {
     // 에러 출력
-    console.error(`[API ERROR] ${err}`);
+    console.error(`[API ERROR] ${err.code} ${err.message}`);
     // 에러 반환
-    return Promise.reject({ result: false, message: err });
+    return Promise.reject({ result: false, message: err.message });
   }
 );
 

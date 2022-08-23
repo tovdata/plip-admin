@@ -78,6 +78,7 @@ export const getUsers = async (companyId: string): Promise<any[]> => {
         email: item.email,
         id: item.id,
         key: item.id,
+        marketing: item.agreement?.ssa1,
         userName: item.userName,
       }));
     } else {

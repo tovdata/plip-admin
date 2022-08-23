@@ -5,25 +5,25 @@ export const StyledMenu = styled.ul`
   position: relative;
   width: 100%;
   li.item {
-    background-color: #F0F6FF;
-    border-radius: 8px;
-    color: #0050B3;
+    background-color: #FFFFFF;
+    border: 1px solid #E7EAEC;
+    // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), 1px 2px 3px rgba(0, 0, 0, 0.16);
     cursor: pointer;
     display: block;
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;
     margin-bottom: 32px;
-    padding: 24px; 32px;
     user-select: none;
     &:last-child {
       margin-bottom: 0;
     }
     a {
       align-item: center;
-      color: #0050B3;
+      color: #434343;
       display: flex;
       justify-content: space-between;
+      padding: 24px; 32px;
       text-decoration: none;
       .label {
         cursor: pointer;

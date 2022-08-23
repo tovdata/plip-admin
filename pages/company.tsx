@@ -1,8 +1,14 @@
 import type { NextPage } from 'next';
+import dynamic from 'next/dynamic';
+import { useCallback, useEffect, useState } from 'react';
 // Component
-import { StyledPageContainer } from '@/components/styles/Layout';
-import { CompanyList, Dashboard } from '@/components/Company';
-import { useCallback, useState } from 'react';
+const CompanyList: ComponentType<any> = dynamic(() => import('@/components/Company').then((mod: any): any => mod.CompanyList), { loading: () => (<></>), ssr: false });
+const Dashboard: ComponentType<any> = dynamic(() => import('@/components/Company').then((mod: any): any => mod.Dashboard), { loading: () => (<></>), ssr: false });
+const Session: ComponentType<any> = dynamic(() => import('@/components/Session'), { loading: () => (<></>), ssr: false });
+// Component (style)
+const StyledPageContainer: ComponentType<any> = dynamic(() => import('@/components/styles/Layout').then((mod: any): any => mod.StyledPageContainer), { loading: () => (<></>) });
+// Type
+import type { ComponentType } from 'react';
 
 const Page: NextPage = () => {
   // 선택된 회사
@@ -14,7 +20,7 @@ const Page: NextPage = () => {
   const onSelect = useCallback((record: any) => setCompany({ id: record.id, name: record.companyName }), []);
 
   return (
-    <>
+    <Session>
       {company.id === '' ? (
         <StyledPageContainer>
           <CompanyList onSelect={onSelect} />
@@ -22,7 +28,7 @@ const Page: NextPage = () => {
       ) : (
         <Dashboard company={company} onInit={onInit} />
       )}
-    </>
+    </Session>
   )
 }
 

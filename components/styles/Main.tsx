@@ -7,7 +7,7 @@ export const StyledMenu = styled.ul`
   li.item {
     background-color: #FFFFFF;
     border: 1px solid #E7EAEC;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.24), 1px 1px 2px rgba(0, 0, 0, 0.12);
+    // box-shadow: 0 1px 2px rgba(0, 0, 0, 0.32), 1px 2px 3px rgba(0, 0, 0, 0.16);
     cursor: pointer;
     display: block;
     font-size: 16px;
@@ -20,7 +20,7 @@ export const StyledMenu = styled.ul`
     }
     a {
       align-item: center;
-      color: #262626;
+      color: #434343;
       display: flex;
       justify-content: space-between;
       padding: 24px; 32px;

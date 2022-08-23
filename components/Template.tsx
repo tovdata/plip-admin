@@ -98,6 +98,7 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
     formData.append('title', form.getFieldValue('title'));
     formData.append('source', form.getFieldValue('source'));
     formData.append('publishAt', form.getFieldValue('publishAt').unix());
+    formData.append('filename', form.getFieldValue('file').file.name);
     formData.append('templateFile', form.getFieldValue('file').file);
     // API 호출
     const response = await createTemplate(formData);
@@ -137,16 +138,17 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
     // 데이터 설정
     formData.append('category', form.getFieldValue('category'));
     formData.append('title', form.getFieldValue('title'));
-    formData.append('sources', form.getFieldValue('sources'));
+    formData.append('source', form.getFieldValue('source'));
     formData.append('publishAt', form.getFieldValue('publishAt').unix());
+    formData.append('filename', form.getFieldValue('file').file.name);
     formData.append('templateFile', form.getFieldValue('file').file);
     // API 호출
     const response = await updateTemplate(form.getFieldValue('id'), formData);
     // 결과 처리
-    if (response) {
+    if (response.result) {
       successNotification('수정 완료', '템플릿을 수정하였습니다.');
       // 데이터 수정
-      onSelect(form.getFieldsValue());
+      onSelect({ ...form.getFieldsValue(), filename: form.getFieldValue('file').file.name, url: response.data.url, file: undefined });
       // 편집 상태 변경
       setEdit(false);
     } else {
@@ -169,7 +171,7 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
     }
   }), [form]);
   // 기본 업로드된 파일
-  const defaultFileList: any = useMemo(() => template.url ? [{ uid: '1', name: extractFileNameFromURL(template.url), status: 'done', url: template.url }] : undefined, [template]);
+  const defaultFileList: any = useMemo(() => template.url ? [{ uid: '1', name: template.filename, status: 'done', url: template.url }] : undefined, [template]);
 
   // 컴포넌트 반환
   return (
@@ -199,7 +201,7 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
                   </p>
                   <p className="ant-upload-text">업로드할 자료를 드래그 또는 선택해주세요</p>
                 </Upload.Dragger>
-              ) : template.url ? (<a href={template.url}>{extractFileNameFromURL(template.url)}</a>) : (<></>)}
+              ) : template.url ? (<a href={template.url}>{template.filename}</a>) : (<></>)}
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label='게시일'>
@@ -208,8 +210,8 @@ const TemplateDetail: React.FC<any> = ({ template, onInit, onSelect }): JSX.Elem
             </Form.Item>
           </Descriptions.Item>
           <Descriptions.Item label='출처(작성자)'>
-            <Form.Item name='sources' rules={[{ required: true, message: '자료에 대한 출처를 입력해주세요' }]}>
-              {edit ? (<Input placeholder='출처를 입력해주세요' />) : (<>{template.sources}</>)}
+            <Form.Item name='source' rules={[{ required: true, message: '자료에 대한 출처를 입력해주세요' }]}>
+              {edit ? (<Input placeholder='출처를 입력해주세요' />) : (<>{template.source}</>)}
             </Form.Item>
           </Descriptions.Item>
         </Descriptions>
@@ -252,17 +254,6 @@ const emptyFiles = (form: FormInstance<any>): boolean => {
   const file: any = form.getFieldValue('file');
   // 확인 결과
   return file === undefined ? true : false;
-}
-/**
- * [Internal Function] URL에서 파일 이름 추출
- * @param url URL
- * @returns 파일 이름
- */
-const extractFileNameFromURL = (url: string): string => {
-  // 슬래시를 기준으로 문자열 분리
-  const split: string[] = url.split('/');
-  // 배열 마지막 내용(= 파일 이름) 반환
-  return split.length > 0 ? split[split.length - 1] : '';
 }
 
 export default TemplateManagement;

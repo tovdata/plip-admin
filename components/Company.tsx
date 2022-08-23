@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 // Component
 import { Col, Row, Spin, Table } from 'antd';
-import { StyledDashboard, StyledDashboardCard, StyledManager, StyledService, StyledServiceList } from '@/components/styles/Company';
+import { StyledCount, StyledDashboard, StyledDashboardCard, StyledManager, StyledService, StyledServiceList } from '@/components/styles/Company';
 import { PageHeader } from '@/components/Header';
 import { BasicTable } from '@/components/Table';
 import { StyledPageContainerXL } from '@/components/styles/Layout';
@@ -44,18 +44,16 @@ export const Dashboard: React.FC<any> = ({ company, onInit }): JSX.Element => {
     <StyledDashboard>
       <StyledPageContainerXL>
         <PageHeader isBack onEvent={onInit} title={company.name} style={{ marginBottom: 28 }} />
-        <Row gutter={[24, 24]}>
-          <Col span={24}>
-            <Manager companyId={company.id} />
-          </Col>
-          <Col span={6}>
+        <Row gutter={[16, 16]}>
+          <Col span={4}>
             <Count count={services ? services.length : 0} isLoading={loadingServices} title='서비스 개수' />
           </Col>
-          <Col span={6}>
+          <Col span={4}>
             <Count count={users ? users.length : 0} isLoading={loadingUsers} title='사용자 수' />
           </Col>
-          <Col span={6}></Col>
-          <Col span={6}></Col>
+          <Col span={16}>
+            <Manager companyId={company.id} />
+          </Col>
           <Col span={8}>
             <ServiceList isLoading={loadingServices} services={services} />
           </Col>
@@ -110,7 +108,7 @@ const ManagerDetail: React.FC<any> = ({ label, text }): JSX.Element => {
 const Count: React.FC<any> = ({ count, isLoading, title }): JSX.Element => {
   return (
     <DashboardItem loading={isLoading} title={title}>
-      <div style={{ alignItems: 'center', display: 'flex', fontSize: 21, fontWeight: '600', justifyContent: 'flex-end', padding: '8px 20px' }}>{count}</div>
+      <StyledCount>{count}</StyledCount>
     </DashboardItem>
   );
 }

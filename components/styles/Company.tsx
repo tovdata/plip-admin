@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
+export const StyledCount = styled.div`
+  align-items: center;
+  display: flex;
+  font-size: 21px;
+  font-weight: 600;
+  justify-content: flex-end;
+  padding: 8px 16px; 8px 20px;
+`;
 /** [Styled Companent] 대시보드 */
 export const StyledDashboard = styled.div`
   background-color: #F3F3F4;
@@ -8,7 +16,7 @@ export const StyledDashboard = styled.div`
 /** [Styled Companent] 대시보드 카드 */
 export const StyledDashboardCard = styled.div`
   background-color: #FFFFFF;
-  border: 1px solid #F0F0F0;
+  border: 1px solid #E7EAEC;
   height: 100%;
   .header {
     border-bottom: 1px solid #F0F0F0;

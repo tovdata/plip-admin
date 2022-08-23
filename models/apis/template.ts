@@ -1,4 +1,5 @@
 import { api } from '@/models/apis/core';
+import { ResponseDF } from '../type';
 
 /**
  * [API Caller] 템플릿 생성
@@ -51,15 +52,12 @@ export const deleteTemplate = async (templateId: string): Promise<boolean> => {
  * @param templateId 템플릿 ID
  * @returns 요청 결과
  */
- export const updateTemplate = async (templateId: string, data: any): Promise<boolean> => {
+ export const updateTemplate = async (templateId: string, data: any): Promise<ResponseDF> => {
   try {
-    // API 호출
-    const response: any = await api.put(`/template/${templateId}`, data);
-    console.log(response);
-    // 결과 반환
-    return response.result;
+    // API 호출 및 반환
+    return await api.patch(`/template/${templateId}`, data);
   } catch (err) {
     console.error(`[API ERROR] ${err}`);
-    return false;
+    return { result: false };
   }
 }

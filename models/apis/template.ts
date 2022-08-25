@@ -41,7 +41,7 @@ export const deleteTemplate = async (templateId: string): Promise<boolean> => {
     // API 호출
     const response: any = await api.get('/template/all');
     // 데이터 가공 및 결과 반환
-    return response.result && response.data ? response.data.sort((a: any, b: any): number => b.regAt - a.regAt).map((item: any): any => ({ ...item, key: item.id })) : [];
+    return response.result && response.data ? response.data.sort((a: any, b: any): number => b.publishAt - a.publishAt).map((item: any): any => ({ ...item, key: item.id })) : [];
   } catch (err) {
     console.error(`[API ERROR] ${err}`);
     return [];

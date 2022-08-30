@@ -27,8 +27,11 @@ export const CompanyList: React.FC<any> = ({ onSelect }): JSX.Element => {
       <BasicTable columns={[
         { dataIndex: 'companyName', key: 'companyName', title: '회사명', width: '40%' },
         { dataIndex: 'url', key: 'url', title: 'URL', width: '40%' },
-        { dataIndex: 'createAt', key: 'createAt', title: '생성일자', render: (value: number): string => transformToDate(value), sortDirections: ['descend'], sorter: ((a: any, b: any): number => b.regAt - a.regAt), width: '20%' },
+        { dataIndex: 'createAt', key: 'createAt', title: '생성일자', render: (value: number): string => transformToDate(value), sortDirections: ['ascend'], sorter: ((a: any, b: any): number => b.createAt - a.createAt), width: '20%' },
       ]} dataSource={companies ? companies : []} loading={isLoading} onSelect={onSelect} />
+      <Table columns={[
+        { dataIndex: '' }
+      ]} />
     </>
   );
 }

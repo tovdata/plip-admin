@@ -10,10 +10,7 @@ export const getCompany = async (companyId: string): Promise<any> => {
     // API 호출
     const response: any = await api.get(`/company/${companyId}`);
     // 데이터 가공 및 결과 반환
-    if (response.result && response.data) {
-      console.log(response.data);
-    }
-    return response.data;
+    return response.result && response.data ? response.data : undefined;
   } catch (err) {
     console.error(`[API ERROR] ${err}`);
     return undefined;
@@ -54,6 +51,22 @@ export const getManager = async (companyId: string): Promise<any> => {
   }
 }
 /**
+ * [API Caller] 서비스 조회
+ * @param serviceId 서비스 ID
+ * @returns 조회 결과
+ */
+export const getService = async (serviceId: string): Promise<any> => {
+  try {
+    // API 호출
+    const response: any = await api.get(`/service/${serviceId}`);
+    // 데이터 가공 및 결과 반환
+    return response.result && response.data ? response.data : undefined;
+  } catch (err) {
+    console.error(`[API ERROR] ${err}`);
+    return undefined;
+  }
+}
+/**
  * [API Caller] 서비스 목록 조회
  * @param companyId 회사 ID
  * @returns 조회 결과
@@ -74,7 +87,6 @@ export const getServices = async (companyId: string): Promise<any[]> => {
     } else {
       return [];
     }
-    return [];
   } catch (err) {
     console.error(`[API ERROR] ${err}`);
     return [];

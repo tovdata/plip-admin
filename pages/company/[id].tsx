@@ -11,9 +11,6 @@ const Session: ComponentType<any> = dynamic(() => import('@/components/Session')
 import type { ComponentType } from 'react';
 import Company from '@/components/pages/Company';
 import { useRouter } from 'next/router';
-import { useQuery } from '@tanstack/react-query';
-import { KEY_COMPANY } from '@/models/type';
-import { getCompany } from '@/models/apis/company';
 
 const Page: NextPage = () => {
   const router = useRouter();

@@ -34,6 +34,12 @@ const StyledTableCard = styled(Card)`
   .ant-card-body .ant-table-tbody > tr > td:first-child {
     padding-left: 24px;
   }
+  .ant-card-body .ant-skeleton {
+    padding: 24px;
+  }
+  .ant-card-body .ant-skeleton .ant-skeleton-paragraph {
+    margin-bottom: 0;
+  }
   .ant-table-pagination {
     padding-right: 20px;
   }

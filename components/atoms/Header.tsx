@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import styled from 'styled-components';
 // Icon
 const VscChevronLeft = dynamic(() => import('react-icons/vsc').then((mod: any): any => mod.VscChevronLeft));
@@ -42,9 +43,11 @@ export const PageHeader: React.FC<any> = ({ isBack, redirectPath, onEvent, title
             <VscChevronLeft />
           </span>
         ) : (
-          <a className='back' href={redirectPath ? redirectPath : '/'}>
-            <VscChevronLeft />
-          </a>
+          <Link passHref href={redirectPath ? redirectPath : '/'}>
+            <a className='back'>
+              <VscChevronLeft />
+            </a>
+          </Link>
         ) : (<></>)}
         <h3 className='title'>{title}</h3>
       </div>

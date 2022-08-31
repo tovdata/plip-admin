@@ -11,9 +11,10 @@ import type { ComponentType } from 'react';
 const Page: NextPage = () => {
   return (
     <Session>
-      <StyledPageContainer>
+      {/* <StyledPageContainer>
         <NewsManagement />
-      </StyledPageContainer>
+      </StyledPageContainer> */}
+      
     </Session>
   )
 }

@@ -18,6 +18,7 @@ export const KEY_COMPANY = 'plip-company';
 export const KEY_COMPANIES = 'plip-companies'
 export const KEY_MANAGER = 'plip-manager';
 export const KEY_NEWS = 'plip-news';
+export const KEY_SERVICE = 'plip-service';
 export const KEY_SERVICES = 'plip-services';
 export const KEY_TEMPLATE = 'plip-template';
 export const KEY_USERS = 'plip-users';

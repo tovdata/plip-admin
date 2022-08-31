@@ -41,24 +41,25 @@ const StyledTableCard = styled(Card)`
 
 interface CardProps {
   children?: React.ReactNode;
+  loading?: boolean;
   title?: string;
 }
 
-export const AntCard: React.FC<CardProps> = ({ children, title }): JSX.Element => {
+export const AntCard: React.FC<CardProps> = ({ children, loading, title }): JSX.Element => {
   return (
-    <StyledCard title={title}>{children}</StyledCard>
+    <StyledCard loading={loading} title={title}>{children}</StyledCard>
   );
 }
-export const SimpleCard: React.FC<CardProps> = ({ children, title }): JSX.Element => {
+export const SimpleCard: React.FC<CardProps> = ({ children, loading, title }): JSX.Element => {
   return (
-    <StyledCard>
+    <StyledCard loading={loading}>
       {title ? (<label className='subject'>{title}</label>) : (<></>)}
       {children ? (<h2 className='content'>{children}</h2>) : (<></>)}
     </StyledCard>
   );
 }
-export const TableCard: React.FC<CardProps> = ({ children, title }): JSX.Element => {
+export const TableCard: React.FC<CardProps> = ({ children, loading, title }): JSX.Element => {
   return (
-    <StyledTableCard title={title}>{children}</StyledTableCard>
+    <StyledTableCard loading={loading} title={title}>{children}</StyledTableCard>
   );
 }

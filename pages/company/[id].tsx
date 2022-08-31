@@ -10,15 +10,19 @@ const Session: ComponentType<any> = dynamic(() => import('@/components/Session')
 // Type
 import type { ComponentType } from 'react';
 import Company from '@/components/pages/Company';
+import { useRouter } from 'next/router';
+import { useQuery } from '@tanstack/react-query';
+import { KEY_COMPANY } from '@/models/type';
+import { getCompany } from '@/models/apis/company';
 
 const Page: NextPage = () => {
-  // 선택된 회사
-  const [company, setCompany] = useState<any>({ id: '', name: '' });
-
-  /** [Event handler] 선택 초기화 */
-  const onInit = useCallback(() => setCompany({ id: '', name: '' }), []);
-  /** [Event handler] 회사 선택 */
-  const onSelect = useCallback((record: any) => setCompany({ id: record.id, name: record.companyName }), []);
+  const router = useRouter();
+  // Get a path parameter
+  const { id } = router.query;
+  // Component
+  const [component, setComponent] = useState<JSX.Element>(<></>);
+  // Render
+  useEffect(() => typeof id === 'string' ? setComponent(<Company companyId={id} />) : undefined, [id]);
 
   return (
     <Session>
@@ -29,7 +33,7 @@ const Page: NextPage = () => {
       ) : (
         <Dashboard company={company} onInit={onInit} />
       )} */}
-      <Company />
+      {component}
     </Session>
   )
 }

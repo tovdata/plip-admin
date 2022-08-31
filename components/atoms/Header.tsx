@@ -8,7 +8,8 @@ const StyledPageHeader = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 42px;
+  margin-bottom: 36px;
+  padding-top: 24px;
   position: relative;
   user-select: none;
   .left {
@@ -20,7 +21,7 @@ const StyledPageHeader = styled.div`
       cursor: pointer;
       display: flex;
       font-size: 20px;
-      margin-right: 24px;
+      margin-right: 16px;
     }
     .title {
       font-size: 20px;

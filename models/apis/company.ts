@@ -1,6 +1,25 @@
 import { api } from './core';
 
 /**
+ * [API Caller] 회사 정보 조회
+ * @param companyId 회사 ID
+ * @returns 조회 결과
+ */
+export const getCompany = async (companyId: string): Promise<any> => {
+  try {
+    // API 호출
+    const response: any = await api.get(`/company/${companyId}`);
+    // 데이터 가공 및 결과 반환
+    if (response.result && response.data) {
+      console.log(response.data);
+    }
+    return response.data;
+  } catch (err) {
+    console.error(`[API ERROR] ${err}`);
+    return undefined;
+  }
+}
+/**
  * [API Caller] 회사 목록 조회
  * @returns 조회 결과
  */

@@ -23,16 +23,16 @@ const Home: React.FC<any> = (): JSX.Element => {
   return (
     <Layout selectedKey='management'>
       <Row gutter={24}>
-        <Col lg={6} sm={8} span={12}>
+        <Col lg={6} sm={12} span={24}>
           <SimpleCard title='전체 회사 수'>{companyCount.toString()}</SimpleCard>
         </Col>
-        <Col lg={6} sm={8} span={12}>
+        <Col lg={6} sm={12} span={24}>
           <SimpleCard title='전체 서비스 수'>{serviceCount.toString()}</SimpleCard>
         </Col>
-        <Col lg={6} sm={8} span={12}>
+        <Col lg={6} sm={12} span={24}>
           <SimpleCard title='전체 가입자 수'>{userCount.toString()}</SimpleCard>
         </Col>
-        <Col lg={6} sm={8} span={12}>
+        <Col lg={6} sm={12} span={24}>
           <SimpleCard title='전체 가입자 수'>10</SimpleCard>
         </Col>
       </Row>

@@ -9,8 +9,8 @@ const StyledPageHeader = styled.div`
   align-items: center;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 36px;
-  padding-top: 24px;
+  margin-bottom: 32px;
+  padding-top: 12px;
   position: relative;
   user-select: none;
   .left {

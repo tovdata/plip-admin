@@ -19,6 +19,59 @@ const StyledCard = styled(Card)`
     line-height: 1.4;
     margin: 0;
   }
+  .ant-card-body .ant-form-item {
+    margin-bottom: 0;
+  }
+  .ant-card-body .ant-form-item-explain-error {
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-top: 6px;
+    user-select: none;
+  }
+  .ant-card-body .ant-picker {
+    width: 100%;
+  }
+  .ant-card-body .ant-upload-drag-container {
+    display: flex !important;
+    justify-content: center;
+    padding: 6px 12px;
+  }
+  .ant-card-body .ant-upload-drag-icon {
+    align-items: center;
+    color: #597EF7;
+    display: flex;
+    font-size: 22px;
+    justify-content: center;
+    line-height: 52px;
+    margin-right: 12px;
+    margin-bottom: 0 !important;
+  }
+  .ant-card-body .ant-upload-list-item {
+    font-size: 13px;
+    margin-top: 14px;
+  }
+  .ant-card-body .ant-upload-text {
+    align-items: center;
+    color: #030852 !important;
+    display: flex;
+    font-size: 14px !important;
+    font-weight: 400;
+    justify-content: center;
+    margin-bottom: 0 !important;
+  }
+  .ant-card-body .footer {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+    button {
+      margin-left: 16px;
+    }
+    button:first-child {
+      margin-left: 0;
+    }
+  }
 `;
 const StyledTableCard = styled(Card)`
   margin-bottom: 24px;
@@ -47,25 +100,26 @@ const StyledTableCard = styled(Card)`
 
 interface CardProps {
   children?: React.ReactNode;
+  extra?: React.ReactNode;
   loading?: boolean;
   title?: string;
 }
 
-export const AntCard: React.FC<CardProps> = ({ children, loading, title }): JSX.Element => {
+export const AntCard: React.FC<CardProps> = ({ children, extra, loading, title }): JSX.Element => {
   return (
-    <StyledCard loading={loading} title={title}>{children}</StyledCard>
+    <StyledCard extra={extra} loading={loading} title={title}>{children}</StyledCard>
   );
 }
-export const SimpleCard: React.FC<CardProps> = ({ children, loading, title }): JSX.Element => {
+export const SimpleCard: React.FC<CardProps> = ({ children, extra, loading, title }): JSX.Element => {
   return (
-    <StyledCard loading={loading}>
+    <StyledCard extra={extra} loading={loading}>
       {title ? (<label className='subject'>{title}</label>) : (<></>)}
       {children ? (<h2 className='content'>{children}</h2>) : (<></>)}
     </StyledCard>
   );
 }
-export const TableCard: React.FC<CardProps> = ({ children, loading, title }): JSX.Element => {
+export const TableCard: React.FC<CardProps> = ({ children, extra, loading, title }): JSX.Element => {
   return (
-    <StyledTableCard loading={loading} title={title}>{children}</StyledTableCard>
+    <StyledTableCard extra={extra} loading={loading} title={title}>{children}</StyledTableCard>
   );
 }

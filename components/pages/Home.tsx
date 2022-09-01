@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
+import Router from 'next/router';
+import { useCallback, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 // Component
-import { Col, Row, Table } from 'antd';
+import { SimpleCard, TableCard } from '@/components/atoms/Card';
 import Layout from '@/components/atoms/Layout';
-import { AntCard, SimpleCard, TableCard } from '@/components/atoms/Card';
+import { Col, Row, Table } from 'antd';
 // Query
 import { getCompanies } from '@/models/apis/company';
 // Query key
@@ -12,8 +14,7 @@ import { KEY_COMPANIES } from '@/models/type';
 import { companyCountSelector, serviceCountSelector, userCountSelector } from '@/models/state';
 // Util
 import { transformToDate } from 'utils/util';
-import { useCallback, useEffect } from 'react';
-import Router from 'next/router';
+
 
 const Home: React.FC<any> = (): JSX.Element => {
   const companyCount: number = useRecoilValue(companyCountSelector);

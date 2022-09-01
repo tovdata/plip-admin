@@ -1,19 +1,17 @@
 import type { NextPage } from 'next';
 import dynamic from 'next/dynamic';
 // Component
+const Document: ComponentType<any> = dynamic(() => import('@/components/pages/Document'), { loading: () => (<></>), ssr: false });
 const Session: ComponentType<any> = dynamic(() => import('@/components/Session'), { loading: () => (<></>), ssr: false });
-const Home: ComponentType<any> = dynamic(() => import('@/components/pages/Home'), { loading: () => (<></>), ssr: false });
 // Type
 import type { ComponentType } from 'react';
 
-const App: NextPage = () => {
+const Page: NextPage = () => {
   return (
     <Session>
-      {/* <StyledPageContainer> */}
-        <Home />
-      {/* </StyledPageContainer> */}
+      <Document />
     </Session>
   )
 }
 
-export default App;
+export default Page;

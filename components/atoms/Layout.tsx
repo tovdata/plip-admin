@@ -29,7 +29,7 @@ const Layout: React.FC<LayoutProps> = ({ children, selectedKey }): JSX.Element =
         <Menu defaultSelectedKeys={[selectedKey]} mode='inline' items={[
           { icon: (<AiOutlineHome/>), key: 'management', label: (<Link passHref href='/'><a>Management</a></Link>) },
           { icon: (<AiOutlineInbox />), key: 'news', label: (<Link passHref href='/news'><a>News</a></Link>) },
-          { icon: (<AiOutlineFileText/>), key: 'template', label: (<Link passHref href='/template'><a>Template</a></Link>) }
+          { icon: (<AiOutlineFileText/>), key: 'document', label: (<Link passHref href='/document'><a>Document</a></Link>) }
         ]} />
       </AntSider>
       <AntLayout>

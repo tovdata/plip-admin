@@ -1,18 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
 import styled from 'styled-components';
 // Component
-import Layout from '@/components/atoms/Layout';
 import { SimpleCard } from '@/components/atoms/Card';
 import { PageHeader } from '@/components/atoms/Header';
-import { Card, Col, Row } from 'antd';
+import Layout from '@/components/atoms/Layout';
+import { PageLoading } from '@/components/atoms/Loading';
 import { Services } from '@/components/atoms/Service';
 import { Users } from '@/components/atoms/User';
+import { Card, Col, Row } from 'antd';
 // Query
 import { getCompany } from '@/models/apis/company';
 // Query key
 import { KEY_COMPANY } from '@/models/type';
 // Util
 import { transformToDate } from 'utils/util';
+import { useEffect, useState } from 'react';
 
 const StyledManager = styled.div`
   margin-bottom: 24px;
@@ -48,7 +50,7 @@ const Page: React.FC<any> = ({ companyId }): JSX.Element => {
   // 컴포넌트 반환
   return (
     <Layout selectedKey='management'>
-      {company === undefined ? (<></>) : (<Company company={company} />)}
+      {company === undefined ? (<PageLoading />) : (<Company company={company} />)}
     </Layout>
   );
 }
@@ -85,6 +87,12 @@ const Company: React.FC<any> = ({ company }): JSX.Element => {
 }
 
 const Manager: React.FC<any> = ({ manager }): JSX.Element => {
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    setTimeout(() => setLoading(false), 200);
+  }, []);
+
   return (
     <StyledManager>
       <Card title='개인정보 보호책임자'>

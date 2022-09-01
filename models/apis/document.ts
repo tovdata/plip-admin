@@ -1,11 +1,11 @@
 import { api } from '@/models/apis/core';
-import { ResponseDF } from '../type';
+import { ResponseDF } from '@/models/type';
 
 /**
- * [API Caller] 템플릿 생성
+ * [API Caller] 자료 생성
  * @returns 요청 결과
  */
-export const createTemplate = async (data: any): Promise<boolean> => {
+export const createDocument = async (data: any): Promise<boolean> => {
   try {
     // API 호출
     const response: any = await api.post('/template/new', data);
@@ -17,14 +17,14 @@ export const createTemplate = async (data: any): Promise<boolean> => {
   }
 }
 /**
- * [API Caller] 템플릿 생성
- * @param templateId 템플릿 ID
+ * [API Caller] 자료 삭제
+ * @param documentId 자료 ID
  * @returns 요청 결과
  */
-export const deleteTemplate = async (templateId: string): Promise<boolean> => {
+export const deleteDocument = async (documentId: string): Promise<boolean> => {
   try {
     // API 호출
-    const response: any = await api.delete(`/template/${templateId}`);
+    const response: any = await api.delete(`/template/${documentId}`);
     // 결과 반환
     return response.result;
   } catch (err) {
@@ -33,10 +33,10 @@ export const deleteTemplate = async (templateId: string): Promise<boolean> => {
   }
 }
 /**
- * [API Caller] 템플릿 목록 조회
+ * [API Caller] 자료 목록 조회
  * @returns 조회 결과
  */
- export const getTemplates = async (): Promise<any[]> => {
+ export const getDocuments = async (): Promise<any[]> => {
   try {
     // API 호출
     const response: any = await api.get('/template/all');
@@ -48,14 +48,14 @@ export const deleteTemplate = async (templateId: string): Promise<boolean> => {
   }
 }
 /**
- * [API Caller] 템플릿 갱신
- * @param templateId 템플릿 ID
+ * [API Caller] 자료 수정
+ * @param documentId 자료 ID
  * @returns 요청 결과
  */
- export const updateTemplate = async (templateId: string, data: any): Promise<ResponseDF> => {
+ export const updateDocument = async (documentId: string, data: any): Promise<ResponseDF> => {
   try {
     // API 호출 및 반환
-    return await api.patch(`/template/${templateId}`, data);
+    return await api.patch(`/template/${documentId}`, data);
   } catch (err) {
     console.error(`[API ERROR] ${err}`);
     return { result: false };

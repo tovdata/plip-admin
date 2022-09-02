@@ -53,7 +53,6 @@ export const updateToken = async (): Promise<string | undefined> => {
   try {
     // 사용자 ID 추출
     const userId = getUserId();
-    console.log('userId', userId);
     if (userId) {
       // 요청 객체 생성
       const request: any = {
@@ -65,6 +64,7 @@ export const updateToken = async (): Promise<string | undefined> => {
       const response: any = await fetch(`${SERVER_URL}/auth/silentrefresh`, request);
       // 응답 데이터 변환
       const result: any = await response.json();
+      console.log(request, result);
       // 에러 검증
       if (result.result) {
         return result.data && result.data.AccessToken ? result.data.AccessToken : undefined;

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/charts": "^1.4.2",
     "babel-plugin-styled-components": "^2.0.7",
     "babel-preset-next": "^1.4.0",
     "next": "12.2.3",

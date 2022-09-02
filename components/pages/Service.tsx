@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 // Component
 import Layout from '@/components/atoms/Layout';
 import { PageLoading } from '@/components/atoms/Loading';
-import { Card, Col, Descriptions, PageHeader, Row, Tag } from 'antd';
+import { Card, Col, Descriptions, Divider, PageHeader, Row, Tag } from 'antd';
 import Link from 'next/link';
 // Query
 import { getCompany } from '@/models/apis/company';
@@ -13,9 +13,16 @@ import { getService } from '@/models/apis/service';
 import { KEY_SERVICE } from '@/models/type';
 // Util
 import { transformToDate } from 'utils/util';
-import { Consents, PIItems, PIPPs } from '../atoms/Service';
+import { Consents, CPI, PIItems, PIPPs, PPI } from '../atoms/Service';
 import { AntCard } from '../atoms/Card';
 
+const StyledCompanyName = styled.a`
+  color: #595959;
+  text-decoration: underline;
+  &:hover {
+    color: #1890ff;
+  }
+`;
 const StyledModifiedAt = styled.div`
   user-select: none;
   .label {
@@ -24,9 +31,10 @@ const StyledModifiedAt = styled.div`
     font-size: 13px;
     font-weight: 400;
     line-height: 1.4;
+    margin-bottom: 2px;
   }
   .content {
-    color: #030852;
+    color: #003a8c;
     font-size: 16px;
     font-weight: 600;
     line-height: 1.4;
@@ -70,7 +78,7 @@ const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
             <Descriptions size='small'>
               <Descriptions.Item label='담당회사'>
                 <Link passHref href={`/company/${service.companyId}`}>
-                  <a>{company}</a>
+                  <StyledCompanyName>{company}</StyledCompanyName>
                 </Link>
               </Descriptions.Item>
               <Descriptions.Item label='생성일자'>{transformToDate(service.createAt)}</Descriptions.Item>
@@ -81,17 +89,7 @@ const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
             </Descriptions>
           </PageHeader>
           <ModifiedAt modifiedAt={service.lastModifiedAt} />
-          {/* <Row gutter={24}>
-            <Col span={12}>
-              <PIItems serviceId={service.id} />
-            </Col>
-            <Col span={6}>
-              <CPIItems serviceId={service.id} />
-            </Col>
-            <Col span={6}>
-              <PPIItems serviceId={service.id} />
-            </Col>
-          </Row> */}
+          <DataStatus serviceId={serviceId} />
           <Row gutter={24}>
             <Col xl={16} lg={14} span={24}>
               <Consents serviceId={serviceId} />
@@ -106,24 +104,56 @@ const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
   );
 }
 
+const DataStatus: React.FC<any> = ({ serviceId }): JSX.Element => {
+  // 활성 탭 키
+  const [activeTabKey, setActiveTabKey] = useState<string>('pi');
+  
+  /** [Event handler] 탭 변경 */
+  const onTabChange = useCallback((key: string): void => setActiveTabKey(key), []);
+
+  // 탭 목록
+  const tabList: any[] = useMemo(() => [{ key: 'pi', tab: '개인정보' }, { key: 'fni', tab: '가명정보' }], []);
+  // 탭 내용
+  const tabContent: Record<string, React.ReactNode> = useMemo(() => ({
+    'pi': (
+      <Row gutter={[0, 16]}>
+        <Col lg={12} xs={24} style={{ borderRight: '1px dashed #F0F0F0', paddingRight: 24 }}>
+          <PIItems serviceId={serviceId} />
+        </Col>
+        <Col lg={6} xs={24} style={{ borderRight: '1px dashed #F0F0F0', paddingLeft: 24, paddingRight: 24 }}>
+          <PPI serviceId={serviceId} />
+        </Col>
+        <Col lg={6} xs={24} style={{ paddingLeft: 24 }}>
+          <CPI serviceId={serviceId} />
+        </Col>
+      </Row>
+    ),
+    'fni': (<>구현 예정입니다.</>)
+  }), [serviceId]);
+
+  // 컴포넌트 반환
+  return (
+    <Card style={{ marginBottom: 24 }} tabList={tabList} activeTabKey={activeTabKey} onTabChange={onTabChange}>{tabContent[activeTabKey]}</Card>
+  );
+}
 const ModifiedAt: React.FC<any> = ({ modifiedAt }): JSX.Element => {
   return (
     <AntCard title='데이터 및 문서 수정일'>
       <Row gutter={[12, 16]}>
         <Col xl={5} lg={6} md={8} sm={12} span={24}>
-          <ModifiedAtItem label='수집 및 이용'>{modifiedAt.pi_fni && modifiedAt.pi_fni.modifiedAt ? transformToDate(modifiedAt.pi_fni.modifiedAt) : ''}</ModifiedAtItem>
+          <ModifiedAtItem label='수집 및 이용'>{modifiedAt.pi_fni && modifiedAt.pi_fni.modifiedAt ? transformToDate(modifiedAt.pi_fni.modifiedAt) : '-'}</ModifiedAtItem>
         </Col>
         <Col xl={5} lg={6} md={8} sm={12} span={24}>
-          <ModifiedAtItem label='제3자 제공/위탁'>{modifiedAt.ppi_cpi_pfni_cfni && modifiedAt.ppi_cpi_pfni_cfni.modifiedAt ? transformToDate(modifiedAt.ppi_cpi_pfni_cfni.modifiedAt) : ''}</ModifiedAtItem>
+          <ModifiedAtItem label='제3자 제공/위탁'>{modifiedAt.ppi_cpi_pfni_cfni && modifiedAt.ppi_cpi_pfni_cfni.modifiedAt ? transformToDate(modifiedAt.ppi_cpi_pfni_cfni.modifiedAt) : '-'}</ModifiedAtItem>
         </Col>
         <Col xl={5} lg={6} md={8} sm={12} span={24}>
-          <ModifiedAtItem label='파기'>{modifiedAt.dpi && modifiedAt.dpi.modifiedAt ? transformToDate(modifiedAt.dpi.modifiedAt) : ''}</ModifiedAtItem>
+          <ModifiedAtItem label='파기'>{modifiedAt.dpi && modifiedAt.dpi.modifiedAt ? transformToDate(modifiedAt.dpi.modifiedAt) : '-'}</ModifiedAtItem>
         </Col>
         <Col xl={5} lg={6} md={8} sm={12} span={24}>
-          <ModifiedAtItem label='동의서'>{modifiedAt.consent && modifiedAt.consent.modifiedAt ? transformToDate(modifiedAt.consent.modifiedAt) : ''}</ModifiedAtItem>
+          <ModifiedAtItem label='동의서'>{modifiedAt.consent && modifiedAt.consent.modifiedAt ? transformToDate(modifiedAt.consent.modifiedAt) : '-'}</ModifiedAtItem>
         </Col>
         <Col xl={4} lg={6} md={8} sm={12} span={24}>
-          <ModifiedAtItem label='개인정보 처리방침'>{modifiedAt.pipp && modifiedAt.pipp.modifiedAt ? transformToDate(modifiedAt.pipp.modifiedAt) : ''}</ModifiedAtItem>
+          <ModifiedAtItem label='개인정보 처리방침'>{modifiedAt.pipp && modifiedAt.pipp.modifiedAt ? transformToDate(modifiedAt.pipp.modifiedAt) : '-'}</ModifiedAtItem>
         </Col>
       </Row>
     </AntCard>
@@ -136,6 +166,6 @@ const ModifiedAtItem: React.FC<any> = ({ children, label }): JSX.Element => {
       <div className='content'>{children}</div>
     </StyledModifiedAt>
   );
-}
+} 
 
 export default Page;

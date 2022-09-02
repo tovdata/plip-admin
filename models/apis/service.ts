@@ -1,6 +1,26 @@
 import { api } from '@/models/apis/core';
 
 /**
+ * [API Caller] 개인정보 제3자 위탁 데이터 조회
+ * @param serviceId 서비스 ID
+ * @returns 조회 결과
+ */
+export const getCPIs = async (serviceId: string): Promise<any[]> => {
+  try {
+    // API 호출
+    const response: any = await api.get(`/service/${serviceId}/cpis`);
+    // 데이터 가공 및 결과 반환
+    if (response.result && response.data) {
+      return response.data;
+    } else {
+      return [];
+    }
+  } catch (err) {
+    console.error(`[API ERROR] ${err}`);
+    return [];
+  }
+}
+/**
  * [API Caller] 동의서 목록 조회
  * @param serviceId 서비스 ID
  * @returns 조회 결과
@@ -12,11 +32,12 @@ export const getConsents = async (serviceId: string): Promise<any[]> => {
     // 데이터 가공
     if (response.result && response.data && response.data.consentList) {
       // 가공
-      const list: any[] = response.data.consentList.map((item: any): any => ({
-        publishedAt: item.publishedAt,
-        title: item.data.title,
-        type: consentType(item.data.type),
-        url: item.url
+      const list: any[] = response.data.consentList.map((elem: any): any => ({
+        key: elem.id,
+        publishedAt: elem.publishedAt,
+        title: elem.data.title,
+        type: consentType(elem.data.type),
+        url: elem.url
       }));
       // 정렬
       return list.sort((a: any, b: any): number => b.publishedAt - a.publishedAt);
@@ -29,11 +50,31 @@ export const getConsents = async (serviceId: string): Promise<any[]> => {
   }
 }
 /**
+ * [API Caller] 개인정보 수집 및 이용 업무 수 조회
+ * @param serviceId 서비스 ID
+ * @returns 조회 결과
+ */
+export const getPICount = async (serviceId: string): Promise<number> => {
+  try {
+    // API 호출
+    const response: any = await api.get(`/service/${serviceId}/pis`);
+    // 데이터 가공 및 결과 반환
+    if (response.result && response.data) {
+      return response.data.length;
+    } else {
+      return 0;
+    }
+  } catch (err) {
+    console.error(`[API ERROR] ${err}`);
+    return 0;
+  }
+}
+/**
  * [API Caller] 개인정보 항목 조회
  * @param serviceId 서비스 ID
  * @returns 조회 결과
  */
-export const getPIItems = async (serviceId: string): Promise<any[]> => {
+export const getPIItems = async (serviceId: string): Promise<any> => {
   try {
     // API 호출
     const response: any = await api.get(`/service/${serviceId}/pi/allitems`);
@@ -41,11 +82,11 @@ export const getPIItems = async (serviceId: string): Promise<any[]> => {
     if (response.result && response.data) {
       return response.data;
     } else {
-      return [];
+      return undefined;
     }
   } catch (err) {
     console.error(`[API ERROR] ${err}`);
-    return [];
+    return undefined;
   }
 }
 /**
@@ -63,16 +104,37 @@ export const getPIPPs = async (serviceId: string): Promise<any[]> => {
       // 정렬
       const sorted: any[] = response.data.list ? response.data.list.sort((a: any, b: any): number => b.applyAt - a.applyAt) : [];
       // 가공
-      const list: any[] = sorted.map((elem: any, index: number): any => ({ ...elem, version: count - index }));
+      const list: any[] = sorted.map((elem: any, index: number): any => ({ ...elem, version: count - index, key: count - index }));
       // 이전 처리방침이 있을 경우, 추가
       if (response.data.prevUrl) {
         list.push({
           applyAt: 0,
+          key: 0,
           version: 0,
           url: response.data.prevUrl
         });
       }
       return list;
+    } else {
+      return [];
+    }
+  } catch (err) {
+    console.error(`[API ERROR] ${err}`);
+    return [];
+  }
+}
+/**
+ * [API Caller] 개인정보 제3자 제공 데이터 조회
+ * @param serviceId 서비스 ID
+ * @returns 조회 결과
+ */
+export const getPPIs = async (serviceId: string): Promise<any[]> => {
+  try {
+    // API 호출
+    const response: any = await api.get(`/service/${serviceId}/ppis`);
+    // 데이터 가공 및 결과 반환
+    if (response.result && response.data) {
+      return response.data;
     } else {
       return [];
     }

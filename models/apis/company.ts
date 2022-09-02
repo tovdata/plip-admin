@@ -26,7 +26,7 @@ export const getCompanies = async (): Promise<any[]> => {
     const response: any = await api.get('/company/list');
     // 데이터 가공 및 결과 반환
     if (response.result && response.data && response.data.list) {
-      return response.data.list.sort((a: any, b: any): number => a.createAt - b.createAt).map((item: any): any => ({ ...item, key: item.id }));
+      return response.data.list.sort((a: any, b: any): number => b.createAt - a.createAt).map((item: any): any => ({ ...item, key: item.id }));
     } else {
       return [];
     }
@@ -61,7 +61,7 @@ export const getUsers = async (companyId: string): Promise<any[]> => {
     const response: any = await api.get(`/company/${companyId}/details`);
     // 데이터 가공 및 결과 반환
     if (response.result && response.data && response.data.employees) {
-      return response.data.employees.sort((a: any, b: any): number => a.createAt - b.createAt).map((item: any): any => ({
+      return response.data.employees.sort((a: any, b: any): number => b.createAt - a.createAt).map((item: any): any => ({
         contact: item.contact,
         createAt: item.createAt,
         email: item.email,

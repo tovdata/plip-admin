@@ -4,7 +4,7 @@ import { Card } from 'antd';
 
 const StyledCard = styled(Card)`
   margin-bottom: 24px;
-  .subject {
+  .card-subject {
     color: #8C8C8C;
     font-size: 14px;
     font-weight: 600;
@@ -12,9 +12,9 @@ const StyledCard = styled(Card)`
     margin: 0;
     user-select: none;
   }
-  .content {
+  .card-content {
     color: #1F1F1F;
-    font-size: 30px;
+    font-size: 24px;
     font-weight: 400;
     line-height: 1.4;
     margin: 0;
@@ -113,8 +113,8 @@ export const AntCard: React.FC<CardProps> = ({ children, extra, loading, title }
 export const SimpleCard: React.FC<CardProps> = ({ children, extra, loading, title }): JSX.Element => {
   return (
     <StyledCard extra={extra} loading={loading}>
-      {title ? (<label className='subject'>{title}</label>) : (<></>)}
-      {children ? (<h2 className='content'>{children}</h2>) : (<></>)}
+      {title ? (<label className='card-subject'>{title}</label>) : (<></>)}
+      {children ? (<h2 className='card-content'>{children}</h2>) : (<></>)}
     </StyledCard>
   );
 }

@@ -69,7 +69,7 @@ const Companies: React.FC<any> = (): JSX.Element => {
       { dataIndex: 'url', key: 'url', title: 'URL', width: '34%' },
       { dataIndex: 'services', key: 'services', title: '서비스 수', render: (values: string[]): number => values.length, width: '12%' },
       { dataIndex: 'employees', key: 'employees', title: '회원 수', render: (values: string[]): number => values.length, width: '12%' },
-      { dataIndex: 'createAt', key: 'createAt', title: '생성일', render: (value: number): string => transformToDate(value), sortDirections: ['ascend'], sorter: (a: any, b: any): number => b.createAt - a.createAt, width: '16%' }
+      { dataIndex: 'createAt', key: 'createAt', title: '생성일', render: (value: number): string => transformToDate(value), sortDirections: ['ascend'], sorter: (a: any, b: any): number => a.createAt - b.createAt, width: '16%' }
     ]} dataSource={companies} loading={isLoading} showSorterTooltip={false} size='middle' onRow={onRow} />
   );
 }

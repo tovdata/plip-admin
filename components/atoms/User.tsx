@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import { useQuery } from '@tanstack/react-query';
+import styled from 'styled-components';
 // Component
 import { TableCard } from '@/components/atoms/Card';
 import { Table } from 'antd';
@@ -12,6 +13,14 @@ import { getUsers } from '@/models/apis/company';
 import { KEY_USERS } from '@/models/type';
 // Util
 import { transformToDate } from 'utils/util';
+
+const MarketingBlock = styled.div`
+  align-items: center;
+  color: #8C8C8C;
+  display: flex;
+  font-size: 18px;
+  justify-content: center;
+`;
 
 interface UsersProps {
   companyId: string;
@@ -27,8 +36,8 @@ export const Users: React.FC<UsersProps> = ({ companyId }): JSX.Element => {
         { dataIndex: 'userName', key: 'userName', title: '이름', width: '15%' },
         { dataIndex: 'email', key: 'email', title: '이메일', width: '30%' },
         { dataIndex: 'contact', key: 'contact', title: '연락처', width: '22%' },
-        { dataIndex: 'createAt', key: 'createAt', title: '가입일', render: (value: number): string => transformToDate(value), sortDirections: ['ascend'], sorter: (a: any, b: any): number => b.createAt - a.createAt, width: '22%' },
-        { dataIndex: 'marketing', key: 'marketing', title: '마케팅', render: (value: any): JSX.Element => value === true ? (<span className='icon'><IoCheckbox /></span>) : (<span className='icon'><IoSquareOutline /></span>), width: '11%' }
+        { dataIndex: 'createAt', key: 'createAt', title: '가입일', render: (value: number): string => transformToDate(value), sortDirections: ['ascend'], sorter: (a: any, b: any): number => a.createAt - b.createAt, width: '22%' },
+        { dataIndex: 'marketing', key: 'marketing', title: '마케팅', filters: [{ text: '동의', value: true }, { text: '비동의', value: false }], onFilter: (value: any, record: any): boolean => value ? record.marketing : !record.marketing, render: (value: boolean): JSX.Element => value === true ? (<MarketingBlock><IoCheckbox /></MarketingBlock>) : (<MarketingBlock><IoSquareOutline /></MarketingBlock>), width: '11%' }
       ]} dataSource={users ? users : []} loading={isLoading} showSorterTooltip={false} size='middle' />
     </TableCard>
   );

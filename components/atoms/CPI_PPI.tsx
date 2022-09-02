@@ -25,7 +25,7 @@ const CpiPpiForm: React.FC<CpiPpiFormProps> = ({ data, type }): JSX.Element => {
   const title: string = useMemo(() => type === 'cpi' ? '제3자 위탁' : '제3자 제공', []);
   // 업체 수
   const count: number = useMemo(() => data ? data.filter((elem: any): boolean => {
-    if ('url' in elem) {
+    if ('url' in elem.data) {
       // 링크 존재 확인
       setLink(true);
       return false;

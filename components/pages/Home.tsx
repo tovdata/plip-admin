@@ -31,10 +31,10 @@ const Home: React.FC<any> = (): JSX.Element => {
           <SimpleCard title='전체 서비스 수'>{serviceCount.toString()}</SimpleCard>
         </Col>
         <Col lg={6} sm={12} span={24}>
-          <SimpleCard title='전체 가입자 수'>{userCount.toString()}</SimpleCard>
+          <SimpleCard title='전체 가입자 수'>-</SimpleCard>
         </Col>
         <Col lg={6} sm={12} span={24}>
-          <SimpleCard title='전체 가입자 수'>10</SimpleCard>
+          <SimpleCard title='전체 가입자 수'>-</SimpleCard>
         </Col>
       </Row>
       <TableCard title='회사 목록'>

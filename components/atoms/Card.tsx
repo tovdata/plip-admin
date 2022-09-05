@@ -2,23 +2,58 @@ import styled from 'styled-components';
 // Component
 import { Card } from 'antd';
 
-const StyledCard = styled(Card)`
-  margin-bottom: 24px;
-  .card-subject {
-    color: #8C8C8C;
-    font-size: 14px;
+const StyledSmallCard = styled(Card)`
+  margin-bottom: 16px;
+  .ant-card-body {
+    padding: 18px 24px;
+  }
+  .card-content {
+    color: #1f1f1f;
+    font-size: 20px;
     font-weight: 600;
     line-height: 1.4;
     margin: 0;
+  }
+  .card-content .right {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .card-subject {
+    color: #8c8c8c;
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    margin-top: 0;
     user-select: none;
   }
+`;
+const StyledCard = styled(Card)`
+  margin-bottom: 16px;
   .card-content {
-    color: #1F1F1F;
+    color: #1f1f1f;
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 600;
     line-height: 1.4;
     margin: 0;
   }
+  .card-content .right {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .card-subject {
+    color: #8c8c8c;
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    margin-top: 0;
+    user-select: none;
+  }
+`;
+const StyledUploadCard = styled(Card)`
   .ant-card-body .ant-form-item {
     margin-bottom: 0;
   }
@@ -74,7 +109,7 @@ const StyledCard = styled(Card)`
   }
 `;
 const StyledTableCard = styled(Card)`
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   .ant-card-body {
     padding: 0;
   }
@@ -102,6 +137,13 @@ interface CardProps {
   children?: React.ReactNode;
   extra?: React.ReactNode;
   loading?: boolean;
+  right?: boolean;
+  small?: boolean;
+  title?: string;
+}
+interface CardElementsProps {
+  children?: React.ReactNode;
+  right?: boolean;
   title?: string;
 }
 
@@ -110,16 +152,49 @@ export const AntCard: React.FC<CardProps> = ({ children, extra, loading, title }
     <StyledCard extra={extra} loading={loading} title={title}>{children}</StyledCard>
   );
 }
-export const SimpleCard: React.FC<CardProps> = ({ children, extra, loading, title }): JSX.Element => {
+export const ItemCard: React.FC<CardProps> = ({ children, extra, loading, right, small, title }): JSX.Element => {
   return (
-    <StyledCard extra={extra} loading={loading}>
-      {title ? (<label className='card-subject'>{title}</label>) : (<></>)}
-      {children ? (<h2 className='card-content'>{children}</h2>) : (<></>)}
-    </StyledCard>
+    <>
+      {small ? (
+        <StyledSmallCard extra={extra} loading={loading}>
+          {children ? (
+            <ItemCardElements right={right} title={title}>{children}</ItemCardElements>
+          ) : (<></>)}
+        </StyledSmallCard>
+      ) : (
+        <StyledCard>
+          {children ? (
+            <ItemCardElements right={right} title={title}>{children}</ItemCardElements>
+          ) : (<></>)}
+        </StyledCard>
+      )}
+    </>
   );
 }
 export const TableCard: React.FC<CardProps> = ({ children, extra, loading, title }): JSX.Element => {
   return (
     <StyledTableCard extra={extra} loading={loading} title={title}>{children}</StyledTableCard>
+  );
+}
+export const UploadCard: React.FC<CardProps> = ({ children, extra, loading, title }): JSX.Element => {
+  return (
+    <StyledUploadCard extra={extra} loading={loading} title={title}>{children}</StyledUploadCard>
+  )
+}
+
+const ItemCardElements: React.FC<CardElementsProps> = ({ children, right, title }): JSX.Element => {
+  return (
+    <>
+      {title ? (
+        <label className='card-subject'>{title}</label>
+      ) : (<></>)}
+      {children ? (
+        <div className='card-content'>
+          {right ? (
+            <div className='right'>{children}</div>
+          ) : (<>{children}</>)}
+        </div>
+      ) : (<></>)}
+    </>
   );
 }

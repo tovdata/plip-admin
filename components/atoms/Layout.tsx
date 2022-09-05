@@ -8,10 +8,10 @@ const AiOutlineFileText = dynamic(() => import('react-icons/ai').then((mod: any)
 const AiOutlineHome = dynamic(() => import('react-icons/ai').then((mod: any): any => mod.AiOutlineHome));
 const AiOutlineInbox = dynamic(() => import('react-icons/ai').then((mod: any): any => mod.AiOutlineInbox));
 
-const AntContent = styled(AntLayout.Content)`
+const StyledContent = styled(AntLayout.Content)`
   margin: 24px 32px;
 `;
-const AntSider = styled(AntLayout.Sider)`
+const StyledSider = styled(AntLayout.Sider)`
   background-color: #FFFFFF;
   min-height: 100vh;
   overflow-y: auto;
@@ -19,21 +19,22 @@ const AntSider = styled(AntLayout.Sider)`
 
 interface LayoutProps {
   children?: React.ReactNode;
+  header?: React.ReactNode;
   selectedKey: string;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, selectedKey }): JSX.Element => {
   return (
     <AntLayout hasSider>
-      <AntSider width={256}>
+      <StyledSider width={256}>
         <Menu defaultSelectedKeys={[selectedKey]} mode='inline' items={[
           { icon: (<AiOutlineHome/>), key: 'management', label: (<Link passHref href='/'><a>Management</a></Link>) },
           { icon: (<AiOutlineInbox />), key: 'news', label: (<Link passHref href='/news'><a>News</a></Link>) },
           { icon: (<AiOutlineFileText/>), key: 'document', label: (<Link passHref href='/document'><a>Document</a></Link>) }
         ]} />
-      </AntSider>
+      </StyledSider>
       <AntLayout>
-        <AntContent>{children}</AntContent>
+        <StyledContent>{children}</StyledContent>
       </AntLayout>
     </AntLayout>
   );

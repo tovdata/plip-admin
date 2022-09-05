@@ -2,9 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 // Component
+import { AntCard, ItemCard } from '@/components/atoms/Card';
+import { PageHeader } from '@/components/atoms/Header';
 import Layout from '@/components/atoms/Layout';
 import { PageLoading } from '@/components/atoms/Loading';
-import { Card, Col, Descriptions, Divider, PageHeader, Row, Tag } from 'antd';
+import { Consents, CPI, PIItems, PIPPs, PPI } from '@/components/atoms/Service';
+import { Breadcrumb, Button, Card, Col, Row } from 'antd';
 import Link from 'next/link';
 // Query
 import { getCompany } from '@/models/apis/company';
@@ -13,16 +16,8 @@ import { getService } from '@/models/apis/service';
 import { KEY_SERVICE } from '@/models/type';
 // Util
 import { transformToDate } from 'utils/util';
-import { Consents, CPI, PIItems, PIPPs, PPI } from '../atoms/Service';
-import { AntCard } from '../atoms/Card';
+import Activity from '../atoms/Activity';
 
-const StyledCompanyName = styled.a`
-  color: #595959;
-  text-decoration: underline;
-  &:hover {
-    color: #1890ff;
-  }
-`;
 const StyledModifiedAt = styled.div`
   user-select: none;
   .label {
@@ -50,10 +45,17 @@ interface ModifiedAtProps {
 const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
   // 회사
   const [company, setCompany] = useState<string>('');
+  // 활동 내역 상태
+  const [activity, setActivity] = useState<boolean>(false);
   // API 호출
   const { data: service } = useQuery([KEY_SERVICE], async () => await getService(serviceId));
-  /** [Event handler] 뒤로가기 */
-  const onBack = useCallback(() => window.history.back(), []);
+  
+
+  /** [Event handler] 활동 내역 보기 */
+  const onActivity = useCallback(() => setActivity(true), []);
+  /** [Event handler] 활동 내역 숨기기 */
+  const onHide = useCallback(() => setActivity(false), []);
+
   // 회사 정보 조회
   useEffect(() => {
     if (service) {
@@ -66,31 +68,54 @@ const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
       })();
     }
   }, [service]);
+  // Extra
+  const breadcrumb: JSX.Element = useMemo(() => (
+    <Breadcrumb>
+      <Breadcrumb.Item>
+        <Link href='/' passHref>
+          <a>대시보드</a>
+        </Link>
+      </Breadcrumb.Item>
+      <Breadcrumb.Item>
+        {service ? (
+          <Link href={`/company/${service.companyId}`} passHref>
+            <a>회사관리</a>
+          </Link>
+        ) : (<a>회사관리</a>)}
+      </Breadcrumb.Item>
+      <Breadcrumb.Item>
+        <a>서비스관리</a>
+      </Breadcrumb.Item>
+    </Breadcrumb>
+  ), [service]);
 
   // 컴포넌트 반환
   return (
     <Layout selectedKey='management'>
       {service === undefined ? (
         <PageLoading />
+      ) : activity ? (
+        <Activity onBack={onHide} serviceId={serviceId} />
       ) : (
         <>
-          <PageHeader ghost={false} onBack={onBack} title={service.serviceName} style={{ marginBottom: 24 }}>
-            <Descriptions size='small'>
-              <Descriptions.Item label='담당회사'>
-                <Link passHref href={`/company/${service.companyId}`}>
-                  <StyledCompanyName>{company}</StyledCompanyName>
-                </Link>
-              </Descriptions.Item>
-              <Descriptions.Item label='생성일자'>{transformToDate(service.createAt)}</Descriptions.Item>
-              <Descriptions.Item label='서비스 유형'>
-                <>{service.types.map((type: string): JSX.Element => (<Tag key={type}>{type}</Tag>))}</>
-              </Descriptions.Item>
-              <Descriptions.Item label='URL' span={3}>{service.url ? service.url : 'none'}</Descriptions.Item>
-            </Descriptions>
-          </PageHeader>
-          <ModifiedAt modifiedAt={service.lastModifiedAt} />
+          <PageHeader breadcrumb={breadcrumb} ghost title='토브데이터' />
+          <Row gutter={16}>
+            <Col span={5}>
+              <ItemCard small title='담당회사'>{company}</ItemCard>
+            </Col>
+            <Col span={5}>
+              <ItemCard small title='생성일자'>{transformToDate(service.createAt)}</ItemCard>
+            </Col>
+            <Col span={5}>
+              <ItemCard small title='서비스 유형'>{service.types}</ItemCard>
+            </Col>
+            <Col span={9}>
+              <ItemCard small title='URL'>None</ItemCard>
+            </Col>
+          </Row>
+          <ModifiedAt modifiedAt={service.lastModifiedAt} onClick={onActivity} />
           <DataStatus serviceId={serviceId} />
-          <Row gutter={24}>
+          <Row gutter={16}>
             <Col xl={16} lg={14} span={24}>
               <Consents serviceId={serviceId} />
             </Col>
@@ -133,12 +158,14 @@ const DataStatus: React.FC<any> = ({ serviceId }): JSX.Element => {
 
   // 컴포넌트 반환
   return (
-    <Card style={{ marginBottom: 24 }} tabList={tabList} activeTabKey={activeTabKey} onTabChange={onTabChange}>{tabContent[activeTabKey]}</Card>
+    <Card style={{ marginBottom: 16 }} tabList={tabList} activeTabKey={activeTabKey} onTabChange={onTabChange}>{tabContent[activeTabKey]}</Card>
   );
 }
-const ModifiedAt: React.FC<any> = ({ modifiedAt }): JSX.Element => {
+const ModifiedAt: React.FC<any> = ({ modifiedAt, onClick }): JSX.Element => {
+  const extra = (<Button onClick={onClick}>활동 내역</Button>)
+
   return (
-    <AntCard title='데이터 및 문서 수정일'>
+    <AntCard title='데이터 및 문서 수정일' extra={extra}>
       <Row gutter={[12, 16]}>
         <Col xl={5} lg={6} md={8} sm={12} span={24}>
           <ModifiedAtItem label='수집 및 이용'>{modifiedAt.pi_fni && modifiedAt.pi_fni.modifiedAt ? transformToDate(modifiedAt.pi_fni.modifiedAt) : '-'}</ModifiedAtItem>
@@ -159,7 +186,7 @@ const ModifiedAt: React.FC<any> = ({ modifiedAt }): JSX.Element => {
     </AntCard>
   );
 }
-const ModifiedAtItem: React.FC<any> = ({ children, label }): JSX.Element => {
+const ModifiedAtItem: React.FC<ModifiedAtProps> = ({ children, label }): JSX.Element => {
   return (
     <StyledModifiedAt>
       <label className='label'>{label}</label>

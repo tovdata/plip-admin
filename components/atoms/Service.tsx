@@ -10,12 +10,11 @@ import CpiPpiForm from '@/components/atoms/CPI_PPI';
 import { Col, Row, Table, Tag } from 'antd';
 import Link from 'next/link';
 // Query
-import { getConsents, getCPIs, getPICount, getPIPPs, getPPIs, getServices } from '@/models/apis/service';
+import { getConsents, getCPIs, getPICount, getPIItems, getPIPPs, getPPIs, getServices } from '@/models/apis/service';
 // Query key
 import { KEY_CONSENTS, KEY_CPIS, KEY_PIITEMS, KEY_PIPPS, KEY_PIS, KEY_PPIS, KEY_SERVICES } from '@/models/type';
 // Util
 import { transformToDate } from 'utils/util';
-import { getPIItems } from '@/models/apis/service';
 
 const StyledChartForm = styled.div`
   margin-top: 16px;

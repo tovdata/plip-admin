@@ -1,57 +1,30 @@
-import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import styled from 'styled-components';
-// Icon
-const VscChevronLeft = dynamic(() => import('react-icons/vsc').then((mod: any): any => mod.VscChevronLeft));
+// Component
+import { PageHeader as AntPageHeader } from 'antd';
 
-/** [Styled Component] 테이블 폼 헤더 */
-const StyledPageHeader = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  padding-top: 12px;
-  position: relative;
-  user-select: none;
-  .left {
-    display: flex;
-    position: relative;
-    .back {
-      align-items: center;
-      color: #262626;
-      cursor: pointer;
-      display: flex;
-      font-size: 20px;
-      margin-right: 16px;
-    }
-    .title {
-      font-size: 20px;
-      font-weight: 600;
-      line-height: 28px;
-      margin: 0;
-    }
+const StyledHeader = styled(AntPageHeader)`
+  padding-bottom: 24px;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  .ant-page-header-heading {
+    margin-top: 4px;
   }
 `;
 
-/** [Component] 페이지 헤더 */
-export const PageHeader: React.FC<any> = ({ isBack, redirectPath, onEvent, title, tools, style }): JSX.Element => {
+export interface PageHeaderProps {
+  backIcon?: React.ReactNode;
+  breadcrumb?: any;
+  breadcrumbRender?: (props: PageHeaderProps, defaultDom: React.ReactNode) => React.ReactNode;
+  children?: React.ReactNode;
+  extra?: React.ReactNode;
+  ghost?: boolean;
+  onBack?: (e?: React.MouseEvent<HTMLDivElement>) => void;
+  title?: React.ReactNode;
+}
+
+export const PageHeader: React.FC<PageHeaderProps> = ({ backIcon, breadcrumb, breadcrumbRender, children, extra, ghost, onBack, title }): JSX.Element => {
   return (
-    <StyledPageHeader style={style}>
-      <div className='left'>
-        {isBack ? onEvent ? (
-          <span className='back' onClick={onEvent}>
-            <VscChevronLeft />
-          </span>
-        ) : (
-          <Link passHref href={redirectPath ? redirectPath : '/'}>
-            <a className='back'>
-              <VscChevronLeft />
-            </a>
-          </Link>
-        ) : (<></>)}
-        <h3 className='title'>{title}</h3>
-      </div>
-      <div className='right'>{tools}</div>
-    </StyledPageHeader>
+    <StyledHeader backIcon={backIcon} breadcrumb={breadcrumb} breadcrumbRender={breadcrumbRender} extra={extra} ghost={ghost} onBack={onBack} title={title}>{children}</StyledHeader>
   );
 }

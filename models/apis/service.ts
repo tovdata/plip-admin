@@ -1,6 +1,26 @@
 import { api } from '@/models/apis/core';
 
 /**
+ * [API Caller] 서비스 활동 내역 조회
+ * @param serviceId 서비스 ID
+ * @returns 조회 결과
+ */
+export const getActivities = async (serviceId: string): Promise<any[]> => {
+  try {
+    // API 호출
+    const response: any = await api.get(`/activity/service/${serviceId}`);
+    // 데이터 가공 및 결과 반환
+    if (response.result && response.data) {
+      return response.data;
+    } else {
+      return [];
+    }
+  } catch (err) {
+    console.error(`[API ERROR] ${err}`);
+    return [];
+  }
+}
+/**
  * [API Caller] 개인정보 제3자 위탁 데이터 조회
  * @param serviceId 서비스 ID
  * @returns 조회 결과

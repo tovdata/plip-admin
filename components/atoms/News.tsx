@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // Component
 import { Button, DatePicker, Descriptions, Form, Input, Popconfirm, Select, Table } from 'antd';
-import { AntCard, TableCard } from '@/components/atoms/Card';
+import { TableCard, UploadCard } from '@/components/atoms/Card';
 import { PageHeader } from '@/components/atoms/Header';
 // Query
 import { createNews, deleteNews, getNews, updateNews } from '@/models/apis/news';
@@ -116,8 +116,8 @@ export const News: React.FC<any> = ({ news, onClear, onSelect }): JSX.Element =>
   // 컴포넌트 반환
   return (
     <>
-      <PageHeader isBack onEvent={onClear} title={title} />
-      <AntCard>
+      <PageHeader ghost onBack={onClear} title={title} />
+      <UploadCard>
         <Form form={form} onFinish={isCreate ? onCreate : onSave}>
           <Form.Item hidden name='id'>
             <Input disabled value={news.id} />
@@ -174,7 +174,7 @@ export const News: React.FC<any> = ({ news, onClear, onSelect }): JSX.Element =>
             )}
           </div>
         </Form>
-      </AntCard>
+      </UploadCard>
     </>
   );
 }

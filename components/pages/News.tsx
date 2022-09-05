@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 // Component
-import Layout from '@/components/atoms/Layout';
 import { PageHeader } from '@/components/atoms/Header';
+import Layout from '@/components/atoms/Layout';
 import { News, NewsList } from '@/components/atoms/News';
 
 const Page: React.FC<any> = (): JSX.Element => {
@@ -20,7 +20,7 @@ const Page: React.FC<any> = (): JSX.Element => {
         <News news={news} onClear={onClear} onSelect={onSelect} />
       ) : (
         <>
-          <PageHeader isBack title='뉴스 관리' />
+          <PageHeader ghost title='뉴스 관리' />
           <NewsList onSelect={onSelect} />
         </>
       )}

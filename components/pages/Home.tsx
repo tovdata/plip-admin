@@ -36,7 +36,7 @@ const Home: React.FC<any> = (): JSX.Element => {
           <ItemCard right title='전체 가입자 수'>-</ItemCard>
         </Col>
         <Col lg={6} sm={12} span={24}>
-          <ItemCard right title='전체 가입자 수'>-</ItemCard>
+          <ItemCard right title='Title'>-</ItemCard>
         </Col>
       </Row>
       <TableCard title='회사 목록'>

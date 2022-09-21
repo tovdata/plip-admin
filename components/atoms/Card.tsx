@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 // Component
-import { Card } from 'antd';
+import { Card, Skeleton } from 'antd';
 
 const StyledSmallCard = styled(Card)`
   margin-bottom: 16px;
@@ -27,6 +27,9 @@ const StyledSmallCard = styled(Card)`
     margin-bottom: 6px;
     margin-top: 0;
     user-select: none;
+  }
+  .ant-skeleton-paragraph {
+    margin: 22px 0 0 0 !important;
   }
 `;
 const StyledCard = styled(Card)`
@@ -139,6 +142,7 @@ interface CardProps {
   loading?: boolean;
   right?: boolean;
   small?: boolean;
+  style?: React.CSSProperties;
   title?: string;
 }
 interface CardElementsProps {
@@ -152,14 +156,16 @@ export const AntCard: React.FC<CardProps> = ({ children, extra, loading, title }
     <StyledCard extra={extra} loading={loading} title={title}>{children}</StyledCard>
   );
 }
-export const ItemCard: React.FC<CardProps> = ({ children, extra, loading, right, small, title }): JSX.Element => {
+export const ItemCard: React.FC<CardProps> = ({ children, extra, loading, right, small, style, title }): JSX.Element => {
   return (
     <>
       {small ? (
-        <StyledSmallCard extra={extra} loading={loading}>
-          {children ? (
-            <ItemCardElements right={right} title={title}>{children}</ItemCardElements>
-          ) : (<></>)}
+        <StyledSmallCard extra={extra} style={style}>
+          <Skeleton active loading={loading} paragraph={{ rows: 1, width: '100%' }}>
+            {children ? (
+              <ItemCardElements right={right} title={title}>{children}</ItemCardElements>
+            ) : (<></>)}
+          </Skeleton>
         </StyledSmallCard>
       ) : (
         <StyledCard>

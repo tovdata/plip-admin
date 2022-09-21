@@ -53,7 +53,7 @@ export const Users: React.FC<UsersProps> = ({ companyId }): JSX.Element => {
           { dataIndex: 'marketing', key: 'marketing', title: '마케팅', filters: [{ text: '동의', value: true }, { text: '비동의', value: false }], onFilter: (value: any, record: any): boolean => value ? record.marketing : !record.marketing, render: (value: boolean): JSX.Element => value === true ? (<MarketingBlock><IoCheckbox /></MarketingBlock>) : (<MarketingBlock><IoSquareOutline /></MarketingBlock>), width: '11%' }
         ]} dataSource={users ? users : []} loading={isLoading} onRow={onRow} showSorterTooltip={false} size='middle' />
       </TableCard>
-      <Modal footer={[(<Button onClick={onClose}>닫기</Button>)]} onCancel={onClose} visible={user}>
+      <Modal footer={[<Button key='close' onClick={onClose}>닫기</Button>]} onCancel={onClose} visible={user}>
         <LabelGroup label='이름'>{user ? user.userName : ''}</LabelGroup>
         <LabelGroup label='이메일'>{user ? user.email : ''}</LabelGroup>
         <LabelGroup label='연락처'>{user ? user.contact : ''}</LabelGroup>

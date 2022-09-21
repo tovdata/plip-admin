@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 // Component
 import { AntCard, ItemCard } from '@/components/atoms/Card';
@@ -18,6 +19,28 @@ import { KEY_SERVICE } from '@/models/type';
 import { transformToDate } from 'utils/util';
 import Activity from '../atoms/Activity';
 
+const StyledColumn = styled(Col)`
+  border-right: 1px dashed #F0F0F0;
+  padding-left: 24px;
+  padding-right: 24px;
+  &:first-child {
+    padding-left: 0;
+  }
+  &:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  @media(max-width: 992px) {
+    border-top: 1px dashed #F0F0F0;
+    padding: 24px 0 0 0;
+    border-right: none;
+    &:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+  }
+`;
 const StyledModifiedAt = styled.div`
   user-select: none;
   .label {
@@ -49,6 +72,8 @@ const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
   const [activity, setActivity] = useState<boolean>(false);
   // API 호출
   const { data: service } = useQuery([KEY_SERVICE], async () => await getService(serviceId));
+  // 데이터 로딩
+  const [loading, setLoading] = useState<boolean>(true);
   
 
   /** [Event handler] 활동 내역 보기 */
@@ -65,6 +90,8 @@ const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
         if (response) {
           setCompany(response.companyName);
         }
+        // 로딩 비활성화
+        setLoading(false);
       })();
     }
   }, [service]);
@@ -98,19 +125,19 @@ const Page: React.FC<any> = ({ serviceId }): JSX.Element => {
         <Activity onBack={onHide} serviceId={serviceId} />
       ) : (
         <>
-          <PageHeader breadcrumb={breadcrumb} ghost title='토브데이터' />
+          <PageHeader breadcrumb={breadcrumb} ghost title={service.serviceName} />
           <Row gutter={16}>
-            <Col span={5}>
-              <ItemCard small title='담당회사'>{company}</ItemCard>
+            <Col lg={5} span={12}>
+              <ItemCard small loading={loading} title='담당회사'>{company}</ItemCard>
             </Col>
-            <Col span={5}>
-              <ItemCard small title='생성일자'>{transformToDate(service.createAt)}</ItemCard>
+            <Col lg={5} span={12}>
+              <ItemCard small loading={loading} title='생성일자'>{transformToDate(service.createAt)}</ItemCard>
             </Col>
-            <Col span={5}>
-              <ItemCard small title='서비스 유형'>{service.types}</ItemCard>
+            <Col lg={5} span={12}>
+              <ItemCard small loading={loading} title='서비스 유형'>{service.types}</ItemCard>
             </Col>
-            <Col span={9}>
-              <ItemCard small title='URL'>None</ItemCard>
+            <Col lg={9} span={12}>
+              <ItemCard small loading={loading} title='URL'>None</ItemCard>
             </Col>
           </Row>
           <ModifiedAt modifiedAt={service.lastModifiedAt} onClick={onActivity} />
@@ -142,15 +169,15 @@ const DataStatus: React.FC<any> = ({ serviceId }): JSX.Element => {
   const tabContent: Record<string, React.ReactNode> = useMemo(() => ({
     'pi': (
       <Row gutter={[0, 16]}>
-        <Col lg={12} xs={24} style={{ borderRight: '1px dashed #F0F0F0', paddingRight: 24 }}>
+        <StyledColumn lg={12} xs={24}>
           <PIItems serviceId={serviceId} />
-        </Col>
-        <Col lg={6} xs={24} style={{ borderRight: '1px dashed #F0F0F0', paddingLeft: 24, paddingRight: 24 }}>
+        </StyledColumn>
+        <StyledColumn lg={6} xs={24}>
           <PPI serviceId={serviceId} />
-        </Col>
-        <Col lg={6} xs={24} style={{ paddingLeft: 24 }}>
+        </StyledColumn>
+        <StyledColumn lg={6} xs={24}>
           <CPI serviceId={serviceId} />
-        </Col>
+        </StyledColumn>
       </Row>
     ),
     'fni': (<>구현 예정입니다.</>)

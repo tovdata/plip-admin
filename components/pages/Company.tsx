@@ -72,7 +72,7 @@ const Company: React.FC<any> = ({ company, loading }): JSX.Element => {
         <a>회사관리</a>
       </Breadcrumb.Item>
     </Breadcrumb>
-  ), [company]);
+  ), []);
   // 컴포넌트 반환
   return (
     <>

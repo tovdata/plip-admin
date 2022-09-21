@@ -39,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children, selectedKey }): JSX.Element =
   const [collapsed, setCollapsed] = useRecoilState(collapsedSiderSelector);
 
   /** [Event handler] 메뉴 확장/축소 */
-  const onCollapse = useCallback((value: boolean): void => setCollapsed(value), []);
+  const onCollapse = useCallback((value: boolean): void => setCollapsed(value), [setCollapsed]);
 
   // 컴포넌트 반환
   return (

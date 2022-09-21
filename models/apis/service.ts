@@ -206,15 +206,15 @@ export const getServices = async (companyId: string): Promise<any[]> => {
   }
 }
 
-const consentType = (type: number): string => {
+const consentType = (type: string): string => {
   switch(type) {
-    case 0:
+    case 'pi':
       return '개인정보';
-    case 1:
+    case 'uii':
       return '고유식별정보';
-    case 2:
+    case 'mai':
       return '마케팅';
-    case 3:
+    case 'si':
       return '민감정보';
     default:
       return '제3자제공';

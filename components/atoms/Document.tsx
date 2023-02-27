@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 // Component
-import { AntCard, TableCard } from '@/components/atoms/Card';
+import { TableCard, UploadCard } from '@/components/atoms/Card';
 import { PageHeader } from '@/components/atoms/Header';
 import { Button, DatePicker, Descriptions, Form, Input, Popconfirm, Select, Table, Tag, Upload } from 'antd';
 // Icon
@@ -164,8 +164,8 @@ export const Document: React.FC<any> = ({ document, onClear, onSelect }): JSX.El
   // 컴포넌트 반환
   return (
     <>
-      <PageHeader isBack onEvent={onClear} title={title} />
-      <AntCard>
+      <PageHeader ghost onBack={onClear} title={title} />
+      <UploadCard>
         <Form form={form} onFinish={isCreate ? onCreate : onSave } acceptCharset='UTF-8'>
           <Form.Item hidden name='id'>
             <Input disabled value={document.id} />
@@ -229,7 +229,7 @@ export const Document: React.FC<any> = ({ document, onClear, onSelect }): JSX.El
             )}
           </div>
         </Form>
-      </AntCard>
+      </UploadCard>
     </>
   );
 }

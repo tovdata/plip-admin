@@ -3,7 +3,7 @@ import Router from 'next/router';
 import { useCallback, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 // Component
-import { SimpleCard, TableCard } from '@/components/atoms/Card';
+import { ItemCard, TableCard } from '@/components/atoms/Card';
 import Layout from '@/components/atoms/Layout';
 import { Col, Row, Table } from 'antd';
 // Query
@@ -14,6 +14,7 @@ import { KEY_COMPANIES } from '@/models/type';
 import { companyCountSelector, serviceCountSelector, userCountSelector } from '@/models/state';
 // Util
 import { transformToDate } from 'utils/util';
+import { PageHeader } from '../atoms/Header';
 
 
 const Home: React.FC<any> = (): JSX.Element => {
@@ -23,18 +24,19 @@ const Home: React.FC<any> = (): JSX.Element => {
 
   return (
     <Layout selectedKey='management'>
-      <Row gutter={24}>
+      <PageHeader ghost title='대시보드' />
+      <Row gutter={16}>
         <Col lg={6} sm={12} span={24}>
-          <SimpleCard title='전체 회사 수'>{companyCount.toString()}</SimpleCard>
+          <ItemCard right title='전체 회사 수'>{companyCount.toString()}</ItemCard>
         </Col>
         <Col lg={6} sm={12} span={24}>
-          <SimpleCard title='전체 서비스 수'>{serviceCount.toString()}</SimpleCard>
+          <ItemCard right title='전체 서비스 수'>{serviceCount.toString()}</ItemCard>
         </Col>
         <Col lg={6} sm={12} span={24}>
-          <SimpleCard title='전체 가입자 수'>{userCount.toString()}</SimpleCard>
+          <ItemCard right title='전체 가입자 수'>-</ItemCard>
         </Col>
         <Col lg={6} sm={12} span={24}>
-          <SimpleCard title='전체 가입자 수'>10</SimpleCard>
+          <ItemCard right title='Title'>-</ItemCard>
         </Col>
       </Row>
       <TableCard title='회사 목록'>

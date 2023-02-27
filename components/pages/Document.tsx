@@ -20,7 +20,7 @@ const Page: React.FC<any> = (): JSX.Element => {
         <Document document={document} onClear={onClear} onSelect={onSelect} />
       ) : (
         <>
-          <PageHeader isBack title='자료 관리' />
+          <PageHeader ghost title='자료 관리' />
           <Documents onSelect={onSelect} />
         </>
       )}

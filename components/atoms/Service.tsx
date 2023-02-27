@@ -1,22 +1,20 @@
 import { useQuery } from '@tanstack/react-query';
-import Router from 'next/router';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import styled from 'styled-components';
 // Chart
 import { Bullet } from '@ant-design/plots';
 // Component
 import { Description } from '@/components/atoms/Description';
-import { AntCard, TableCard } from '@/components/atoms/Card';
+import { TableCard } from '@/components/atoms/Card';
+import CpiPpiForm from '@/components/atoms/CPI_PPI';
 import { Col, Row, Table, Tag } from 'antd';
 import Link from 'next/link';
 // Query
-import { getConsents, getCPIs, getPICount, getPIPPs, getPPIs, getServices } from '@/models/apis/service';
+import { getConsents, getCPIs, getPICount, getPIItems, getPIPPs, getPPIs, getServices } from '@/models/apis/service';
 // Query key
-import { KEY_CONSENTS, KEY_PIITEMS, KEY_PIPPS, KEY_PIS, KEY_PPIS, KEY_SERVICES } from '@/models/type';
+import { KEY_CONSENTS, KEY_CPIS, KEY_PIITEMS, KEY_PIPPS, KEY_PIS, KEY_PPIS, KEY_SERVICES } from '@/models/type';
 // Util
 import { transformToDate } from 'utils/util';
-import { getPIItems } from '@/models/apis/service';
-import CpiPpiForm from './CPI_PPI';
 
 const StyledChartForm = styled.div`
   margin-top: 16px;
@@ -91,7 +89,7 @@ export const Services: React.FC<ServicesProps> = ({ companyId }): JSX.Element =>
 
 export const CPI: React.FC<any> = ({ serviceId }): JSX.Element => {
   // API 호출
-  const { data } = useQuery([KEY_PPIS, serviceId], async () => await getCPIs(serviceId));
+  const { data } = useQuery([KEY_CPIS, serviceId], async () => await getCPIs(serviceId));
   // 컴포넌트 반환
   return (
     <>

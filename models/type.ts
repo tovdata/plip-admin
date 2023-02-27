@@ -24,6 +24,7 @@ export const KEY_SERVICES = 'plip-services';
 export const KEY_TEMPLATE = 'plip-template';
 export const KEY_USERS = 'plip-users';
 // KEY
+export const KEY_ACTICITIES = 'plip-activities';
 export const KEY_PIS = 'plip-pis';
 export const KEY_PPIS = 'plip-ppis'
 export const KEY_CPIS = 'plip-cpis';

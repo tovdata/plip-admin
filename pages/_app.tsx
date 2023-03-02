@@ -1,45 +1,39 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
-// React Query
-import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
-// Recoil
-import { RecoilRoot } from 'recoil';
+import localFont from 'next/font/local';
+// Data type
+import type { AppProps } from 'next/app';
 // Style
-import 'antd/dist/antd.css';
-import { createGlobalStyle } from 'styled-components';
+import '@/styles/globals.css';
 
-// 글로벌 스타일
-const GlobalStyle = createGlobalStyle`
-  body {
-    .ant-table table {
-      user-select: none;
-    }
-    .ant-table table > .ant-table-tbody > .ant-table-row {
-      cursor: pointer;
-    }
-  }
-`;
-
-// 쿼리 클라이언트
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-    },
-  },
+// Local font
+const font = localFont({
+  display: "fallback",
+  src: [{
+    path: "/fonts/Pretendard-Regular.woff2",
+    weight: "400"
+  }, {
+    path: "/fonts/Pretendard-Medium.woff2",
+    weight: "500"
+  }, {
+    path: "/fonts/Pretendard-SemiBlod.woff2",
+    weight: "600"
+  }, {
+    path: "/fonts/Pretendard-Bold.woff2",
+    weight: "700"
+  }, {
+    path: "/fonts/Pretendard-ExtraBold.woff2",
+    weight: "800"
+  }, {
+    path: "/fonts/Pretendard-Black.woff2",
+    weight: "900"
+  }],
+  variable: "--font-pretendard"
 });
 
-function MyApp({ Component, pageProps }: AppProps) {
+/** [Component] 메인 */
+export default function App({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={pageProps.dehydratedState}>
-        <RecoilRoot>
-          <GlobalStyle />
-          <Component {...pageProps} />
-        </RecoilRoot>
-      </Hydrate>
-    </QueryClientProvider>
-  );
+    <main className={`${font.variable} font-sans`}>
+      <Component {...pageProps} />
+    </main>
+  )
 }
-
-export default MyApp

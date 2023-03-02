@@ -1,17 +1,14 @@
-const { fontFamily } = require('tailwindcss/defaultTheme');
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./components/**/*.{ts,tsx}",
     "./pages/**/*.{ts.tsx}"
   ],
+  corePlugins: {
+    preflight: false
+  },
   theme: {
-    extend: {
-      fontFamily: {
-        sans: ['var(--font-pretendard)', ...fontFamily.sans]
-      }
-    },
+    extend: {},
   },
   plugins: [],
 }

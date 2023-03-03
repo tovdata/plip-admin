@@ -1,6 +1,9 @@
-import localFont from 'next/font/local';
+import localFont from "next/font/local";
+// Component
+import { QueryClient, QueryClientProvider } from "react-query";
+import { RecoilRoot } from "recoil";
 // Data type
-import type { AppProps } from 'next/app';
+import type { AppProps } from "next/app";
 // Style
 import '@/styles/globals.css';
 
@@ -29,11 +32,24 @@ const font = localFont({
   variable: "--font-pretendard"
 });
 
+// Query client
+const queryClient: QueryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+});
+
 /** [Component] 메인 */
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <main className={font.className}>
-      <Component {...pageProps} />
-    </main>
-  )
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <main className={font.className}>
+          <Component {...pageProps} />
+        </main>
+      </RecoilRoot>
+    </QueryClientProvider>
+  );
 }

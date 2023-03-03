@@ -1,3 +1,13 @@
+import { Button } from "antd";
+// Icon
+import { RightOutlined } from "@ant-design/icons";
+
+/** [Component] 회사 선택 버튼 */
+export function CompanySelectButton({ id }: { id: string }): JSX.Element {
+  return (
+    <Button icon={<RightOutlined />} shape="circle" type="text" />
+  );
+}
 /** [Component] 로그인 버튼 */
 export function LoginButton({ children }: { children: string }): JSX.Element {
   return (

@@ -7,8 +7,13 @@ module.exports = {
   corePlugins: {
     preflight: false
   },
+  important: true,
   theme: {
-    extend: {},
+    extend: {
+      fontSize: {
+        "2xs": "0.5rem"
+      }
+    },
   },
   plugins: [],
 }

@@ -2,10 +2,13 @@ import localFont from "next/font/local";
 // Component
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
+import { StyleProvider } from "@ant-design/cssinjs"
 // Data type
+import type { ThemeConfig } from "antd";
 import type { AppProps } from "next/app";
 // Style
 import '@/styles/globals.css';
+import { ConfigProvider } from "antd";
 
 // Local font
 const font = localFont({
@@ -40,15 +43,25 @@ const queryClient: QueryClient = new QueryClient({
     }
   }
 });
+// Ant-design theme
+const theme: ThemeConfig = {
+  token: {
+    fontFamily: font.style.fontFamily
+  }
+}
 
 /** [Component] 메인 */
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
-        <main className={font.className}>
-          <Component {...pageProps} />
-        </main>
+        <StyleProvider hashPriority="high">
+          <ConfigProvider theme={theme}>
+            <main className={`bg-inherit ${font.className}`}>
+              <Component {...pageProps} />
+            </main>
+          </ConfigProvider>
+        </StyleProvider>
       </RecoilRoot>
     </QueryClientProvider>
   );

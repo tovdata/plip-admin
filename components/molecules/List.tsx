@@ -1,62 +1,73 @@
 import { useCallback, useEffect, useState } from "react";
 import { useQuery } from "react-query";
 // Component
+import { ServiceListItem, UserListItem } from "@/components/molecules/Item";
 import { List } from "antd";
-import { CompanyListItem, ServiceListItem } from "@/components/molecules/Item";
 // Query
-import { getCompanies } from "@/apis/services/company";
+import { getServices } from "@/models/apis/services/service";
+import { getUsers } from "@/models/apis/services/user";
 // Utilities
 import { isEmptyValue } from "@/utilities/common";
-import { getServices } from "@/models/apis/services/service";
 
-/** [Component] 회사 목록 */
-export function CompanyList({ keyword, onCount }: { keyword?: string, onCount: (value: number) => void }): JSX.Element {
-  // // 목록 원본 데이터
-  // const [origin, setOrigin] = useState<any[]>([]);
+/** [Component] 서비스 목록 */
+export function ServiceList({ companyId, keyword, onInit }: { companyId: string, keyword: string, onInit: (value: number) => void }): JSX.Element {
+  // 원본 목록 데이터
+  const [origin, setOrigin] = useState<any[]>([]);
   // 목록 데이터
   const [dataSource, setDataSource] = useState<any[]>([]);
-  // 로딩 상태
-  const [loading, setLoading] = useState<boolean>(true);
 
-  // 회사 목록 조회
-  const { data: companies, isLoading } = useQuery(["companies"], async () => await getCompanies(true), { keepPreviousData: true });
-
-  // 목록 컴포넌트에서 사용할 렌더러
-  const renderItem = useCallback((elem: any): React.ReactNode => (<CompanyListItem id={elem.id} name={elem.name} />), []);
-
-  /** [Event hook] 목록 원본 데이터 초기화 */
-  // useEffect((): void => (!isLoading && companies) ? setOrigin(companies) : undefined, [isLoading, companies]);
-  /** [Event hook] 목록 데이터 초기화 */
-  useEffect((): void => { companies ? setDataSource(companies) : undefined; setLoading(isLoading) }, [isLoading, companies]);
-  /** [Event hook] 검색에 따른 목록 필터링 */
-  useEffect((): void => {
-    if (companies) {
-      if (isEmptyValue(keyword)) {
-        onCount(companies.length);
-        setDataSource(companies);
-      } else {
-        const filtered: any[] = companies.filter((item: any): boolean => item.name.includes(keyword));
-        onCount(filtered.length);
-        setDataSource(filtered);
-      }
-    } else {
-      onCount(0);
-    }
-  }, [companies, keyword, onCount]);
-
-  return (
-    <List dataSource={dataSource} loading={loading} renderItem={renderItem} />
-  );
-}
-/** [Component] 서비스 목록 */
-export function ServiceList({ companyId }: { companyId: string }): JSX.Element {
   // 서비스 목록 조회
   const { data: services, isLoading } = useQuery(["services"], async () => await getServices(companyId), { enabled: !isEmptyValue(companyId) });
 
   // 목록 컴포넌트에서 사용할 렌더러
-  const renderItem = useCallback((elem: any): React.ReactNode => (<ServiceListItem id={elem.id} name={elem.name} />), []);
+  const renderItem = useCallback((elem: any): React.ReactNode => (
+    <ServiceListItem service={elem} />
+  ), []);
+
+  /** [Event hook] 원본 목록 데이터 초기화 */
+  useEffect((): void => {
+    if (services) {
+      onInit(services.length);
+      setOrigin(services);
+    }
+  }, [services]);
+  /** [Event hook] 목록 데이터 초기화 */
+  useEffect((): void => setDataSource(origin), [origin]);
+  /** [Event hook] 검색에 따른 목록 필터링 */
+  useEffect((): void => isEmptyValue(keyword) ? setDataSource(origin) : setDataSource(origin.filter((item: any): boolean => item.name.includes(keyword))), [keyword, origin]);
 
   return (
-    <List dataSource={services} loading={isLoading} renderItem={renderItem} />
+    <List dataSource={dataSource} loading={isLoading} renderItem={renderItem} />
+  );
+}
+/** [Component] 사용자 목록 */
+export function UserList({ companyId, keyword, onInit }: { companyId: string, keyword: string, onInit: (value: number) => void }): JSX.Element {
+  // 원본 목록 데이터
+  const [origin, setOrigin] = useState<any[]>([]);
+  // 목록 데이터
+  const [dataSource, setDataSource] = useState<any[]>([]);
+
+  // 사용자 목록 조회
+  const { data: users, isLoading } = useQuery(["users"], async () => await getUsers(companyId), { enabled: !isEmptyValue(companyId) });
+
+  // 목록 컴포넌트에서 사용할 렌더러
+  const renderItem = useCallback((elem: any): React.ReactNode => (
+    <UserListItem user={elem} />
+  ), []);
+
+  /** [Event hook] 원본 목록 데이터 초기화 */
+  useEffect((): void => {
+    if (users) {
+      onInit(users.length);
+      setOrigin(users);
+    }
+  }, [users]);
+  /** [Event hook] 목록 데이터 초기화 */
+  useEffect((): void => setDataSource(origin), [origin]);
+  /** [Event hook] 검색에 따른 목록 필터링 */
+  useEffect((): void => isEmptyValue(keyword) ? setDataSource(origin) : setDataSource(origin.filter((item: any): boolean => item.name.includes(keyword))), [keyword, origin]);
+
+  return (
+    <List dataSource={dataSource} loading={isLoading} renderItem={renderItem} />
   );
 }

@@ -11,6 +11,7 @@ import { getService } from "@/models/apis/services/service";
 import { LeftOutlined } from "@ant-design/icons";
 // Utilities
 import { isEmptyValue } from "@/utilities/common";
+import { ConsentTable, IppTable, PippTable } from "../molecules/Table";
 
 /** [Component] 서비스 페이지 템플릿 */
 export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Element {
@@ -49,10 +50,10 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
           <DpiInfoForm serviceId={serviceId} />
         </Col>
         <Col span={12}>
-          <Table />
+          <ConsentTable serviceId={serviceId} />
         </Col>
         <Col span={12}>
-          <Table />
+          <PippTable serviceId={serviceId} />
         </Col>
       </Row>
     </div>

@@ -37,8 +37,6 @@ export function LastModifiedInfoForm({ serviceId }: { serviceId: string }): JSX.
   // 최근 수정일 조회
   const { data } = useQuery(["last-modified"], async () => await getLastModified(serviceId), { enabled: !isEmptyValue(serviceId) });
 
-  useEffect((): void => console.log("data", data), [data]);
-
   return (
     <div className="px-6">
       <LastModifiedInfoGroup datetime={data?.pi_fni?.modified_at} label="수집 및 이용" user={data?.pi_fni?.user} />

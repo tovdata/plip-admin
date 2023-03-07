@@ -21,7 +21,7 @@ export function ServiceList({ companyId, keyword, onInit }: { companyId: string,
 
   // 목록 컴포넌트에서 사용할 렌더러
   const renderItem = useCallback((elem: any): React.ReactNode => (
-    <ServiceListItem service={elem} />
+    <ServiceListItem createAt={elem?.create_at} name={elem?.name} id={elem?.id} />
   ), []);
 
   /** [Event hook] 원본 목록 데이터 초기화 */
@@ -41,7 +41,7 @@ export function ServiceList({ companyId, keyword, onInit }: { companyId: string,
   );
 }
 /** [Component] 사용자 목록 */
-export function UserList({ companyId, keyword, onInit }: { companyId: string, keyword: string, onInit: (value: number) => void }): JSX.Element {
+export function UserList({ companyId, keyword, onInit, onOpen }: { companyId: string, keyword: string, onInit: (value: number) => void, onOpen: (value: any) => void }): JSX.Element {
   // 원본 목록 데이터
   const [origin, setOrigin] = useState<any[]>([]);
   // 목록 데이터
@@ -52,8 +52,8 @@ export function UserList({ companyId, keyword, onInit }: { companyId: string, ke
 
   // 목록 컴포넌트에서 사용할 렌더러
   const renderItem = useCallback((elem: any): React.ReactNode => (
-    <UserListItem user={elem} />
-  ), []);
+    <UserListItem onClick={onOpen} user={elem} />
+  ), [onOpen]);
 
   /** [Event hook] 원본 목록 데이터 초기화 */
   useEffect((): void => {

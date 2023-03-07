@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 // Component
 import { Table } from "antd";
 // Data
-import { TableHeaderForCompany } from "@/models/header"
+import { TableHeaderForCompany } from "@/headers"
 // Query
 import { getCompanies } from "@/apis/services/company";
 // Utilities

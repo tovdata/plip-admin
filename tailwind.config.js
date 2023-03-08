@@ -13,6 +13,9 @@ module.exports = {
       fontSize: {
         "2xs": "0.5rem"
       },
+      maxHeight: {
+        "144.5": "578px"
+      },
       maxWidth: {
         "8xl": "90rem"
       }

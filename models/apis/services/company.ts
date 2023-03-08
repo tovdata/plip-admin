@@ -53,3 +53,19 @@ export async function getCompanyCount(): Promise<number> {
     return 0;
   }
 }
+/**
+ * [API Caller] 개인정보 보호책임자 조회
+ * @param companyId 회사 ID
+ * @returns 조회 결과
+ */
+export async function getManager(companyId: string): Promise<any> {
+  try {
+    // API 호출
+    const { data } = await authApi.get(`/companies/${companyId}`);
+    // 응답 처리
+    return isEmptyObject(data) ? null : { name: data.m_name, email: data.m_email, position: data.m_position };
+  } catch (err: any) {
+    catchRequestError(err, false);
+    return null;
+  }
+}

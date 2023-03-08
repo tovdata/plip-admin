@@ -1,8 +1,10 @@
+import { useMemo } from "react";
 // Component
 import { Form } from "antd";
 import { DescriptionGroupLabel, InputGroupLabel } from "@/components/atoms/Label";
+import { DescriptionParagraph } from "@/components/atoms/Paragraph";
+// Utilities
 import { transformToDate } from "@/utilities/common";
-import { DescriptionParagraph } from "../atoms/Paragraph";
 
 /** [Component] 설명 그룹 */
 export function DescriptionGroup({ children, className, displayEmpty, label }: { children?: React.ReactNode, className?: string, displayEmpty?: boolean, label: React.ReactNode }): JSX.Element {
@@ -31,11 +33,17 @@ export function FormInputGroup({ children, label, name, rules }: {  children?: R
   )
 }
 /** [Component] 최근 정보 수정일 그룹 */
-export function LastModifiedInfoGroup({ datetime, label, user }: { datetime?: number, label: string, user?: string }): JSX.Element {
+export function LastModifiedInfoGroup({ className, datetime, label, user }: { className?: string, datetime?: number, label: string, user?: string }): JSX.Element {
+  // 클래스
+  const combineClassName: string = useMemo(() => {
+    const cn: string = "font-semibold mb-1 mt-0";
+    return className ? `${cn} ${className}` : cn;
+  }, [className]);
+
   return (
-    <div className="flex items-center justify-between last:mb-0 mb-1">
-      <p className="font-semibold m-0">{label}</p>
-      <div className="flex justify-between w-28">
+    <div className="flex flex-wrap justify-between last:mb-0 mb-1">
+      <h4 className={combineClassName}>{label}</h4>
+      <div className="flex justify-between w-36">
         <DescriptionParagraph>{transformToDate(datetime)}</DescriptionParagraph>
         <DescriptionParagraph>{user}</DescriptionParagraph>
       </div>

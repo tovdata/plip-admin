@@ -1,28 +1,39 @@
 import { useRouter } from "next/router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 // Component
-import { Button, Col, Row, Table } from "antd";
+import { Button, Col, Row } from "antd";
 import { FormBox } from "@/components/molecules/Box";
 import { CpiInfoForm, DpiInfoForm, LastModifiedInfoForm, PpiInfoForm, ServiceInfoForm } from "@/components/organisms/form/Service";
+// Data type
+import type { PIM_TYPE } from "@/models/types";
 // Query
-import { getService } from "@/models/apis/services/service";
+import { getService } from "@/apis/services/service";
 // Icon
 import { LeftOutlined } from "@ant-design/icons";
 // Utilities
-import { isEmptyValue } from "@/utilities/common";
-import { ConsentTable, IppTable, PippTable } from "../molecules/Table";
+import { isEmptyString } from "@/utilities/common";
+import { ConsentDocumentationForm, PippDocumentationForm } from "../organisms/form/Documentation";
+import { PimDetailPopup } from "../organisms/Popup";
 
 /** [Component] 서비스 페이지 템플릿 */
 export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Element {
   // 라우터
   const router = useRouter();
+  // 팝업 표시 상태
+  const [open, setOpen] = useState<boolean>(false);
+  // 개인정보 관리(PIM) 데이터 유형
+  const [pimType, setPimType] = useState<PIM_TYPE | undefined>(undefined);
 
   // 회사 조회
-  const { data: service, isLoading } = useQuery(["service-info"], async () => await getService(serviceId), { enabled: !isEmptyValue(serviceId) });
+  const { data: service, isLoading } = useQuery(["service-info"], async () => await getService(serviceId), { enabled: !isEmptyString(serviceId) });
 
   /** [Event handler] 뒤로 가기 */
   const onBack = useCallback((): void => router.back(), [router]);
+  /** [Event handler] 팝업 닫기 */
+  const onClose = useCallback((): void => setOpen(false), []);
+  /** [Event handler] 팝업 열기 */
+  const onOpen = useCallback((value: PIM_TYPE): void => { setOpen(true), setPimType(value) }, []);
 
   return (
     <div className="m-auto max-w-7xl w-full">
@@ -37,7 +48,7 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
           </FormBox>
         </Col>
         <Col span={8}>
-          <FormBox className="h-full" title="최근 정보 수정일">
+          <FormBox className="flex flex-col h-full" title="최근 정보 수정일">
             <LastModifiedInfoForm serviceId={serviceId} />
           </FormBox>
         </Col>
@@ -45,17 +56,18 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
           <FormBox className="h-full" title="개인정보 수집 항목"></FormBox>
         </Col>
         <Col className="flex flex-col justify-between" span={8}>
-          <PpiInfoForm serviceId={serviceId} />
-          <CpiInfoForm serviceId={serviceId} />
+          <PpiInfoForm onOpen={onOpen} serviceId={serviceId} />
+          <CpiInfoForm onOpen={onOpen} serviceId={serviceId} />
           <DpiInfoForm serviceId={serviceId} />
         </Col>
-        <Col span={12}>
-          <ConsentTable serviceId={serviceId} />
+        <Col span={14}>
+          <ConsentDocumentationForm serviceId={serviceId} />
         </Col>
-        <Col span={12}>
-          <PippTable serviceId={serviceId} />
+        <Col span={10}>
+          <PippDocumentationForm serviceId={serviceId} />
         </Col>
       </Row>
+      <PimDetailPopup onCancel={onClose} open={open} serviceId={serviceId} type={pimType} />
     </div>
   );
 }

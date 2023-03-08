@@ -56,6 +56,7 @@ authApi.interceptors.request.use(async (config: AxiosRequestConfig<any>): Promis
       return config;
     }
   } catch (err: unknown) {
+    console.log("error", err)
     return Promise.reject(createResponseError("Interceptor process error", 999, config));
   }
 });

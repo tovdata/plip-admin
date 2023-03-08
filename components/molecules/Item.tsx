@@ -11,7 +11,7 @@ export function ServiceListItem({ createAt, name, id }: { createAt: number, name
   const href: string = useMemo(() => `/service/${id}`, [id]);
 
   return (
-    <Link className="border-solid border-0 border-b border-slate-200 cursor-pointer flex items-center justify-between last:border-b-0 px-6 py-3 text-black" href={href}>
+    <Link className="border-solid border-0 border-b border-slate-200 box-border cursor-pointer flex items-center justify-between px-6 py-3 text-black" href={href}>
       <p className="m-0">{name}</p>
       <p className="m-0 text-gray-500 text-xs">{transformToDate(createAt)}</p>
     </Link>
@@ -23,7 +23,7 @@ export function UserListItem({ onClick, user }: { onClick: (value: any) => void,
   const onSelect = useCallback((): void => onClick(user), [onClick, user])
 
   return (
-    <div className="border-solid border-0 border-b border-slate-200 cursor-pointer flex items-center justify-between last:border-b-0 px-6 py-3" onClick={onSelect}>
+    <div className="border-solid border-0 border-b border-slate-200 cursor-pointer flex items-center justify-between px-6 py-3" onClick={onSelect}>
       <div>
         <p className="m-0">{user.name}</p>
         <p className="m-0 text-gray-400 text-xs">{user.email}</p>

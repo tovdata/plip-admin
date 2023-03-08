@@ -4,15 +4,20 @@ import { StatisticCountParagraph } from "@/components/atoms/Paragraph";
 import { FormBoxTitle } from "@/components/atoms/Title";
 
 /** [Component] 박스 */
-export function Box({ children, className }: { children?: React.ReactNode, className?: string }): JSX.Element {
+export function Box({ children, className, onClick }: { children?: React.ReactNode, className?: string, onClick?: () => void }): JSX.Element {
   // 클래스
   const combineClassName: string = useMemo(() => {
-    const cn: string = "bg-white overflow-hidden rounded-md shadow w-full";
-    return className ? `${cn} ${className}` : cn;
-  }, [className]);
+    let cn: string = "bg-white overflow-hidden rounded-md shadow w-full";
+    // 추가적인 클래스 여부
+    if (className) cn += ` ${className}`;
+    // 클릭 여부
+    if (onClick) cn += " cursor-pointer";
+    // 반환
+    return cn;
+  }, [className, onClick]);
 
   return (
-    <div className={combineClassName}>{children}</div>
+    <div className={combineClassName} onClick={onClick}>{children}</div>
   );
 }
 /** [Component] 폼(Form) 박스 */
@@ -23,14 +28,14 @@ export function FormBox({ children, className, extra, title }: { children?: Reac
         <FormBoxTitle>{title}</FormBoxTitle>
         <>{extra}</>
       </div>
-      <div>{children}</div>
+      <>{children}</>
     </Box>
   );
 }
 /** [Component] 개인정보 관리(PIM) 데이터 통계 박스 */
-export function PimStatisticsBox({ count, containLink, link, title }: { count?: number, containLink?: boolean, link?: number, inline?: boolean, title: string }): JSX.Element {
+export function PimStatisticsBox({ count, containLink, link, onClick, title }: { count?: number, containLink?: boolean, link?: number, onClick?: () => void, title: string }): JSX.Element {
   return (
-    <Box className="mb-4 last:mb-0">
+    <Box className="mb-4 last:mb-0" onClick={onClick}>
       <div className="flex flex-wrap items-center justify-between px-6 py-4">
         {containLink ? (
           <>

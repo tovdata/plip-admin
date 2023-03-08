@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 // Component
-import { Divider, Input } from "antd";
+import { Input } from "antd";
+import { DescriptionParagraph } from "@/components/atoms/Paragraph";
+import { FormBox } from "@/components/molecules/Box";
 import { CompanyTable } from "@/components/molecules/Table";
-import { UserList } from "@/components/molecules/List";
 
 /** [Component] 회사 목록 폼(Form) */
 export function CompanyListForm(): JSX.Element {
@@ -32,21 +33,17 @@ export function CompanyListForm(): JSX.Element {
     </div>
   );
 }
-/** [Component] 사용자 목록 폼(Form) */
-export function UserListForm({ companyId, onInit, onOpen }: { companyId: string, onInit: (value: number) => void, onOpen: (value: any) => void }): JSX.Element {
-  // 검색 키워드
-  const [keyword, setKeyword] = useState<string>("");
-
-  /** [Event handler] 검색 */
-  const onSearch = useCallback((value: string): void => setKeyword(value), []);
-
+/** [Component] 개인정보 보호책임자 정보 폼(Form) */
+export function CompanyInfoForm({ className, company }: { className?: string, company: any }): JSX.Element {
   return (
-    <div>
-      <Input.Search className="px-6" onSearch={onSearch} />
-      <Divider className="mb-0" />
-      <div>
-        <UserList companyId={companyId} keyword={keyword} onInit={onInit} onOpen={onOpen} />
+    <FormBox className={className} title="개인정보 보호책임자">
+      <div className="pb-5 px-6">
+        <h4 className="my-0">
+          <>{company?.m_name}</>
+          <small className="text-blue-600"> [{company?.m_position}]</small>
+        </h4>
+        <DescriptionParagraph>{company?.m_email}</DescriptionParagraph>
       </div>
-    </div>
+    </FormBox>
   );
 }

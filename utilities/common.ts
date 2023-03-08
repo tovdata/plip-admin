@@ -27,15 +27,15 @@ export const isEmptyObject = (obj: any): boolean => {
   }
 }
 /**
- * [Function] 빈 값 확인
+ * [Function] 빈 문자열 확인
  * @param value 값 (문자열)
  * @returns 확인 결과
  */
-export function isEmptyValue(value: string | null | undefined): boolean {
+export function isEmptyString(value: string | null | undefined): boolean {
   try {
     return value ? value.replace(/^\s+|\s$/g, "") === "" : true;
   } catch {
-    console.error("[Utilities Error] isEmptyValue function error.");
+    console.error("[Utilities Error] isEmptyString function error.");
     return true;
   }
 }
@@ -64,7 +64,12 @@ export function lastSignin(timestamp?: number) {
  */
 export function transformToDate(timestamp?: number): string {
   try {
-    return !isEmptyNumber(timestamp) ? dayjs.unix(timestamp as number).format("YYYY-MM-DD") : "";
+    // 예외 처리
+    if (isEmptyNumber(timestamp)) return "";
+    // 유닉스 타임스탬프 변환 (miliscend 단위)
+    const value: number = (timestamp as number) > 1_000_000_000_000 ? (timestamp as number) / 1000 : (timestamp as number);
+    // 변환 및 반환
+    return dayjs.unix(value).format("YYYY-MM-DD");
   } catch {
     console.error("[Utilities Error] tranformToDate function error.");
     return "";

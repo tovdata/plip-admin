@@ -1,7 +1,7 @@
 // Utilities
 import dayjs from "dayjs";
 import { decode } from "jsonwebtoken";
-import { isEmptyValue } from "@/utilities/common";
+import { isEmptyString } from "@/utilities/common";
 
 // 액세스 토큰에 대한 키(Key)
 const KEY: string = "pa-auth";
@@ -14,7 +14,7 @@ const KEY: string = "pa-auth";
 export function decodeAccessToken(token: string | null | undefined): any {
   try {
     // 토큰 값 존재 확인
-    if (isEmptyValue(token)) return undefined;
+    if (isEmptyString(token)) return undefined;
     // 복호화 및 반환
     return decode(token as string);
   } catch {
@@ -42,7 +42,7 @@ export function isAccessTokenExpired(value: any, isExp?: boolean): boolean {
       return !(value && dayjs().isBefore(dayjs.unix(value)));
     } else {  // 토큰 값인 경우
       // 토큰 값 존재 확인
-      if (isEmptyValue(value)) {
+      if (isEmptyString(value)) {
         // 세션에서 제거
         if (typeof window !== "undefined") localStorage.removeItem(KEY);
         // 결과 반환
@@ -67,7 +67,7 @@ export function setAccessToken(token: string | null | undefined): void {
     // Window 객체가 없을 경우, 종료
     if (typeof window === "undefined") return;
     // 토큰 값이 없을 경우, 세션에서 제거
-    if (isEmptyValue(token)) localStorage.removeItem(KEY);
+    if (isEmptyString(token)) localStorage.removeItem(KEY);
     // 토큰 값 설정
     else localStorage.setItem(KEY, token as string);
   } catch {

@@ -1,24 +1,17 @@
 import { useMemo } from "react";
 // Component
-import { Col, Modal, Row, Table } from "antd";
+import { Col, Modal, Row } from "antd";
 import { DescriptionGroup } from "@/components/molecules/Group";
-// Utilities
-import { isEmptyString, transformToDate } from "@/utilities/common";
-import { useQuery } from "react-query";
+import { CpiTable, PiTable, PpiTable } from "@/components/molecules/Table";
+// Data type
 import type { PIM_TYPE } from "@/types";
-import { getPimItems } from "@/apis/services/service";
+// Utilities
+import { transformToDate } from "@/utilities/common";
 
 /** [Component] 개인정보 관리(PIM) 데이터에 대한 팝업 */
-export function PimDetailPopup({ onCancel, open, serviceId, type }: { onCancel: () => void, open: boolean, serviceId: string, type: PIM_TYPE | undefined }): JSX.Element {
+export function PimPopup({ onCancel, open, serviceId, type }: { onCancel: () => void, open: boolean, serviceId: string, type: PIM_TYPE | undefined }): JSX.Element {
   // 팝업 바디(Body) 스타일
   const bodyStyle: React.CSSProperties = useMemo(() => ({ marginTop: 16 }), []);
-
-  // 위탁 수 조회
-  const { data, isLoading } = useQuery(["pim", type], async () => await getPimItems(serviceId, type as PIM_TYPE), { enabled: !isEmptyString(serviceId) && (type !== undefined) });
-  // 링크 위탁 수 조회
-  const { data: link } = useQuery(["pim", `${type}-link`], async () => await getPimItems(serviceId, type as PIM_TYPE, true), { enabled: !isEmptyString(serviceId) && (type !== undefined && type !== "dpi" && type !== "pi") });
-
-  console.log(data);
 
   // 팝업 제목
   const title: string = useMemo(() => {
@@ -35,16 +28,26 @@ export function PimDetailPopup({ onCancel, open, serviceId, type }: { onCancel: 
         return "";
     }
   }, [type]);
+  // 테이블
+  const table: React.ReactNode = useMemo(() => {
+    switch (type) {
+      case "cpi":
+        return (<CpiTable serviceId={serviceId} />);
+      case "pi":
+        return (<PiTable serviceId={serviceId} />);
+      case "ppi":
+        return (<PpiTable serviceId={serviceId} />);
+      default:
+        return (<></>)
+    }
+  }, [serviceId, type]);
 
   return (
-    <Modal bodyStyle={bodyStyle} destroyOnClose={true} footer={null} onCancel={onCancel} open={open} title={title}>
-      <Table columns={[
-        { dataIndex: "company", key: "company", title: "위탁받는 자(수탁자)" },
-        { dataIndex: "task", key: "task", title: "위탁업무" }
-      ]} dataSource={data} loading={isLoading} size="middle" />
-    </Modal>
+    <Modal bodyStyle={bodyStyle} destroyOnClose={true} footer={null} onCancel={onCancel} open={open} title={title} width={1024}>{table}</Modal>
   );
 }
+
+
 /** [Component] 사용자 정보 팝업 */
 export function UserInfoPopup({ onCancel, open, user }: { onCancel: () => void, open: boolean, user: any }): JSX.Element {
   // 팝업 바디(Body) 스타일

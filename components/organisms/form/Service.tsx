@@ -1,24 +1,24 @@
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 // Component
-import { Col, Divider, Input, Row, Space } from "antd";
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";
 import { FormBox, PimStatisticsBox } from "@/components/molecules/Box";
 import { DescriptionGroup, LastModifiedInfoGroup } from "@/components/molecules/Group";
 import { ServiceList } from "@/components/molecules/List";
 // Data type
-import { PIM_CPI, PIM_DPI, PIM_PPI, PIM_TYPE } from "@/types";
+import { PIM_CPI, PIM_DPI, PIM_PI, PIM_PPI, PIM_TYPE } from "@/types";
 // Query
-import { getLastModified, getPimItems } from "@/apis/services/service";
+import { getLastModified, getPiItems, getPimItems } from "@/apis/services/service";
 // Utilities
 import { isEmptyString, transformToDate } from "@/utilities/common";
+import { FormBoxTitle } from "@/components/atoms/Title";
 
 /** [Component] 위탁 조회 폼(Form) */
 export function CpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
   // 위탁 수 조회
-  const { data } = useQuery(["pim", PIM_CPI], async () => await getPimItems(serviceId, PIM_CPI), { enabled: !isEmptyString(serviceId) });
+  const { data } = useQuery(["pim", PIM_CPI, "input"], async () => await getPimItems(serviceId, PIM_CPI), { enabled: !isEmptyString(serviceId) });
   // 링크 위탁 수 조회
-  const { data: link } = useQuery(["pim", `${PIM_CPI}-link`], async () => await getPimItems(serviceId, PIM_CPI, true), { enabled: !isEmptyString(serviceId) });
+  const { data: link } = useQuery(["pim", PIM_CPI, "link"], async () => await getPimItems(serviceId, PIM_CPI, true), { enabled: !isEmptyString(serviceId) });
 
   /** [Event handler] 클릭 */
   const onClick = useCallback((): void => onOpen(PIM_CPI), [onOpen]);
@@ -44,18 +44,42 @@ export function LastModifiedInfoForm({ serviceId }: { serviceId: string }): JSX.
   return (
     <div className="pb-4 px-6">
       <LastModifiedInfoGroup datetime={data?.pi_fni?.modified_at} label="수집 및 이용" user={data?.pi_fni?.user} />
-      <LastModifiedInfoGroup datetime={data?.pi_fni?.modified_at} label="수집 및 이용" user={data?.pi_fni?.user} />
-      <LastModifiedInfoGroup datetime={data?.pi_fni?.modified_at} label="수집 및 이용" user={data?.pi_fni?.user} />
-      <LastModifiedInfoGroup datetime={data?.pi_fni?.modified_at} label="수집 및 이용" user={data?.pi_fni?.user} />
+      <LastModifiedInfoGroup datetime={data?.ppi_cpi_pfni_cfni?.modified_at} label="제공 및 위탁" user={data?.ppi_cpi_pfni_cfni?.user} />
+      <LastModifiedInfoGroup datetime={data?.consent?.modified_at} label="동의서" user={data?.consent?.user} />
+      <LastModifiedInfoGroup datetime={data?.pipp?.modified_at} label="개인정보 처리방침" user={data?.pipp?.user} />
     </div>
+  );
+}
+/** [Component] 수집 및 이용 항목 조회 폼(Form) */
+export function PiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
+  // 수집 및 이용 항목 조회
+  const { data } = useQuery(["pim", PIM_PI, "items"], async () => await getPiItems(serviceId), { enabled: !isEmptyString(serviceId) });
+  // 전체 항목 수
+  const allItems: number = useMemo(() => data ? ((data.essentials.length) + (data.selections.filter((item: string): boolean => !data.essentials.includes(item))).length) : 0, [data]);
+
+  /** [Event handler] 클릭 */
+  const onClick = useCallback((): void => onOpen(PIM_PI), [onOpen]);
+
+  // 제목
+  const title: React.ReactNode = useMemo(() => (
+    <>
+      <>개인정보 수집 항목</>
+      <small className="font-light text-gray-500 text-xs"> (필수 / 선택)</small>
+    </>
+  ), []);
+  // 항목 구분
+  const extra: React.ReactNode = useMemo(() => data ? (<>({data.essentials.length} / {data.selections.length})</>) : (<></>), [data]);
+
+  return (
+    <PimStatisticsBox count={allItems} extra={extra} onClick={onClick} title={title} />
   );
 }
 /** [Component] 제3자 제공 조회 폼(Form) */
 export function PpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
   // 제공 수 조회
-  const { data } = useQuery(["pim", PIM_PPI], async () => await getPimItems(serviceId, PIM_PPI), { enabled: !isEmptyString(serviceId) });
+  const { data } = useQuery(["pim", PIM_PPI, "input"], async () => await getPimItems(serviceId, PIM_PPI), { enabled: !isEmptyString(serviceId) });
   // 링크 제공 수 조회
-  const { data: link } = useQuery(["pim", `${PIM_PPI}-link`], async () => await getPimItems(serviceId, PIM_PPI, true), { enabled: !isEmptyString(serviceId) });
+  const { data: link } = useQuery(["pim", PIM_PPI, "link"], async () => await getPimItems(serviceId, PIM_PPI, true), { enabled: !isEmptyString(serviceId) });
 
   /** [Event handler] 클릭 */
   const onClick = useCallback((): void => onOpen(PIM_PPI), [onOpen]);

@@ -11,7 +11,8 @@ module.exports = {
   theme: {
     extend: {
       fontSize: {
-        "2xs": "0.5rem"
+        "2xs": "0.5rem",
+        "table-sm": "0.813rem"
       },
       maxHeight: {
         "144.5": "578px"

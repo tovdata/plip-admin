@@ -33,10 +33,10 @@ export function FormBox({ children, className, extra, title }: { children?: Reac
   );
 }
 /** [Component] 개인정보 관리(PIM) 데이터 통계 박스 */
-export function PimStatisticsBox({ count, containLink, link, onClick, title }: { count?: number, containLink?: boolean, link?: number, onClick?: () => void, title: string }): JSX.Element {
+export function PimStatisticsBox({ count, containLink, extra, link, onClick, title }: { count?: number, containLink?: boolean, extra?: React.ReactNode, link?: number, onClick?: () => void, title: React.ReactNode }): JSX.Element {
   return (
     <Box className="mb-4 last:mb-0" onClick={onClick}>
-      <div className="flex flex-wrap items-center justify-between px-6 py-4">
+      <div className="px-6 py-4">
         {containLink ? (
           <>
             <div className="flex items-end">
@@ -46,14 +46,17 @@ export function PimStatisticsBox({ count, containLink, link, onClick, title }: {
               </FormBoxTitle>
             </div>
             <StatisticCountParagraph className="ml-6">
-              <>{count}</>
-              <small className="font-light text-gray-500 text-sm">{` / ${link}`}</small>
+              <>{count !== undefined ? count : 0}</>
+              <small className="font-light text-gray-500 text-sm">{` / ${link !== undefined ? link : 0}`}</small>
             </StatisticCountParagraph>
           </>
         ) : (
           <>
             <FormBoxTitle>{title}</FormBoxTitle>
-            <StatisticCountParagraph className="ml-6">{count}</StatisticCountParagraph>
+            <StatisticCountParagraph className="ml-6">
+              <>{count !== undefined ? count : 0}</>
+              <>{extra ? (<small className="font-light text-gray-500 text-sm"> {extra}</small>) : (<></>)}</>
+            </StatisticCountParagraph>
           </>
         )}
       </div>
@@ -66,7 +69,7 @@ export function StatisticsBox({ count, title }: { count?: number, title: string 
     <Box>
       <div className="px-6 py-4">
         <FormBoxTitle>{title}</FormBoxTitle>
-        <StatisticCountParagraph className="">{count ? count : 0}</StatisticCountParagraph>
+        <StatisticCountParagraph className="">{count !== undefined ? count : 0}</StatisticCountParagraph>
       </div>
     </Box>
   );

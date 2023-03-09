@@ -10,6 +10,7 @@ export const PIM_PPI: PIM_TYPE = "ppi";
 // 테이블 헤더
 export interface TableHeader {
   category?: string
+  className?: string
   dataIndex: string
   key: string
   title: React.ReactNode

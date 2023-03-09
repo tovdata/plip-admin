@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 // Component
 import { Button, Col, Row } from "antd";
 import { FormBox } from "@/components/molecules/Box";
-import { CpiInfoForm, DpiInfoForm, LastModifiedInfoForm, PpiInfoForm, ServiceInfoForm } from "@/components/organisms/form/Service";
+import { CpiInfoForm, DpiInfoForm, LastModifiedInfoForm, PiInfoForm, PpiInfoForm, ServiceInfoForm } from "@/components/organisms/form/Service";
 // Data type
 import type { PIM_TYPE } from "@/models/types";
 // Query
@@ -14,7 +14,7 @@ import { LeftOutlined } from "@ant-design/icons";
 // Utilities
 import { isEmptyString } from "@/utilities/common";
 import { ConsentDocumentationForm, PippDocumentationForm } from "../organisms/form/Documentation";
-import { PimDetailPopup } from "../organisms/Popup";
+import { PimPopup } from "../organisms/Popup";
 
 /** [Component] 서비스 페이지 템플릿 */
 export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Element {
@@ -47,18 +47,26 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
             <ServiceInfoForm service={service} />
           </FormBox>
         </Col>
-        <Col span={8}>
+        <Col span={10}>
           <FormBox className="flex flex-col h-full" title="최근 정보 수정일">
             <LastModifiedInfoForm serviceId={serviceId} />
           </FormBox>
         </Col>
-        <Col span={8}>
-          <FormBox className="h-full" title="개인정보 수집 항목"></FormBox>
-        </Col>
-        <Col className="flex flex-col justify-between" span={8}>
-          <PpiInfoForm onOpen={onOpen} serviceId={serviceId} />
-          <CpiInfoForm onOpen={onOpen} serviceId={serviceId} />
-          <DpiInfoForm serviceId={serviceId} />
+        <Col span={14}>
+          <Row className="h-full" gutter={[16, 16]}>
+            <Col span={12}>
+              <PiInfoForm onOpen={onOpen} serviceId={serviceId} />
+            </Col>
+            <Col span={12}>
+              <PpiInfoForm onOpen={onOpen} serviceId={serviceId} />
+            </Col>
+            <Col span={12}>
+              <CpiInfoForm onOpen={onOpen} serviceId={serviceId} />
+            </Col>
+            <Col span={12}>
+              <DpiInfoForm serviceId={serviceId} />
+            </Col>
+          </Row>
         </Col>
         <Col span={14}>
           <ConsentDocumentationForm serviceId={serviceId} />
@@ -67,7 +75,7 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
           <PippDocumentationForm serviceId={serviceId} />
         </Col>
       </Row>
-      <PimDetailPopup onCancel={onClose} open={open} serviceId={serviceId} type={pimType} />
+      <PimPopup onCancel={onClose} open={open} serviceId={serviceId} type={pimType} />
     </div>
   );
 }

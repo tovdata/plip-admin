@@ -215,6 +215,9 @@ export function setColumns(headers: TableHeader[], isAvaliableClick?: boolean, i
       case "item-split":
         column.render = (value: string[] | undefined): string => value ? value.join(", ") : "";
         break;
+      case "list":
+        column.render = (value: string[] | undefined): JSX.Element => value ? (<ul className="m-0 pl-5">{value.map((item: string): JSX.Element => (<li key={item}>{item}</li>))}</ul>) : (<></>);
+        break;
       case "version":
         column.render = (value: number): string => value === 0 ? "외부" : value.toString();
         break;

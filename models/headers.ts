@@ -51,7 +51,7 @@ export const TableHeaderForPipp: TableHeader[] = [
 // 수집 및 이용 테이블 헤더
 export const TableHeaderForPi: TableHeader[] = [
   { dataIndex: "subject", key: "subject", title: "구분(업무명)" },
-  { dataIndex: "purpose", key: "purpose", title: "처리 목적" },
+  { category: "list", dataIndex: "purpose", key: "purpose", title: "처리 목적" },
   { category: "item-split", dataIndex: "essentialItems", key: "essentialItems", title: "필수 항목" },
   { category: "item-split", dataIndex: "selectionItems", key: "selectionItems", title: "선택 항목" },
   { dataIndex: "period", key: "period", title: "보유 및 이용기간" }

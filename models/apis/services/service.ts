@@ -66,7 +66,7 @@ export async function getPimItems(serviceId: string, type: "cfni" | "cpi" | "dpi
     // API 호출
     const { data } = await authApi.get(`/services/${serviceId}/${type}s${queryParams}`);
     // 응답 처리
-    return isEmptyObject(data) ? [] : Object.keys(data).map((key: string): any => data[key]);
+    return isEmptyObject(data) ? [] : Object.keys(data).map((key: string, index: number): any => ({ index, ...data[key] }));
   } catch (err: any) {
     catchRequestError(err, false);
     return [];

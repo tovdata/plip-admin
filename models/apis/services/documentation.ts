@@ -29,7 +29,6 @@ export async function getConsents(serviceId: string): Promise<any[]> {
  */
 export async function getIpps(companyId: string): Promise<any[]> {
   try {
-    console.log(companyId)
     // API 호출
     const { data } = await authApi.get(`/companies/${companyId}/ipp?urls=true`);
     // 예외 처리

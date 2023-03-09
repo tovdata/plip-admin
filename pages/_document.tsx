@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html lang="ko">
       <Head />
-      <body style={{ background: "rgb(241 245 249)" }}>
+      <body className="m-0 h-screen" style={{ background: "rgb(241 245 249)" }}>
         <Main />
         <NextScript />
       </body>

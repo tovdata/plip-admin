@@ -16,9 +16,9 @@ import { FormBoxTitle } from "@/components/atoms/Title";
 /** [Component] 위탁 조회 폼(Form) */
 export function CpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
   // 위탁 수 조회
-  const { data } = useQuery(["pim", PIM_CPI, "input"], async () => await getPimItems(serviceId, PIM_CPI), { enabled: !isEmptyString(serviceId) });
+  const { data } = useQuery([serviceId, "pim", PIM_CPI, "input"], async () => await getPimItems(serviceId, PIM_CPI), { enabled: !isEmptyString(serviceId) });
   // 링크 위탁 수 조회
-  const { data: link } = useQuery(["pim", PIM_CPI, "link"], async () => await getPimItems(serviceId, PIM_CPI, true), { enabled: !isEmptyString(serviceId) });
+  const { data: link } = useQuery([serviceId, "pim", PIM_CPI, "link"], async () => await getPimItems(serviceId, PIM_CPI, true), { enabled: !isEmptyString(serviceId) });
 
   /** [Event handler] 클릭 */
   const onClick = useCallback((): void => onOpen(PIM_CPI), [onOpen]);
@@ -30,7 +30,7 @@ export function CpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) =
 /** [Component] 파기 조회 폼(Form) */
 export function DpiInfoForm({ serviceId }: { serviceId: string }): JSX.Element {
   // 제공 수 조회
-  const { data } = useQuery(["pim", PIM_DPI], async () => await getPimItems(serviceId, PIM_DPI), { enabled: !isEmptyString(serviceId) });
+  const { data } = useQuery([serviceId, "pim", PIM_DPI], async () => await getPimItems(serviceId, PIM_DPI), { enabled: !isEmptyString(serviceId) });
 
   return (
     <PimStatisticsBox count={data?.length} title="파기 건 수" />
@@ -39,7 +39,7 @@ export function DpiInfoForm({ serviceId }: { serviceId: string }): JSX.Element {
 /** [Component] 최근 정보 수정일 폼(Form) */
 export function LastModifiedInfoForm({ serviceId }: { serviceId: string }): JSX.Element {
   // 최근 수정일 조회
-  const { data } = useQuery(["last-modified"], async () => await getLastModified(serviceId), { enabled: !isEmptyString(serviceId) });
+  const { data } = useQuery([serviceId, "last-modified"], async () => await getLastModified(serviceId), { enabled: !isEmptyString(serviceId) });
 
   return (
     <div className="pb-4 px-6">
@@ -53,7 +53,7 @@ export function LastModifiedInfoForm({ serviceId }: { serviceId: string }): JSX.
 /** [Component] 수집 및 이용 항목 조회 폼(Form) */
 export function PiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
   // 수집 및 이용 항목 조회
-  const { data } = useQuery(["pim", PIM_PI, "items"], async () => await getPiItems(serviceId), { enabled: !isEmptyString(serviceId) });
+  const { data } = useQuery([serviceId, "pim", PIM_PI, "items"], async () => await getPiItems(serviceId), { enabled: !isEmptyString(serviceId) });
   // 전체 항목 수
   const allItems: number = useMemo(() => data ? ((data.essentials.length) + (data.selections.filter((item: string): boolean => !data.essentials.includes(item))).length) : 0, [data]);
 
@@ -77,9 +77,9 @@ export function PiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) =>
 /** [Component] 제3자 제공 조회 폼(Form) */
 export function PpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
   // 제공 수 조회
-  const { data } = useQuery(["pim", PIM_PPI, "input"], async () => await getPimItems(serviceId, PIM_PPI), { enabled: !isEmptyString(serviceId) });
+  const { data } = useQuery([serviceId, "pim", PIM_PPI, "input"], async () => await getPimItems(serviceId, PIM_PPI), { enabled: !isEmptyString(serviceId) });
   // 링크 제공 수 조회
-  const { data: link } = useQuery(["pim", PIM_PPI, "link"], async () => await getPimItems(serviceId, PIM_PPI, true), { enabled: !isEmptyString(serviceId) });
+  const { data: link } = useQuery([serviceId, "pim", PIM_PPI, "link"], async () => await getPimItems(serviceId, PIM_PPI, true), { enabled: !isEmptyString(serviceId) });
 
   /** [Event handler] 클릭 */
   const onClick = useCallback((): void => onOpen(PIM_PPI), [onOpen]);

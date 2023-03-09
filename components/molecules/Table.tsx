@@ -34,7 +34,7 @@ function DocumentationTable({ columns, dataSource, loading, onCount, rowKey }: {
 /** [Internal Component] 개인정보 관리(PIM) 테이블 */
 function PimTable({ columns, fColumns, serviceId, type }: { columns: any[], fColumns?: any[], serviceId: string, type: PIM_TYPE }): JSX.Element {
   // 데이터 조회
-  const { data, isLoading } = useQuery(["pim", type, "input"], async () => await getPimItems(serviceId, type), { enabled: !isEmptyString(serviceId) });
+  const { data, isLoading } = useQuery([serviceId, "pim", type, "input"], async () => await getPimItems(serviceId, type), { enabled: !isEmptyString(serviceId) });
   // 국외 데이터
   const fDataSource: any[] = useMemo(() => data ? data.filter((item: any): boolean => item.isForeign) : [], [data]);
 
@@ -56,7 +56,7 @@ function PimTable({ columns, fColumns, serviceId, type }: { columns: any[], fCol
 /** [Internal Component] 개인정보 관리(PIM) 링크 테이블 */
 function PimLinkTable({ columns, serviceId, type }: { columns: any[], serviceId: string, type: PIM_TYPE }): JSX.Element {
   // 데이터 조회
-  const { data, isLoading } = useQuery(["pim", type, "link"], async () => await getPimItems(serviceId, type, true), { enabled: !isEmptyString(serviceId) });
+  const { data, isLoading } = useQuery([serviceId, "pim", type, "link"], async () => await getPimItems(serviceId, type, true), { enabled: !isEmptyString(serviceId) });
 
   return (
     <div>
@@ -103,7 +103,7 @@ export function CompanyTable({ keyword, onCount }: { keyword?: string, onCount: 
   }), [TableHeaderForCompany]);
 
   // 회사 목록 조회
-  const { data: companies, isLoading } = useQuery(["companies"], async () => await getCompanies(), { keepPreviousData: true });
+  const { data: companies, isLoading } = useQuery(["company", "list"], async () => await getCompanies(), { keepPreviousData: true });
 
   /** [Event hook] 목록 데이터 초기화 */
   useEffect((): void => {
@@ -135,7 +135,7 @@ export function CompanyTable({ keyword, onCount }: { keyword?: string, onCount: 
 /** [Component] 동의서 목록 테이블 */
 export function ConsentTable({ onCount, serviceId }: { onCount: (value: number) => void, serviceId: string }) {
   // 동의서 목록 조회
-  const { data, isLoading } = useQuery(["consent"], async () => await getConsents(serviceId), { enabled: !isEmptyString(serviceId) });
+  const { data, isLoading } = useQuery([serviceId, "consent"], async () => await getConsents(serviceId), { enabled: !isEmptyString(serviceId) });
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForConsent, true), [TableHeaderForCompany]);
 
@@ -146,7 +146,7 @@ export function ConsentTable({ onCount, serviceId }: { onCount: (value: number) 
 /** [Component] 내부 관리계획 목록 테이블 */
 export function IppTable({ companyId, onCount }: { companyId: string, onCount: (value: number) => void }) {
   // 내부 관리계획 목록 조회
-  const { data, isLoading } = useQuery(["ipp"], async () => await getIpps(companyId), { enabled: !isEmptyString(companyId) });
+  const { data, isLoading } = useQuery([companyId, "ipp"], async () => await getIpps(companyId), { enabled: !isEmptyString(companyId) });
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForIpp, true), [TableHeaderForCompany]);
 
@@ -157,7 +157,7 @@ export function IppTable({ companyId, onCount }: { companyId: string, onCount: (
 /** [Component] 개인정보 처리방침 목록 테이블 */
 export function PippTable({ onCount, serviceId }: { onCount: (value: number) => void, serviceId: string }) {
   // 내부 관리계획 목록 조회
-  const { data, isLoading } = useQuery(["pipp"], async () => await getPipps(serviceId), { enabled: !isEmptyString(serviceId) });
+  const { data, isLoading } = useQuery([serviceId, "pipp"], async () => await getPipps(serviceId), { enabled: !isEmptyString(serviceId) });
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForPipp, true), [TableHeaderForCompany]);
 

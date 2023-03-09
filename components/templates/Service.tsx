@@ -26,7 +26,7 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
   const [pimType, setPimType] = useState<PIM_TYPE | undefined>(undefined);
 
   // 회사 조회
-  const { data: service, isLoading } = useQuery(["service-info"], async () => await getService(serviceId), { enabled: !isEmptyString(serviceId) });
+  const { data: service, isLoading } = useQuery([serviceId, "service", "info"], async () => await getService(serviceId), { enabled: !isEmptyString(serviceId) });
 
   /** [Event handler] 뒤로 가기 */
   const onBack = useCallback((): void => router.back(), [router]);

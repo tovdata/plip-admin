@@ -1,4 +1,8 @@
-import { LoginForm } from "@/components/organisms/form/Login";
+import dynamic from "next/dynamic";
+// Component
+const LoginForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Login").then((module: any): any => module.LoginForm), { loading: () => (<></>) });
+// Data type
+import type { ComponentType } from "react";
 
 /** [Component] 로그인 템플릿 */
 export function LoginTemplate(): JSX.Element {

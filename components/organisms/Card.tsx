@@ -7,7 +7,7 @@ import { getCompanyCount } from "@/models/apis/services/company";
 /** [Component] 전체 회사 수 */
 export function CompanyCountCard(): JSX.Element {
   // 회사 수 조회
-  const { data: count } = useQuery(["company-count"], getCompanyCount);
+  const { data: count } = useQuery(["company", "count"], getCompanyCount);
 
   return (
     <StatisticsBox count={count} title="전체 회사 수" />

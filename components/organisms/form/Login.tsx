@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { useCallback } from "react";
 import { useSetRecoilState } from "recoil";
 // Component
@@ -11,13 +12,17 @@ import { accessTokenSelector } from "@/status";
 
 /** [Component] 로그인 폼(Form) */
 export function LoginForm(): JSX.Element {
+  // 라우터
+  const router = useRouter();
   // 액세스 토큰
   const setAccessToken: any = useSetRecoilState(accessTokenSelector);
 
   /** [Event handler] 로그인 */
-  const onSignin = useCallback((values: any): Promise<void> => signin(values.email, values.password).then((value: string | undefined): void => {
+  const onSignin = useCallback((values: any): Promise<void> => signin(values.email, values.password).then(async (value: string | undefined): Promise<any> => {
     if (value) {
       setAccessToken(value);
+      // 페이지 이동
+      return router.push("/");
     } else {
       console.error("[ERROR] Signin error");
     }

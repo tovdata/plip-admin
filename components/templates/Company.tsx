@@ -26,10 +26,10 @@ export function CompanyTemplate({ companyId }: { companyId: string }): JSX.Eleme
   const [user, setUser] = useState<any>(undefined);
 
   // 회사 조회
-  const { data: company, isLoading } = useQuery(["company-info"], async () => await getCompany(companyId), { enabled: !isEmptyString(companyId) });
+  const { data: company } = useQuery([companyId, "company", "info"], async () => await getCompany(companyId), { enabled: !isEmptyString(companyId) });
 
   /** [Event handler] 뒤로 가기 */
-  const onBack = useCallback((): void => router.back(), [router]);
+  const onBack = useCallback(async (): Promise<boolean> => router.push("/"), [router]);
   /** [Event handler] 팝업 닫기 */
   const onClose = useCallback((): void => { setOpen(false); setUser(undefined) }, []);
   /** [Event handler] 팝업 열기 */

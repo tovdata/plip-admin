@@ -3,6 +3,8 @@ import { useQuery } from "react-query";
 import { StatisticsBox } from "@/components/molecules/Box";
 // Query
 import { getCompanyCount } from "@/models/apis/services/company";
+import { getServiceCount } from "@/models/apis/services/service";
+import { getUserCount } from "@/models/apis/services/user";
 
 /** [Component] 전체 회사 수 */
 export function CompanyCountCard(): JSX.Element {
@@ -21,13 +23,19 @@ export function DocumentationCountCard(): JSX.Element {
 }
 /** [Component] 전체 서비스 수 */
 export function ServiceCountCard(): JSX.Element {
+  // 회사 수 조회
+  const { data: count } = useQuery(["service", "count"], getServiceCount);
+
   return (
-    <StatisticsBox count={0} title="전체 서비스 수" />
+    <StatisticsBox count={count} title="전체 서비스 수" />
   );
 }
 /** [Component] 전체 사용자 수 */
 export function UserCountCard(): JSX.Element {
+  // 회사 수 조회
+  const { data: count } = useQuery(["company", "count"], getUserCount);
+
   return (
-    <StatisticsBox count={0} title="전체 사용자 수" />
+    <StatisticsBox count={count} title="전체 사용자 수" />
   );
 }

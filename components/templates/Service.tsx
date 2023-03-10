@@ -1,35 +1,42 @@
-import { useRouter } from "next/router";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 // Component
-import { Button, Col, Row } from "antd";
+import { Breadcrumb, Col, Row } from "antd";
 import { FormBox } from "@/components/molecules/Box";
+import { ConsentDocumentationForm, PippDocumentationForm } from "@/components/organisms/form/Documentation";
 import { CpiInfoForm, DpiInfoForm, LastModifiedInfoForm, PiInfoForm, PpiInfoForm, ServiceInfoForm } from "@/components/organisms/form/Service";
+import { PimPopup } from "@/components/organisms/Popup";
 // Data type
+import type { ItemType } from "antd/es/breadcrumb/Breadcrumb";
 import type { PIM_TYPE } from "@/models/types";
-// Query
-import { getService } from "@/apis/services/service";
 // Icon
-import { LeftOutlined } from "@ant-design/icons";
+import { HomeOutlined } from "@ant-design/icons";
+// Query
+import { getCompanyName } from "@/apis/services/company";
+import { getService } from "@/apis/services/service";
 // Utilities
 import { isEmptyString } from "@/utilities/common";
-import { ConsentDocumentationForm, PippDocumentationForm } from "../organisms/form/Documentation";
-import { PimPopup } from "../organisms/Popup";
 
 /** [Component] 서비스 페이지 템플릿 */
 export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Element {
-  // 라우터
-  const router = useRouter();
   // 팝업 표시 상태
   const [open, setOpen] = useState<boolean>(false);
   // 개인정보 관리(PIM) 데이터 유형
   const [pimType, setPimType] = useState<PIM_TYPE | undefined>(undefined);
 
-  // 회사 조회
-  const { data: service, isLoading } = useQuery([serviceId, "service", "info"], async () => await getService(serviceId), { enabled: !isEmptyString(serviceId) });
+  // 서비스 조회
+  const { data: service } = useQuery([serviceId, "service", "info"], async () => await getService(serviceId), { enabled: !isEmptyString(serviceId) });
+  // 회사 ID
+  const companyId: string = useMemo(() => service ? service.company_id : "", [service]);
+  // 회사 이름 조회
+  const { data: companyName } = useQuery([companyId, "company", "name"], async () => await getCompanyName(companyId), { enabled: !isEmptyString(companyId) });
+  // Breadcrumb 아이템
+  const bcItems: ItemType[] = useMemo(() => (companyName && service) ? [
+    { href: "/", title: (<HomeOutlined />) },
+    { href: `/company/${service.company_id}`, title: companyName },
+    { title: service.name }
+  ] : [], [companyName, service]);
 
-  /** [Event handler] 뒤로 가기 */
-  const onBack = useCallback((): void => router.back(), [router]);
   /** [Event handler] 팝업 닫기 */
   const onClose = useCallback((): void => setOpen(false), []);
   /** [Event handler] 팝업 열기 */
@@ -37,9 +44,8 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
 
   return (
     <div className="m-auto max-w-7xl w-full">
-      <div className="flex items-center">
-        <Button className="mr-2" icon={<LeftOutlined />} onClick={onBack} shape="circle" type="text" />
-        <h2>서비스</h2>
+      <div className="my-4">
+        <Breadcrumb items={bcItems} />
       </div>
       <Row gutter={[16, 16]}>
         <Col span={24}>

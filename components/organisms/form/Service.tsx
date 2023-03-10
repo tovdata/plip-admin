@@ -5,13 +5,13 @@ import { DescriptionParagraph } from "@/components/atoms/Paragraph";
 import { FormBox, PimStatisticsBox } from "@/components/molecules/Box";
 import { DescriptionGroup, LastModifiedInfoGroup } from "@/components/molecules/Group";
 import { ServiceList } from "@/components/molecules/List";
+import { ServiceTable } from "@/components/molecules/Table";
 // Data type
 import { PIM_CPI, PIM_DPI, PIM_PI, PIM_PPI, PIM_TYPE } from "@/types";
 // Query
 import { getLastModified, getPiItems, getPimItems } from "@/apis/services/service";
 // Utilities
 import { isEmptyString, transformToDate } from "@/utilities/common";
-import { FormBoxTitle } from "@/components/atoms/Title";
 
 /** [Component] 위탁 조회 폼(Form) */
 export function CpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
@@ -113,5 +113,11 @@ export function ServiceListForm({ className, companyId }: { className?: string, 
     <FormBox className={className} extra={sElement} title="서비스">
       <ServiceList companyId={companyId} onCount={onCount} />
     </FormBox>
+  );
+}
+/** [Component] 서비스 전체 목록 테이블 폼(Form) */
+export function ServiceTableForm(): JSX.Element {
+  return (
+    <ServiceTable />
   );
 }

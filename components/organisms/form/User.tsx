@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 // Component
-import { Divider, Input } from "antd";
+import { Input } from "antd";
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";
 import { FormBox } from "@/components/molecules/Box";
 import { UserList } from "@/components/molecules/List";
+import { UserTable } from "@/components/molecules/Table";
 
 /** [Component] 사용자 목록 폼(Form) */
 export function UserListForm({ companyId, onOpen }: { companyId: string, onOpen: (value: any) => void }): JSX.Element {
@@ -27,5 +28,11 @@ export function UserListForm({ companyId, onOpen }: { companyId: string, onOpen:
         <UserList companyId={companyId} keyword={keyword} onCount={onCount} onOpen={onOpen} />
       </div>
     </FormBox>
+  );
+}
+/** [Component] 사용자 목록 테이블 폼(Form) */
+export function UserTableForm(): JSX.Element {
+  return (
+    <UserTable />
   );
 }

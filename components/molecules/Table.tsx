@@ -1,21 +1,26 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQuery } from "react-query";
 // Component
-import { Table } from "antd";
+import { Table, TableProps, theme } from "antd";
 import Link from "next/link";
 import { ConsentTypeTag } from "@/components/atoms/Tag";
 // Data
-import { TableHeaderForCompany, TableHeaderForConsent, TableHeaderForIpp, TableHeaderForPipp } from "@/headers";
+import { TableHeaderForCompany, TableHeaderForConsent, TableHeaderForIpp, TableHeaderForPipp, TableHeaderForService, TableHeaderForUser } from "@/headers";
 import { TableHeaderForCpi, TableHeaderForCpiForeign, TableHeaderForLink, TableHeaderForPi, TableHeaderForPpi, TableHeaderForPpiForeign } from "@/headers";
 // Data type
 import { PIM_CPI, PIM_PI, PIM_PPI, PIM_TYPE, TableHeader } from "@/types";
+// Icon
+import { CheckCircleOutlined } from "@ant-design/icons";
 // Query
 import { getCompanies } from "@/apis/services/company";
 import { getConsents, getIpps, getPipps } from "@/apis/services/documentation";
-import { getPimItems } from "@/apis/services/service";
+import { getPimItems, getServices } from "@/apis/services/service";
+import { getUsers } from "@/models/apis/services/user";
 // Utilities
-import { isEmptyString, transformToDate } from "@/utilities/common";
+import { isEmptyString, transformToDate, transformToDateTime } from "@/utilities/common";
 
+import ResizeObserver from 'rc-resize-observer';
+import { VariableSizeGrid as Grid } from "react-window";
 
 /** [Internal Component] 문서 목록 테이블 */
 function DocumentationTable({ columns, dataSource, loading, onCount, rowKey }: { columns: any[], dataSource?: any[], loading?: boolean, onCount?: (value: number) => void, rowKey: string }): JSX.Element {
@@ -89,21 +94,10 @@ export function CompanyTable({ keyword, onCount }: { keyword?: string, onCount: 
   // 로딩 상태
   const [loading, setLoading] = useState<boolean>(true);
 
-  // 컬럼 데이터 가공
-  const columns: any[] = useMemo(() => setColumns(TableHeaderForCompany).map((value: any): any => {
-    if (value.key === "name") {
-      return { ...value, render: (value: string, record: any): JSX.Element => (
-        <Link className="text-gray-800" href={`/company/${record.id}`}>{value}</Link>
-      ) };
-    } else if (value.key === "created_at") {
-      return { ...value, render: (value: number): string => transformToDate(value) };
-    } else {
-      return value;
-    }
-  }), [TableHeaderForCompany]);
-
   // 회사 목록 조회
   const { data: companies, isLoading } = useQuery(["company", "list"], async () => await getCompanies(), { keepPreviousData: true });
+  // 컬럼 데이터 가공
+  const columns: any[] = useMemo(() => setColumns(TableHeaderForCompany).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/company/${record.id}`}>{value}</Link>) }) : value), []);
 
   /** [Event hook] 목록 데이터 초기화 */
   useEffect((): void => {
@@ -129,14 +123,14 @@ export function CompanyTable({ keyword, onCount }: { keyword?: string, onCount: 
   }, [companies, keyword, onCount]);
 
   return (
-    <Table columns={columns} dataSource={dataSource} loading={loading} rowKey="id" />
+    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
   );
 }
 /** [Component] 동의서 목록 테이블 */
 export function ConsentTable({ onCount, serviceId }: { onCount: (value: number) => void, serviceId: string }) {
   // 동의서 목록 조회
   const { data, isLoading } = useQuery([serviceId, "consent"], async () => await getConsents(serviceId), { enabled: !isEmptyString(serviceId) });
-  // 컬럼 데이터 가공
+  // 컬럼 데이터
   const columns: any[] = useMemo(() => setColumns(TableHeaderForConsent, true), [TableHeaderForCompany]);
 
   return (
@@ -147,7 +141,7 @@ export function ConsentTable({ onCount, serviceId }: { onCount: (value: number) 
 export function IppTable({ companyId, onCount }: { companyId: string, onCount: (value: number) => void }) {
   // 내부 관리계획 목록 조회
   const { data, isLoading } = useQuery([companyId, "ipp"], async () => await getIpps(companyId), { enabled: !isEmptyString(companyId) });
-  // 컬럼 데이터 가공
+  // 컬럼 데이터
   const columns: any[] = useMemo(() => setColumns(TableHeaderForIpp, true), [TableHeaderForCompany]);
 
   return (
@@ -158,7 +152,7 @@ export function IppTable({ companyId, onCount }: { companyId: string, onCount: (
 export function PippTable({ onCount, serviceId }: { onCount: (value: number) => void, serviceId: string }) {
   // 내부 관리계획 목록 조회
   const { data, isLoading } = useQuery([serviceId, "pipp"], async () => await getPipps(serviceId), { enabled: !isEmptyString(serviceId) });
-  // 컬럼 데이터 가공
+  // 컬럼 데이터
   const columns: any[] = useMemo(() => setColumns(TableHeaderForPipp, true), [TableHeaderForCompany]);
 
   return (
@@ -190,6 +184,62 @@ export function PpiTable({ serviceId }: { serviceId: string }): JSX.Element {
     </>
   );
 }
+/** [Component] 서비스 전체 목록 테이블 */
+export function ServiceTable(): JSX.Element {
+  // 목록 데이터
+  const [dataSource, setDataSource] = useState<any[]>([]);
+  // 로딩 상태
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // 사용자 목록 조회
+  const { data: services, isLoading } = useQuery(["service", "list"], getServices);
+  // 컬럼 데이터 가공
+  const columns: any[] = useMemo(() => setColumns(TableHeaderForService).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/service/${record.id}`}>{value}</Link>) }) : value), []);
+
+  /** [Event hook] 목록 데이터 초기화 */
+  useEffect((): void => {
+    if (services) {
+      setDataSource(services);
+    }
+    setLoading(isLoading);
+  }, [isLoading, services]);
+
+  return (
+    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
+  );
+}
+/** [Component] 사용자 전체 목록 테이블 */
+export function UserTable(): JSX.Element {
+  // 목록 데이터
+  const [dataSource, setDataSource] = useState<any[]>([]);
+  // 로딩 상태
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // 사용자 목록 조회
+  const { data: users, isLoading } = useQuery(["user", "list"], getUsers);
+  // 컬럼 데이터
+  const columns: any[] = useMemo(() => setColumns(TableHeaderForUser).map((value: any): any => {
+    if (value.key === "company_name") {
+      return { ...value, filters: [{ text: "가입", value: true }, { text: "미가입", value: false }], onFilter: (value: boolean, record: any): boolean => value ? !isEmptyString(record.company_name) : isEmptyString(record.company_name) };
+    } else if (value.key === "ssa1") {
+      return { ...value, filters: [{ text: "동의", value: 1 }, { text: "비동의", value: 0 }], onFilter: (value: number, record: any): boolean => record.ssa1 === value };
+    } else {
+      return value;
+    }
+  }), []);
+
+  /** [Event hook] 목록 데이터 초기화 */
+  useEffect((): void => {
+    if (users) {
+      setDataSource(users);
+    }
+    setLoading(isLoading);
+  }, [isLoading, users]);
+
+  return (
+    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
+  );
+}
 
 /**
  * [Function] 테이블 컬럼 설정
@@ -206,11 +256,17 @@ export function setColumns(headers: TableHeader[], isAvaliableClick?: boolean, i
     const column: any = { className: isAvaliableClick ? `${className} cursor-pointer` : !isEmptyString(className) ? className : undefined, dataIndex: item.dataIndex, key: item.key, title: item.title, width: item.width };
     // 카테고리에 따른 render 추가
     switch (item.category) {
+      case "check":
+        column.render = (value: boolean | number): JSX.Element => value ? (<CheckCircleOutlined />) : (<></>);
+        break;
       case "consent-tag":
         column.render = (value: string): JSX.Element => (<ConsentTypeTag type={value} />);
         break;
       case "date":
         column.render = (value: number | undefined): string => transformToDate(value);
+        break;
+      case "datetime":
+        column.render = (value: number | undefined): string => transformToDateTime(value);
         break;
       case "item-split":
         column.render = (value: string[] | undefined): string => value ? value.join(", ") : "";
@@ -218,9 +274,28 @@ export function setColumns(headers: TableHeader[], isAvaliableClick?: boolean, i
       case "list":
         column.render = (value: string[] | undefined): JSX.Element => value ? (<ul className="m-0 pl-5">{value.map((item: string): JSX.Element => (<li key={item}>{item}</li>))}</ul>) : (<></>);
         break;
+      case "phone":
+        column.render = (value: any): string => value?.replace(/(\d{3})(\d{4})(\d{4})/, "$1-$2-$3");
+        break;
       case "version":
         column.render = (value: number): string => value === 0 ? "외부" : value.toString();
         break;
+    }
+    // 정렬
+    if (item.sort || item.sortDirections) {
+      // 정렬 옵션이 있을 경우
+      if (item.sortDirections) {
+        column.sortDirections = item.sortDirections;
+        // 정렬 옵션에 따른 정렬 함수 추가
+        if (item.sortDirections.length > 1 || item.sortDirections[0] === "ascend") {
+          column.sorter = (a: any, b: any): any => a[item.key] - b[item.key];
+        } else {
+          column.sorter = (a: any, b: any): any => b[item.key] - a[item.key];
+        }
+      } else {
+        // 정렬 함수 추가 (오름차순)
+        column.sorter = (a: any, b: any): any => a[item.key] - b[item.key];
+      }
     }
     // 첫 번째와 마지막 컬럼 패딩(Padding) 값 설정
     if (isPim) {
@@ -244,3 +319,118 @@ export function setColumns(headers: TableHeader[], isAvaliableClick?: boolean, i
     return column;
   });
 }
+
+const VirtualTable = <RecordType extends object>(props: any) => {
+  const { columns, scroll } = props;
+  const [tableWidth, setTableWidth] = useState(0);
+  const { token } = theme.useToken();
+
+  const widthColumnCount = columns!.filter(({ width }: { width: number }) => !width).length;
+  const mergedColumns = columns!.map((column: any) => {
+    if (column.width) {
+      return column;
+    }
+
+    return {
+      ...column,
+      width: Math.floor(tableWidth / widthColumnCount),
+    };
+  });
+
+  const gridRef = useRef<any>();
+  const [connectObject] = useState<any>(() => {
+    const obj = {};
+    Object.defineProperty(obj, 'scrollLeft', {
+      get: () => {
+        if (gridRef.current) {
+          return gridRef.current?.state?.scrollLeft;
+        }
+        return null;
+      },
+      set: (scrollLeft: number) => {
+        if (gridRef.current) {
+          gridRef.current.scrollTo({ scrollLeft });
+        }
+      },
+    });
+
+    return obj;
+  });
+
+  const resetVirtualGrid = () => {
+    gridRef.current?.resetAfterIndices({
+      columnIndex: 0,
+      shouldForceUpdate: true,
+    });
+  };
+
+  useEffect(() => resetVirtualGrid, [tableWidth]);
+
+  const renderVirtualList = (rawData: object[], { scrollbarSize, ref, onScroll }: any) => {
+    ref.current = connectObject;
+    const totalHeight = rawData.length * 54;
+
+    return (
+      <Grid
+        ref={gridRef}
+        className="virtual-grid"
+        columnCount={mergedColumns.length}
+        columnWidth={(index: number) => {
+          const { width } = mergedColumns[index];
+          return totalHeight > scroll!.y! && index === mergedColumns.length - 1
+            ? (width as number) - scrollbarSize - 1
+            : (width as number);
+        }}
+        height={scroll!.y as number}
+        rowCount={rawData.length}
+        rowHeight={() => 54}
+        width={tableWidth}
+        onScroll={({ scrollTop }: { scrollTop: number }) => {
+          console.log(scrollTop);
+          // onScroll({ scrollTop });
+        }}
+      >
+        {({
+          columnIndex,
+          rowIndex,
+          style,
+        }: {
+          columnIndex: number;
+          rowIndex: number;
+          style: React.CSSProperties;
+        }) => (
+          <div
+            className={'virtual-table-cell'}
+            style={{
+              ...style,
+              boxSizing: 'border-box',
+              padding: token.padding,
+              borderBottom: `${token.lineWidth}px ${token.lineType} ${token.colorSplit}`,
+              background: token.colorBgContainer,
+            }}
+          >
+            {(rawData[rowIndex] as any)[(mergedColumns as any)[columnIndex].dataIndex]}
+          </div>
+        )}
+      </Grid>
+    );
+  };
+
+  return (
+    <ResizeObserver
+      onResize={({ width }) => {
+        setTableWidth(width);
+      }}
+    >
+      <Table
+        {...props}
+        className="virtual-table"
+        columns={mergedColumns}
+        pagination={false}
+        components={{
+          body: renderVirtualList,
+        }}
+      />
+    </ResizeObserver>
+  );
+};

@@ -80,7 +80,7 @@ export async function getPimItems(serviceId: string, type: "cfni" | "cpi" | "dpi
 export async function getService(serviceId: string): Promise<any> {
   try {
     // API 호출
-    const { data } = await authApi.get(`/services/${serviceId}`);
+    const { data } = await authApi.get(`/services/${serviceId}?company_name=true`);
     // 응답 처리
     return isEmptyObject(data) ? null : data;
   } catch (err: any) {
@@ -89,16 +89,46 @@ export async function getService(serviceId: string): Promise<any> {
   }
 }
 /**
+ * [API Caller] 서비스 수 조회
+ * @returns 조회 결과
+ */
+export async function getServiceCount(): Promise<number> {
+  try {
+    // API 호출
+    const { data } = await authApi.get("/services");
+    // 응답 처리
+    return isEmptyObject(data) ? 0 : data.length;
+  } catch (err: any) {
+    catchRequestError(err, false);
+    return 0;
+  }
+}
+/**
+ * [API Caller] 서비스 목록 조회
+ * @returns 조회 결과
+ */
+export async function getServices(): Promise<any[]> {
+  try {
+    // API 호출
+    const { data } = await authApi.get("/services?company_name=true");
+    // 응답 처리
+    return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.create_at - a.create_at);
+  } catch (err: any) {
+    catchRequestError(err, false);
+    return [];
+  }
+}
+/**
  * [API Caller] 서비스 목록 조회
  * @param companyId 회사 ID
  * @returns 조회 결과
  */
-export async function getServices(companyId: string): Promise<any[]> {
+export async function getServicesByCompany(companyId?: string): Promise<any[]> {
   try {
     // API 호출
     const { data } = await authApi.get(`/companies/${companyId}/services`);
     // 응답 처리
-    return isEmptyObject(data) ? [] : data;
+    return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.create_at - a.create_at);
   } catch (err: any) {
     catchRequestError(err, false);
     return [];

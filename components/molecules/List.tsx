@@ -4,15 +4,15 @@ import { useQuery } from "react-query";
 import { List } from "antd";
 import { ServiceListItem, UserListItem } from "@/components/molecules/Item";
 // Query
-import { getServices } from "@/models/apis/services/service";
-import { getUsers } from "@/models/apis/services/user";
+import { getServicesByCompany } from "@/models/apis/services/service";
+import { getUsersByCompany } from "@/models/apis/services/user";
 // Utilities
 import { isEmptyString } from "@/utilities/common";
 
 /** [Component] 서비스 목록 */
 export function ServiceList({ companyId, onCount }: { companyId: string, onCount: (value: number) => void }): JSX.Element {
   // 서비스 목록 조회
-  const { data: services, isLoading } = useQuery([companyId, "service", "list"], async () => await getServices(companyId), { enabled: !isEmptyString(companyId) });
+  const { data: services, isLoading } = useQuery([companyId, "service", "list"], async () => await getServicesByCompany(companyId), { enabled: !isEmptyString(companyId) });
 
   // 목록 컴포넌트에서 사용할 렌더러
   const renderItem = useCallback((elem: any): React.ReactNode => (
@@ -34,7 +34,7 @@ export function UserList({ companyId, keyword, onCount, onOpen }: { companyId: s
   const [dataSource, setDataSource] = useState<any[]>([]);
 
   // 사용자 목록 조회
-  const { data: users, isLoading } = useQuery([companyId, "user", "list"], async () => await getUsers(companyId), { enabled: !isEmptyString(companyId) });
+  const { data: users, isLoading } = useQuery([companyId, "user", "list"], async () => await getUsersByCompany(companyId), { enabled: !isEmptyString(companyId) });
 
   // 목록 컴포넌트에서 사용할 렌더러
   const renderItem = useCallback((elem: any): React.ReactNode => (

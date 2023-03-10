@@ -1,3 +1,5 @@
+import { ColumnType } from "antd/es/table";
+
 export type PIM_TYPE = "cfni" | "cpi" | "dpi" | "fni" | "pfni" | "pi" | "ppi";
 // 데이터 유형
 export const PIM_CFNI: PIM_TYPE = "cfni";
@@ -13,6 +15,8 @@ export interface TableHeader {
   className?: string
   dataIndex: string
   key: string
-  title: React.ReactNode
+  sort?: boolean,
+  sortDirections?: string[],
+  title?: React.ReactNode
   width?: string | number
 }

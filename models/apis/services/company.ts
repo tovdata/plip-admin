@@ -6,17 +6,17 @@ import { isEmptyObject } from "@/utilities/common";
 
 /**
  * [API Caller] 회사 목록 조회
- * @param isSimple 간편 조회 여부 (이름과 ID)
+ * @param from 기간
  * @returns 조회 결과
  */
-export async function getCompanies(isSimple?: boolean): Promise<any[]> {
+export async function getCompanies(from?: number): Promise<any[]> {
   try {
     // API 호출
-    const { data } = await authApi.get("/companies");
+    const { data } = await authApi.get("/companies?with_counts=true");
     // 예외 처리
     if (isEmptyObject(data)) return [];
     // 데이터 처리 및 반환
-    return isSimple ? data.map((item: any): any => ({ id: item.id, name: item.name })) : data;
+    return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
     catchRequestError(err, false);
     return [];
@@ -51,6 +51,22 @@ export async function getCompanyCount(): Promise<number> {
   } catch (err: any) {
     catchRequestError(err, false);
     return 0;
+  }
+}
+/**
+ * [API Caller] 회사 이름 조회
+ * @param companyId 회사 ID
+ * @returns 조회 결과
+ */
+export async function getCompanyName(companyId: string): Promise<string> {
+  try {
+    // API 호출
+    const { data } = await authApi.get(`/companies/${companyId}`);
+    // 응답 처리
+    return isEmptyObject(data) ? null : data.name ?? "";
+  } catch (err: any) {
+    catchRequestError(err);
+    return "";
   }
 }
 /**

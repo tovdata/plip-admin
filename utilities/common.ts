@@ -75,3 +75,21 @@ export function transformToDate(timestamp?: number): string {
     return "";
   }
 }
+/**
+ * [Function] 날짜 변환 (YYYY-MM-DD HH:mm)
+ * @param timestamp 유닉스 타임스탬프
+ * @returns 변환된 날짜 (문자열)
+ */
+export function transformToDateTime(timestamp?: number): string {
+  try {
+    // 예외 처리
+    if (isEmptyNumber(timestamp)) return "";
+    // 유닉스 타임스탬프 변환 (miliscend 단위)
+    const value: number = (timestamp as number) > 1_000_000_000_000 ? (timestamp as number) / 1000 : (timestamp as number);
+    // 변환 및 반환
+    return dayjs.unix(value).format("YYYY-MM-DD HH:mm");
+  } catch {
+    console.error("[Utilities Error] tranformToDate function error.");
+    return "";
+  }
+}

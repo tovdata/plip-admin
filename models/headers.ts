@@ -4,7 +4,9 @@ import { TableHeader } from "@/types";
 // 회사 목록 테이블 헤더
 export const TableHeaderForCompany: TableHeader[] = [
   { dataIndex: "name", key: "name", title: "회사명" },
-  { category: "date", dataIndex: "created_at", key: "created_at", title: "생성 일자" },
+  { dataIndex: "N_of_services", key: "N_of_services", sort: true,  title: "서비스 수" },
+  { dataIndex: "N_of_users", key: "N_of_users", sort: true, title: "사용자 수" },
+  { category: "date", dataIndex: "created_at", key: "created_at", sortDirections: ["ascend"], title: "생성 일자" },
   { dataIndex: "m_name", key: "m_name", title: "책임자명" },
   { dataIndex: "m_email", key: "m_email", title: "책임자이메일" }
 ];
@@ -72,4 +74,21 @@ export const TableHeaderForPpiForeign: TableHeader[] = [
   { category: "item-split", dataIndex: "items", key: "items", title: "항목" },
   { dataIndex: "period", key: "period", title: "보유 및 이용기간" },
   { dataIndex: "charger", key: "charger", title: "관리책임자의 연락처" }
+];
+// 서비스 목록 테이블 헤더
+export const TableHeaderForService: TableHeader[] = [
+  { dataIndex: "name", key: "name", title: "이름" },
+  { dataIndex: "company_name", key: "company_name", title: "회사명" },
+  { category: "date", dataIndex: "create_at", key: "create_at", sortDirections: ["ascend"], title: "생성 일자" },
+  { dataIndex: "url", key: "url", title: "URL" }
+];
+// 사용자 목록 테이블 헤더
+export const TableHeaderForUser: TableHeader[] = [
+  { dataIndex: "name", key: "name", title: "이름" },
+  { dataIndex: "email", key: "email", title: "이메일" },
+  { dataIndex: "company_name", key: "company_name", title: "회사명" },
+  { category: "date", dataIndex: "created_at", key: "created_at", sortDirections: ["ascend"], title: "가입 일자" },
+  { category: "phone", dataIndex: "contact", key: "contact", title: "연락처" },
+  { category: "check", dataIndex: "ssa1", key: "ssa1", title: "동의 여부" },
+  { category: "datetime", dataIndex: "last_signin", key: "last_signin", sort: true, title: "최근 로그인 일시" }
 ];

@@ -23,7 +23,7 @@ export function UserListForm({ companyId, onOpen }: { companyId: string, onOpen:
 
   return (
     <FormBox className="h-full" extra={uElement} title="사용자">
-      <Input.Search className="px-6" onSearch={onSearch} />
+      <Input.Search addonBefore="사용자명" className="px-6" onSearch={onSearch} />
       <div className="mt-6">
         <UserList companyId={companyId} keyword={keyword} onCount={onCount} onOpen={onOpen} />
       </div>
@@ -32,7 +32,23 @@ export function UserListForm({ companyId, onOpen }: { companyId: string, onOpen:
 }
 /** [Component] 사용자 목록 테이블 폼(Form) */
 export function UserTableForm(): JSX.Element {
+  // 검색 키워드
+  const [keyword, setKeyword] = useState<string>("");
+  // 검색된 데이터 수
+  const [count, setCount] = useState<number>(0);
+  
+  /** [Event handler] 검색된 데이터 수 */
+  const onCount = useCallback((value: number): void => setCount(value), []);
+  /** [Event handler] 검색 */
+  const onSearch = useCallback((value: string): void => setKeyword(value), []);
+
   return (
-    <UserTable />
+    <div>
+      <div className="mb-4 px-6">
+        <Input.Search addonBefore="사용자명" onSearch={onSearch} />
+        <p className="mb-0 text-sm">{`검색 결과 : ${count}개`}</p>
+      </div>
+      <UserTable keyword={keyword} onCount={onCount} />
+    </div>
   );
 }

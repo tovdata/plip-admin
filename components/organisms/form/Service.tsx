@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 // Component
+import { Input } from "antd";
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";
 import { FormBox, PimStatisticsBox } from "@/components/molecules/Box";
 import { DescriptionGroup, LastModifiedInfoGroup } from "@/components/molecules/Group";
@@ -117,7 +118,23 @@ export function ServiceListForm({ className, companyId }: { className?: string, 
 }
 /** [Component] 서비스 전체 목록 테이블 폼(Form) */
 export function ServiceTableForm(): JSX.Element {
+  // 검색 키워드
+  const [keyword, setKeyword] = useState<string>("");
+  // 검색된 데이터 수
+  const [count, setCount] = useState<number>(0);
+  
+  /** [Event handler] 검색된 데이터 수 */
+  const onCount = useCallback((value: number): void => setCount(value), []);
+  /** [Event handler] 검색 */
+  const onSearch = useCallback((value: string): void => setKeyword(value), []);
+
   return (
-    <ServiceTable />
+    <div>
+      <div className="mb-4 px-6">
+        <Input.Search addonBefore="서비스명" onSearch={onSearch} />
+        <p className="mb-0 text-sm">{`검색 결과 : ${count}개`}</p>
+      </div>
+      <ServiceTable keyword={keyword} onCount={onCount} />
+    </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 // Component
 import { Tabs } from "antd";
 import { RecentCompanyTable, RecentServiceTable, RecentUserTable } from "@/components/molecules/Table";
@@ -13,7 +13,10 @@ const tabItems: any[] = [
 ];
 
 /** [Component] 메인 탭(Tab) */
-export function MainTabs(): JSX.Element {
+export function MainTabs({ tabKey }: { tabKey?: string }): JSX.Element {
+  // Key
+  const [activeKey, setActiveKey] = useState<string | undefined>(tabKey);
+
   // 기준일 (Timestamp)
   const timestamp: number = dayjs(dayjs().subtract(1, "M").format("YYYY-MM-DD")).unix()
   // Tab 아이템
@@ -33,7 +36,13 @@ export function MainTabs(): JSX.Element {
     return item;
   }), [timestamp]);
 
+  /** [Event handler] 키(Key) 변경 */
+  const onChange = useCallback((key: string): void => setActiveKey(key), []);
+
+  /** [Event hook] 키(Key) 초기화 */
+  useEffect((): void => setActiveKey(tabKey), [tabKey]);
+
   return (
-    <Tabs items={items} tabBarStyle={{ marginBottom: 0, paddingLeft: 24 }} />
+    <Tabs activeKey={activeKey} items={items} onChange={onChange} tabBarStyle={{ marginBottom: 0, paddingLeft: 24 }} />
   );
 }

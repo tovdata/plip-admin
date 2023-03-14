@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 // Component
 import { Table } from "antd";
 import Link from "next/link";
@@ -12,9 +12,9 @@ import { PIM_CPI, PIM_PI, PIM_PPI, PIM_TYPE, TableHeader } from "@/types";
 // Icon
 import { CheckCircleOutlined } from "@ant-design/icons";
 // Query
-import { getCompanies } from "@/apis/services/company";
+import { findCompanies, getCompanies } from "@/apis/services/company";
 import { getConsents, getIpps, getPipps } from "@/apis/services/documentation";
-import { getPimItems, getServices } from "@/apis/services/service";
+import { findServices, getPimItems, getServices } from "@/apis/services/service";
 import { getUsers } from "@/models/apis/services/user";
 // Utilities
 import { isEmptyString, transformToDate, transformToDateTime } from "@/utilities/common";
@@ -86,41 +86,23 @@ export function CpiTable({ serviceId }: { serviceId: string }): JSX.Element {
 }
 /** [Component] 회사 목록 테이블 */
 export function CompanyTable({ keyword, onCount }: { keyword?: string, onCount: (value: number) => void }): JSX.Element {
-  // 목록 데이터
-  const [dataSource, setDataSource] = useState<any[]>([]);
-  // 로딩 상태
-  const [loading, setLoading] = useState<boolean>(true);
-
   // 회사 목록 조회
-  const { data: companies, isLoading } = useQuery(["company", "list"], async () => await getCompanies(), { keepPreviousData: true });
+  const { data: companies, isFetched, refetch } = useQuery(["company", "list"], async () => await findCompanies(keyword), { keepPreviousData: true });
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForCompany).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/company/info/${record.id}`}>{value}</Link>) }) : value), []);
 
-  /** [Event hook] 목록 데이터 초기화 */
-  useEffect((): void => {
-    if (companies) {
-      setDataSource(companies);
-    }
-    setLoading(isLoading);
-  }, [isLoading, companies]);
-  /** [Event hook] 검색에 따른 목록 필터링 */
-  useEffect((): void => {
-    if (companies) {
-      if (isEmptyString(keyword)) {
-        onCount(companies.length);
-        setDataSource(companies);
-      } else {
-        const filtered: any[] = companies.filter((item: any): boolean => item.name.includes(keyword));
-        onCount(filtered.length);
-        setDataSource(filtered);
-      }
-    } else {
-      onCount(0);
-    }
-  }, [companies, keyword, onCount]);
+  /** [Event hook] 검색 갯수 파악 */
+  useEffect((): void => companies ? onCount(companies.length) : undefined, [companies, onCount]);
+  /** [Event hook] 검색에 따른 데이터 처리 */
+  useEffect((): any => {
+    async function fetchData() {
+      refetch();
+    };
+    fetchData();
+  }, [keyword]);
 
   return (
-    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
+    <Table columns={columns} dataSource={companies} loading={!isFetched} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 440 }} />
   );
 }
 /** [Component] 동의서 목록 테이블 */
@@ -186,7 +168,7 @@ export function RecentCompanyTable({ timestamp }: { timestamp: number }): JSX.El
   // 목록 조회
   const { data, isLoading } = useQuery(["company", "list", "recent"], async () => await getCompanies(timestamp));
   // 컬럼 데이터 가공
-  const columns: any[] = useMemo(() => setColumns(TableHeaderForCompany).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/company/info/${record.id}`}>{value}</Link>) }) : value), []);
+  const columns: any[] = useMemo(() => setColumns(TableHeaderForCompany).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): React.ReactNode => (<Link className="text-gray-800" href={`/company/info/${record.id}`}>{value}</Link>) }) : value), []);
 
   return (
     <Table columns={columns} dataSource={data} loading={isLoading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 440 }} />
@@ -197,7 +179,7 @@ export function RecentServiceTable({ timestamp }: { timestamp: number }): JSX.El
   // 목록 조회
   const { data, isLoading } = useQuery(["service", "list", "recent"], async () => await getServices(timestamp));
   // 컬럼 데이터 가공
-  const columns: any[] = useMemo(() => setColumns(TableHeaderForService).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/service/info/${record.id}`}>{value}</Link>) }) : value), []);
+  const columns: any[] = useMemo(() => setColumns(TableHeaderForService).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): React.ReactNode => (<Link className="text-gray-800" href={`/service/info/${record.id}`}>{value}</Link>) }) : value), []);
 
   return (
     <Table columns={columns} dataSource={data} loading={isLoading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 440 }} />
@@ -210,7 +192,7 @@ export function RecentUserTable({ timestamp }: { timestamp: number }): JSX.Eleme
   // 컬럼 데이터
   const columns: any[] = useMemo(() => setColumns(TableHeaderForUser).map((value: any): any => {
     if (value.key === "company_name") {
-      return { ...value, filters: [{ text: "가입", value: true }, { text: "미가입", value: false }], onFilter: (value: boolean, record: any): boolean => value ? !isEmptyString(record.company_name) : isEmptyString(record.company_name) };
+      return { ...value, filters: [{ text: "가입", value: true }, { text: "미가입", value: false }], onFilter: (value: boolean, record: any): boolean => value ? !isEmptyString(record.company_name) : isEmptyString(record.company_name), render: (value: string, record: any): React.ReactNode => record.affiliation ? (<Link className="text-gray-800" href={`/company/info/${record.affiliation}`}>{value}</Link>) : value };
     } else if (value.key === "ssa1") {
       return { ...value, filters: [{ text: "동의", value: 1 }, { text: "비동의", value: 0 }], onFilter: (value: number, record: any): boolean => record.ssa1 === value };
     } else {
@@ -223,42 +205,34 @@ export function RecentUserTable({ timestamp }: { timestamp: number }): JSX.Eleme
   );
 }
 /** [Component] 서비스 전체 목록 테이블 */
-export function ServiceTable(): JSX.Element {
-  // 목록 데이터
-  const [dataSource, setDataSource] = useState<any[]>([]);
-  // 로딩 상태
-  const [loading, setLoading] = useState<boolean>(true);
-
-  // 사용자 목록 조회
-  const { data: services, isLoading } = useQuery(["service", "list"], async () => await getServices());
+export function ServiceTable({ keyword, onCount }: { keyword?: string, onCount: (value: number) => void }): JSX.Element {
+  // 서비스 목록 조회
+  const { data: services, isFetched, refetch } = useQuery(["service", "list"], async () => await findServices(keyword));
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForService).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/service/info/${record.id}`}>{value}</Link>) }) : value), []);
 
-  /** [Event hook] 목록 데이터 초기화 */
-  useEffect((): void => {
-    if (services) {
-      setDataSource(services);
-    }
-    setLoading(isLoading);
-  }, [isLoading, services]);
+  /** [Event hook] 검색 갯수 파악 */
+  useEffect((): void => services ? onCount(services.length) : undefined, [services, onCount]);
+  /** [Event hook] 검색에 따른 데이터 처리 */
+  useEffect((): any => {
+    async function fetchData() {
+      refetch();
+    };
+    fetchData();
+  }, [keyword]);
 
   return (
-    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
+    <Table columns={columns} dataSource={services} loading={!isFetched} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
   );
 }
 /** [Component] 사용자 전체 목록 테이블 */
-export function UserTable(): JSX.Element {
-  // 목록 데이터
-  const [dataSource, setDataSource] = useState<any[]>([]);
-  // 로딩 상태
-  const [loading, setLoading] = useState<boolean>(true);
-
+export function UserTable({ keyword, onCount }: { keyword?: string, onCount: (value: number) => void }): JSX.Element {
   // 사용자 목록 조회
-  const { data: users, isLoading } = useQuery(["user", "list"], async () => await getUsers());
+  const { data: users, isFetched, refetch } = useQuery(["user", "list"], async () => await getUsers());
   // 컬럼 데이터
   const columns: any[] = useMemo(() => setColumns(TableHeaderForUser).map((value: any): any => {
     if (value.key === "company_name") {
-      return { ...value, filters: [{ text: "가입", value: true }, { text: "미가입", value: false }], onFilter: (value: boolean, record: any): boolean => value ? !isEmptyString(record.company_name) : isEmptyString(record.company_name) };
+      return { ...value, filters: [{ text: "가입", value: true }, { text: "미가입", value: false }], onFilter: (value: boolean, record: any): boolean => value ? !isEmptyString(record.company_name) : isEmptyString(record.company_name), render: (value: string, record: any): React.ReactNode => record.affiliation ? (<Link className="text-gray-800" href={`/company/info/${record.affiliation}`}>{value}</Link>) : value };
     } else if (value.key === "ssa1") {
       return { ...value, filters: [{ text: "동의", value: 1 }, { text: "비동의", value: 0 }], onFilter: (value: number, record: any): boolean => record.ssa1 === value };
     } else {
@@ -266,16 +240,18 @@ export function UserTable(): JSX.Element {
     }
   }), []);
 
-  /** [Event hook] 목록 데이터 초기화 */
-  useEffect((): void => {
-    if (users) {
-      setDataSource(users);
-    }
-    setLoading(isLoading);
-  }, [isLoading, users]);
+  /** [Event hook] 검색 갯수 파악 */
+  useEffect((): void => users ? onCount(users.length) : undefined, [users, onCount]);
+  /** [Event hook] 검색에 따른 데이터 처리 */
+  useEffect((): any => {
+    async function fetchData() {
+      refetch();
+    };
+    fetchData();
+  }, [keyword]);
 
   return (
-    <Table columns={columns} dataSource={dataSource} loading={loading} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
+    <Table columns={columns} dataSource={users} loading={!isFetched} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 480 }} />
   );
 }
 

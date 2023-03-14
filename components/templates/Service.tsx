@@ -34,7 +34,7 @@ export function ServiceInfoTemplate({ serviceId }: { serviceId: string }): JSX.E
   // Breadcrumb 아이템
   const bcItems: ItemType[] = useMemo(() => (companyName && service) ? [
     { href: "/", title: (<HomeOutlined />) },
-    { href: `/company/${service.company_id}`, title: companyName },
+    { href: `/company/info/${service.company_id}`, title: companyName },
     { title: service.name }
   ] : [], [companyName, service]);
 

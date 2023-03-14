@@ -8,7 +8,7 @@ import { lastSignin, transformToDate } from "@/utilities/common";
 /** [Component] 서비스 목록 아이템 */
 export function ServiceListItem({ createAt, name, id }: { createAt: number, name: string, id: string }): JSX.Element {
   // 서비스 정보 URL
-  const href: string = useMemo(() => `/service/${id}`, [id]);
+  const href: string = useMemo(() => `/service/info/${id}`, [id]);
 
   return (
     <Link className="border-solid border-0 border-b border-slate-200 box-border cursor-pointer flex items-center justify-between px-6 py-3 text-black" href={href}>

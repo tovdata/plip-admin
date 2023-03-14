@@ -2,19 +2,19 @@
 import { authApi } from "@/apis/utilities/core";
 // Utilites
 import { catchRequestError } from "@/apis/utilities/error";
-import { isEmptyObject } from "@/utilities/common";
+import { isEmptyObject, isEmptyString } from "@/utilities/common";
 
 /**
  * [API Caller] 사용자 검색
- * @param name 사용자 이름
+ * @param keyword 키워드
  * @returns 검색 결과
  */
-export async function findUser(name: string): Promise<any> {
+export async function findUsers(keyword?: string): Promise<any> {
   try {
     // API 호출
-    const { data } = await authApi.get(`/users?keyword=${name}`);
+    const { data } = await authApi.get(isEmptyString(keyword) ? "/users?company_name=true" : `/users?keyword=${encodeURIComponent(keyword as string)}&company_name=true`);
     // 응답 처리
-    return isEmptyObject(data) ? null : data;
+    return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
     catchRequestError(err);
     return null;

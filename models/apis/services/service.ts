@@ -2,8 +2,24 @@
 import { authApi } from "@/apis/utilities/core";
 // Utilites
 import { catchRequestError } from "@/apis/utilities/error";
-import { isEmptyObject } from "@/utilities/common";
+import { isEmptyObject, isEmptyString } from "@/utilities/common";
 
+/**
+ * [API Caller] 서비스 검색
+ * @param from 키워드
+ * @returns 검색 결과
+ */
+export async function findServices(keyword?: string): Promise<any[]> {
+  try {
+    // API 호출
+    const { data } = await authApi.get(isEmptyString(keyword) ? "/services?company_name=true" : `/services?keyword=${encodeURIComponent(keyword as string)}&company_name=true`);
+    // 응답 처리
+    return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.create_at - a.create_at);
+  } catch (err: any) {
+    catchRequestError(err, false);
+    return [];
+  }
+}
 /**
  * [API Caller] 최근 정보 수정일 조회
  * @param serviceId 서비스 ID

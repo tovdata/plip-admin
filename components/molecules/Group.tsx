@@ -1,9 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 // Component
-import { Form, Input } from "antd";
+import { Form } from "antd";
 import { DescriptionGroupLabel, InputGroupLabel } from "@/components/atoms/Label";
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";
-import { KeywordSearchSelect } from "@/components/atoms/Select";
 // Data type
 import type { SEARCH_TYPE } from "@/types";
 // Utilities
@@ -15,11 +14,11 @@ import { SearchButton } from "../atoms/Button";
 export function DescriptionGroup({ children, className, displayEmpty, label }: { children?: React.ReactNode, className?: string, displayEmpty?: boolean, label: React.ReactNode }): JSX.Element {
   return (
     <div className={className}>
-      <div className="flex items-center mb-0.5">
+      <div className="flex items-center mb-1">
         <DescriptionGroupLabel>{label}</DescriptionGroupLabel>
       </div>
       {children ? (
-        <p className="m-0">{children}</p>
+        <>{children}</>
       ) : displayEmpty ? (
         <p className="m-0 text-gray-300">None</p>
       ) : (<></>)}
@@ -48,10 +47,12 @@ export function LastModifiedInfoGroup({ className, datetime, label, user }: { cl
   return (
     <div className="flex flex-wrap justify-between last:mb-0 mb-1">
       <h4 className={combineClassName}>{label}</h4>
-      <div className="flex justify-between w-36">
-        <DescriptionParagraph>{transformToDate(datetime)}</DescriptionParagraph>
-        <DescriptionParagraph>{user}</DescriptionParagraph>
-      </div>
+      {datetime ? (
+        <div className="flex justify-between w-36">
+          <DescriptionParagraph>{transformToDate(datetime)}</DescriptionParagraph>
+          <DescriptionParagraph>{user}</DescriptionParagraph>
+        </div>
+      ) : (<></>)}
     </div>
   );
 }

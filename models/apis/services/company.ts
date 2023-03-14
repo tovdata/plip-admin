@@ -2,8 +2,26 @@
 import { authApi } from "@/apis/utilities/core";
 // Utilites
 import { catchRequestError } from "@/apis/utilities/error";
-import { isEmptyObject } from "@/utilities/common";
+import { isEmptyObject, isEmptyString } from "@/utilities/common";
 
+/**
+ * [API Caller] 회사 검색
+ * @param keyword 검색 키워드
+ * @returns 검색 결과
+ */
+export async function findCompanies(keyword?: string): Promise<any[]> {
+  try {
+    // API 호출
+    const { data } = await authApi.get(isEmptyString(keyword) ? "/companies?with_counts=true" : `/companies?keyword=${encodeURIComponent(keyword as string)}&with_counts=true`);
+    // 예외 처리
+    if (isEmptyObject(data)) return [];
+    // 데이터 가공 및 반환
+    return data.sort((a: any, b: any): number => b.created_at - a.created_at);
+  } catch (err: any) {
+    catchRequestError(err, false);
+    return [];
+  }
+}
 /**
  * [API Caller] 회사 목록 조회 (Batch)
  * @param size Batch size
@@ -16,7 +34,7 @@ export async function getBatchCompanies(size: number = 20, offset?: number) {
     const { data } = await authApi.get(offset ? `/companies?offset=${offset}&limit=${offset}&with_counts=true` : `/companies?offset=0&limit=${size}&with_counts=true`);
     // 예외 처리
     if (isEmptyObject(data)) return [];
-    // 데이터 처리 및 반환
+    // 데이터 가공 및 반환
     return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
     catchRequestError(err, false);
@@ -34,7 +52,7 @@ export async function getCompanies(from?: number): Promise<any[]> {
     const { data } = await authApi.get(from ? `/companies?from=${from}&with_counts=true` : `/companies?with_counts=true`);
     // 예외 처리
     if (isEmptyObject(data)) return [];
-    // 데이터 처리 및 반환
+    // 데이터 가공 및 반환
     return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
     catchRequestError(err, false);

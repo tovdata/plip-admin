@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useCallback, useState } from "react";
 import { useQuery } from "react-query";
@@ -5,17 +6,22 @@ import { useQuery } from "react-query";
 import { Button, Col, Row } from "antd";
 import { Container } from "@/components/atoms/Container";
 import { FormBox } from "@/components/molecules/Box";
-import { CompanyInfoForm, CompanyListForm } from "@/components/organisms/form/Company";
 import { IppDocumentationForm } from "@/components/organisms/form/Documentation";
 import { ServiceListForm } from "@/components/organisms/form/Service";
 import { UserListForm } from "@/components/organisms/form/User";
 import { UserInfoPopup } from "@/components/organisms/Popup";
+// Component (dynamic)
+const CompanyInfoForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Company").then((module: any): any => module.CompanyInfoForm), { loading: () => (<></>), ssr: false });
+const CompanyTableForm = dynamic(() => import("@/components/organisms/form/Company").then((module: any): any => module.CompanyTableForm), { loading: () => (<></>), ssr: false });
+// Data type
+import type { ComponentType } from "react";
 // Query
 import { getCompany } from "@/models/apis/services/company";
 // Icon
 import { LeftOutlined } from "@ant-design/icons";
 // Utilities
 import { isEmptyString } from "@/utilities/common";
+
 
 /** [Component] 회사 정보 페이지 템플릿 */
 export function CompanyInfoTemplate({ companyId }: { companyId: string }): JSX.Element {
@@ -45,12 +51,16 @@ export function CompanyInfoTemplate({ companyId }: { companyId: string }): JSX.E
       </div>
       <Row gutter={[16, 16]}>
         <Col span={24}>
+          <FormBox title="회사 기본 정보">
+            <CompanyInfoForm company={company} />
+          </FormBox>
+        </Col>
+        <Col span={24}>
           <Row className="h-full" gutter={[16, 16]}>
-            <Col className="flex flex-col h-full" md={10} span={24}>
-              <CompanyInfoForm className="mb-4" company={company} />
+            <Col className="flex h-full" md={10} span={24}>
               <ServiceListForm className="flex-auto" companyId={companyId} />
             </Col>
-            <Col className="h-full" md={14} span={24}>
+            <Col className="flex h-full" md={14} span={24}>
               <UserListForm companyId={companyId} onOpen={onOpen} />
             </Col>
           </Row>
@@ -68,7 +78,7 @@ export function CompanyListTemplate(): JSX.Element {
   return (
     <Container>
       <FormBox title="전체 회사 목록">
-        <CompanyListForm />
+        <CompanyTableForm />
       </FormBox>
     </Container>
   );

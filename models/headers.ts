@@ -84,11 +84,11 @@ export const TableHeaderForService: TableHeader[] = [
 ];
 // 사용자 목록 테이블 헤더
 export const TableHeaderForUser: TableHeader[] = [
-  { dataIndex: "name", key: "name", title: "이름" },
-  { dataIndex: "email", key: "email", title: "이메일" },
-  { dataIndex: "company_name", key: "company_name", title: "회사명" },
-  { category: "date", dataIndex: "created_at", key: "created_at", sortDirections: ["ascend"], title: "가입 일자" },
-  { category: "phone", dataIndex: "contact", key: "contact", title: "연락처" },
-  { category: "check", dataIndex: "ssa1", key: "ssa1", title: "동의 여부" },
-  { category: "datetime", dataIndex: "last_signin", key: "last_signin", sort: true, title: "최근 로그인 일시" }
+  { dataIndex: "name", key: "name", title: "이름", width: "14%" },
+  { dataIndex: "email", key: "email", title: "이메일", width: "18%" },
+  { dataIndex: "company_name", key: "company_name", title: "회사명", width: "20%" },
+  { category: "date", dataIndex: "created_at", key: "created_at", sortDirections: ["ascend"], title: "가입 일자", width: "12%" },
+  { category: "phone", dataIndex: "contact", key: "contact", title: "연락처", width: "12%" },
+  { category: "check", dataIndex: "ssa1", key: "ssa1", title: "동의 여부", width: "10%" },
+  { category: "datetime", dataIndex: "last_signin", key: "last_signin", sort: true, title: "최근 로그인 일시", width: "14%" }
 ];

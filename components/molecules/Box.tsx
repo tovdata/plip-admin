@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 // Component
+import { Spin } from "antd";
+import Link from "next/link";
 import { StatisticCountParagraph } from "@/components/atoms/Paragraph";
 import { FormBoxTitle } from "@/components/atoms/Title";
 
@@ -21,12 +23,15 @@ export function Box({ children, className, onClick }: { children?: React.ReactNo
   );
 }
 /** [Component] 폼(Form) 박스 */
-export function FormBox({ children, className, extra, title }: { children?: React.ReactNode, className?: string, extra?: React.ReactNode, title: string }): JSX.Element {
+export function FormBox({ children, className, description, extra, title }: { children?: React.ReactNode, className?: string, description?: React.ReactNode, extra?: React.ReactNode, title: string }): JSX.Element {
   return (
     <Box className={className}>
-      <div className="flex items-center justify-between px-6 py-5">
-        <FormBoxTitle>{title}</FormBoxTitle>
-        <>{extra}</>
+      <div className="px-6 py-5">
+        <div className="flex items-center justify-between">
+          <FormBoxTitle>{title}</FormBoxTitle>
+          <>{extra}</>
+        </div>
+        {description ? (<p className="mb-0 mt-1 text-gray-400 text-sm">{description}</p>) : (<></>)}
       </div>
       <>{children}</>
     </Box>
@@ -64,13 +69,15 @@ export function PimStatisticsBox({ count, containLink, extra, link, onClick, tit
   );
 }
 /** [Component] 통계 박스 */
-export function StatisticsBox({ count, title }: { count?: number, title: string }): JSX.Element {
+export function StatisticsBox({ count, href, loading, title }: { count?: number, href: string, loading?: boolean, title: string }): JSX.Element {
   return (
     <Box>
-      <div className="px-6 py-4">
-        <FormBoxTitle>{title}</FormBoxTitle>
-        <StatisticCountParagraph className="">{count !== undefined ? count : 0}</StatisticCountParagraph>
-      </div>
+      <Link className="block cursor-pointer no-underline px-6 py-4" href={href} rel="noopener noreferrer">
+        <Spin spinning={loading}>
+          <FormBoxTitle>{title}</FormBoxTitle>
+          <StatisticCountParagraph className="">{count !== undefined ? count : 0}</StatisticCountParagraph>
+        </Spin>
+      </Link>
     </Box>
   );
 }

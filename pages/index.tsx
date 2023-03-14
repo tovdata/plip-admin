@@ -1,13 +1,13 @@
 import dynamic from "next/dynamic";
 // Component
-const DashboardTemplate: ComponentType<any> = dynamic(() => import("@/components/templates/Dashboard").then((module: any): any => module.DashboardTemplate));
+const Template: ComponentType<any> = dynamic(() => import("@/components/templates/Home").then((module: any): any => module.Template));
 // Data type
 import type { ComponentType } from "react";
 
 export default function Home() {
   return (
     <main>
-      <DashboardTemplate />
+      <Template />
     </main>
   );
 }

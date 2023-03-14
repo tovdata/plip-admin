@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 // Component
-const CompanyTemplate: ComponentType<any> = dynamic(() => import("@/components/templates/Company").then((module: any): any => module.CompanyTemplate));
+const CompanyInfoTemplate: ComponentType<any> = dynamic(() => import("@/components/templates/Company").then((module: any): any => module.CompanyInfoTemplate));
 // Data type
 import type { ComponentType } from "react";
 
@@ -12,8 +12,6 @@ export default function Page() {
   const { id: companyId } = router.query;
 
   return (
-    <main>
-      <CompanyTemplate companyId={companyId} />
-    </main>
+    <CompanyInfoTemplate companyId={companyId} />
   );
 }

@@ -3,7 +3,9 @@ import { useCallback, useState } from "react";
 import { useQuery } from "react-query";
 // Component
 import { Button, Col, Row } from "antd";
-import { CompanyInfoForm } from "@/components/organisms/form/Company";
+import { Container } from "@/components/atoms/Container";
+import { FormBox } from "@/components/molecules/Box";
+import { CompanyInfoForm, CompanyListForm } from "@/components/organisms/form/Company";
 import { IppDocumentationForm } from "@/components/organisms/form/Documentation";
 import { ServiceListForm } from "@/components/organisms/form/Service";
 import { UserListForm } from "@/components/organisms/form/User";
@@ -15,8 +17,8 @@ import { LeftOutlined } from "@ant-design/icons";
 // Utilities
 import { isEmptyString } from "@/utilities/common";
 
-/** [Component] 회사 페이지 템플릿 */
-export function CompanyTemplate({ companyId }: { companyId: string }): JSX.Element {
+/** [Component] 회사 정보 페이지 템플릿 */
+export function CompanyInfoTemplate({ companyId }: { companyId: string }): JSX.Element {
   // 라우터
   const router = useRouter();
 
@@ -36,7 +38,7 @@ export function CompanyTemplate({ companyId }: { companyId: string }): JSX.Eleme
   const onOpen = useCallback((value: any): void => { setOpen(true); setUser(value) }, []);
 
   return (
-    <div className="m-auto max-w-7xl w-full">
+    <Container>
       <div className="flex items-center">
         <Button className="mr-2" icon={<LeftOutlined />} onClick={onBack} shape="circle" type="text" />
         <h2>{company?.name}</h2>
@@ -58,6 +60,16 @@ export function CompanyTemplate({ companyId }: { companyId: string }): JSX.Eleme
         </Col>
       </Row>
       <UserInfoPopup onCancel={onClose} open={open} user={user} />
-    </div>
+    </Container>
+  );
+}
+/** [Component] 회사 전체 목록 페이지 템플릿 */
+export function CompanyListTemplate(): JSX.Element {
+  return (
+    <Container>
+      <FormBox title="전체 회사 목록">
+        <CompanyListForm />
+      </FormBox>
+    </Container>
   );
 }

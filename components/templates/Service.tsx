@@ -2,9 +2,10 @@ import { useCallback, useMemo, useState } from "react";
 import { useQuery } from "react-query";
 // Component
 import { Breadcrumb, Col, Row } from "antd";
+import { Container } from "@/components/atoms/Container";
 import { FormBox } from "@/components/molecules/Box";
 import { ConsentDocumentationForm, PippDocumentationForm } from "@/components/organisms/form/Documentation";
-import { CpiInfoForm, DpiInfoForm, LastModifiedInfoForm, PiInfoForm, PpiInfoForm, ServiceInfoForm } from "@/components/organisms/form/Service";
+import { CpiInfoForm, DpiInfoForm, LastModifiedInfoForm, PiInfoForm, PpiInfoForm, ServiceInfoForm, ServiceTableForm } from "@/components/organisms/form/Service";
 import { PimPopup } from "@/components/organisms/Popup";
 // Data type
 import type { ItemType } from "antd/es/breadcrumb/Breadcrumb";
@@ -17,8 +18,8 @@ import { getService } from "@/apis/services/service";
 // Utilities
 import { isEmptyString } from "@/utilities/common";
 
-/** [Component] 서비스 페이지 템플릿 */
-export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Element {
+/** [Component] 서비스 정보 페이지 템플릿 */
+export function ServiceInfoTemplate({ serviceId }: { serviceId: string }): JSX.Element {
   // 팝업 표시 상태
   const [open, setOpen] = useState<boolean>(false);
   // 개인정보 관리(PIM) 데이터 유형
@@ -43,8 +44,8 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
   const onOpen = useCallback((value: PIM_TYPE): void => { setOpen(true), setPimType(value) }, []);
 
   return (
-    <div className="m-auto max-w-7xl w-full">
-      <div className="my-4">
+    <Container>
+      <div className="mb-4">
         <Breadcrumb items={bcItems} />
       </div>
       <Row gutter={[16, 16]}>
@@ -82,6 +83,16 @@ export function ServiceTemplate({ serviceId }: { serviceId: string }): JSX.Eleme
         </Col>
       </Row>
       <PimPopup onCancel={onClose} open={open} serviceId={serviceId} type={pimType} />
-    </div>
+    </Container>
+  );
+}
+/** [Component] 서비스 전체 목록 페이지 템플릿 */
+export function ServiceListTemplate(): JSX.Element {
+  return (
+    <Container>
+      <FormBox title="서비스 전체 목록">
+        <ServiceTableForm />
+      </FormBox>
+    </Container>
   );
 }

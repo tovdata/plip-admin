@@ -9,33 +9,27 @@ import { getUserCount } from "@/models/apis/services/user";
 /** [Component] 전체 회사 수 */
 export function CompanyCountCard(): JSX.Element {
   // 회사 수 조회
-  const { data: count } = useQuery(["company", "count"], getCompanyCount);
+  const { data: count, isLoading } = useQuery(["company", "count"], getCompanyCount);
 
   return (
-    <StatisticsBox count={count} title="전체 회사 수" />
-  );
-}
-/** [Component] 전체 문서 수 */
-export function DocumentationCountCard(): JSX.Element {
-  return (
-    <StatisticsBox count={0} title="전체 문서 수" />
+    <StatisticsBox count={count} href="/company/list" loading={isLoading} title="전체 회사 수" />
   );
 }
 /** [Component] 전체 서비스 수 */
 export function ServiceCountCard(): JSX.Element {
   // 회사 수 조회
-  const { data: count } = useQuery(["service", "count"], getServiceCount);
+  const { data: count, isLoading } = useQuery(["service", "count"], getServiceCount);
 
   return (
-    <StatisticsBox count={count} title="전체 서비스 수" />
+    <StatisticsBox count={count} href="/service/list" loading={isLoading} title="전체 서비스 수" />
   );
 }
 /** [Component] 전체 사용자 수 */
 export function UserCountCard(): JSX.Element {
   // 회사 수 조회
-  const { data: count } = useQuery(["company", "count"], getUserCount);
+  const { data: count, isLoading } = useQuery(["company", "count"], getUserCount);
 
   return (
-    <StatisticsBox count={count} title="전체 사용자 수" />
+    <StatisticsBox count={count} href="/user/list" loading={isLoading} title="전체 사용자 수" />
   );
 }

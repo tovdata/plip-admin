@@ -105,12 +105,13 @@ export async function getServiceCount(): Promise<number> {
 }
 /**
  * [API Caller] 서비스 목록 조회
+ * @param from 기준일
  * @returns 조회 결과
  */
-export async function getServices(): Promise<any[]> {
+export async function getServices(from?: number): Promise<any[]> {
   try {
     // API 호출
-    const { data } = await authApi.get("/services?company_name=true");
+    const { data } = await authApi.get(from ? `/services?from=${from}&company_name=true` : "/services?company_name=true");
     // 응답 처리
     return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.create_at - a.create_at);
   } catch (err: any) {

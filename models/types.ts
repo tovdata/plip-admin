@@ -9,6 +9,8 @@ export const PIM_FNI: PIM_TYPE = "fni";
 export const PIM_PFNI: PIM_TYPE = "pfni";
 export const PIM_PI: PIM_TYPE = "pi";
 export const PIM_PPI: PIM_TYPE = "ppi";
+// 검색 유형
+export type SEARCH_TYPE = "company" | "service" | "user";
 // 테이블 헤더
 export interface TableHeader {
   category?: string

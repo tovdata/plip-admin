@@ -12,7 +12,7 @@ import { UserListForm } from "@/components/organisms/form/User";
 import { UserInfoPopup } from "@/components/organisms/Popup";
 // Component (dynamic)
 const CompanyInfoForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Company").then((module: any): any => module.CompanyInfoForm), { loading: () => (<></>), ssr: false });
-const CompanyTableForm = dynamic(() => import("@/components/organisms/form/Company").then((module: any): any => module.CompanyTableForm), { loading: () => (<></>), ssr: false });
+const CompanyTableForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Company").then((module: any): any => module.CompanyTableForm), { loading: () => (<></>), ssr: false });
 // Data type
 import type { ComponentType } from "react";
 // Query

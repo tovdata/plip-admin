@@ -1,18 +1,25 @@
+// Data type
+import type { SearchOption } from "@/types";
 // Instance
 import { authApi } from "@/apis/utilities/core";
 // Utilites
 import { catchRequestError } from "@/apis/utilities/error";
-import { isEmptyObject, isEmptyString } from "@/utilities/common";
+import { findApiUrl } from "@/apis/utilities/process";
+import { isEmptyObject } from "@/utilities/common";
 
 /**
  * [API Caller] 회사 검색
- * @param keyword 검색 키워드
+ * @param option 검색 옵션
  * @returns 검색 결과
  */
-export async function findCompanies(keyword?: string): Promise<any[]> {
+export async function findCompanies(option?: SearchOption): Promise<any[]> {
   try {
+    // 예외 처리 (검색 키워드가 없을 경우)
+    if (isEmptyObject(option)) return [];
+    // 검색 옵션에 따른 URL
+    const url: string = findApiUrl("/companies", option as SearchOption);
     // API 호출
-    const { data } = await authApi.get(isEmptyString(keyword) ? "/companies?with_counts=true" : `/companies?keyword=${encodeURIComponent(keyword as string)}&with_counts=true`);
+    const { data } = await authApi.get(url);
     // 예외 처리
     if (isEmptyObject(data)) return [];
     // 데이터 가공 및 반환

@@ -3,12 +3,12 @@ import { TableHeader } from "@/types";
 
 // 회사 목록 테이블 헤더
 export const TableHeaderForCompany: TableHeader[] = [
-  { dataIndex: "name", key: "name", title: "회사명", width: "30%" },
-  { dataIndex: "N_of_services", key: "N_of_services", sort: true,  title: "서비스 수", width: "10%" },
-  { dataIndex: "N_of_users", key: "N_of_users", sort: true, title: "사용자 수", width: "10%" },
+  { dataIndex: "name", key: "name", title: "회사명", width: "40%" },
+  // { dataIndex: "N_of_services", key: "N_of_services", sort: true,  title: "서비스 수", width: "10%" },
+  // { dataIndex: "N_of_users", key: "N_of_users", sort: true, title: "사용자 수", width: "10%" },
   { category: "date", dataIndex: "created_at", key: "created_at", sortDirections: ["ascend"], title: "생성 일자", width: "15%" },
   { dataIndex: "m_name", key: "m_name", title: "책임자명", width: "15%" },
-  { dataIndex: "m_email", key: "m_email", title: "책임자이메일", width: "20%" }
+  { dataIndex: "m_email", key: "m_email", title: "책임자이메일", width: "30%" }
 ];
 // 동의서 문서 목록 테이블 헤더
 export const TableHeaderForConsent: TableHeader[] = [

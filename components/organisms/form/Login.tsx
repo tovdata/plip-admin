@@ -18,15 +18,21 @@ export function LoginForm(): JSX.Element {
   const setAccessToken: any = useSetRecoilState(accessTokenSelector);
 
   /** [Event handler] 로그인 */
-  const onSignin = useCallback((values: any): Promise<void> => signin(values.email, values.password).then(async (value: string | undefined): Promise<any> => {
-    if (value) {
-      setAccessToken(value);
-      // 페이지 이동
-      return router.push("/");
-    } else {
-      console.error("[ERROR] Signin error");
+  const onSignin = useCallback(async (values: any): Promise<void> => {
+    // 로그인 계정 식별 및 제한 처리
+    if (values.email.match(/.+@tovdata.com$/) === null) {
+      return Promise.resolve(alert("권한이 없습니다"));
     }
-  }).catch((err: any): void => { console.error(err) }), [setAccessToken]);
+    // 로그인
+    return signin(values.email, values.password).then(async (value: string | undefined): Promise<any> => {
+      if (value) {
+        setAccessToken(value);
+        return router.push("/");
+      } else {
+        alert("[ERROR] Login error");
+      }
+    }).catch((): void => alert("이메일 또는 비밀번호가 일치하지 않습니다."));
+  }, [setAccessToken]);
 
   return (
     <Form onFinish={onSignin}>

@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { atom, selector } from "recoil";
+import { SearchOption, SearchOptionProps } from "./types";
 
 /**
  * [Internal Function] Timestamp 생성

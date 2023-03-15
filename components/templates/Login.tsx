@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 // Component
-const LoginForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Login").then((module: any): any => module.LoginForm), { loading: () => (<></>) });
+const LoginForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Login").then((module: any): any => module.LoginForm), { loading: () => (<></>), ssr: false });
 // Data type
 import type { ComponentType } from "react";
 

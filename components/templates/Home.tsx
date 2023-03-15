@@ -23,7 +23,7 @@ export function Template({ tabs }: { tabs?: string }): JSX.Element {
           <UserCountCard />
         </div>
       </div>
-      <FormBox description="최근 1달 간의 데이터" title="최근 목록">
+      <FormBox description="기본적으로 최근 1달 간의 데이터를 보여주며, 검색 유형에 따른 검색을 지원합니다. 아무런 조건이 없을 경우, 생성(가입)일 기준 최대 100개를 조회합니다." title="최근 목록">
         <MainTabs tabKey={tabs} />
       </FormBox>
     </Container>

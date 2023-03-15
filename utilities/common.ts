@@ -20,7 +20,7 @@ export const isEmptyNumber = (value: number | null | undefined): boolean => {
  */
 export const isEmptyObject = (obj: any): boolean => {
   try {
-    return Object.keys(obj).length === 0 ? true : obj.type === "NOT_FOUND" ? true : false;
+    return obj ? Object.keys(obj).length === 0 ? true : obj.type === "NOT_FOUND" ? true : false : true;
   } catch {
     console.error("[Utilities Error] isEmptyObject function error.");
     return true;

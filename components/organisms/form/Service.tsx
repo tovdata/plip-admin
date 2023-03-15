@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 import { Input } from "antd";
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";
 import { FormBox, PimStatisticsBox } from "@/components/molecules/Box";
-import { DescriptionGroup, LastModifiedInfoGroup } from "@/components/molecules/Group";
+import { DescriptionGroup, LastModifiedInfoGroup, SearchGroup } from "@/components/molecules/Group";
 import { ServiceList } from "@/components/molecules/List";
 import { ServiceTable } from "@/components/molecules/Table";
 // Data type
@@ -13,6 +13,7 @@ import { PIM_CPI, PIM_DPI, PIM_PI, PIM_PPI, PIM_TYPE } from "@/types";
 import { getLastModified, getPiItems, getPimItems } from "@/apis/services/service";
 // Utilities
 import { isEmptyString, transformToDate } from "@/utilities/common";
+import { SearchableTableForm } from "./Common";
 
 /** [Component] 위탁 조회 폼(Form) */
 export function CpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
@@ -118,23 +119,9 @@ export function ServiceListForm({ className, companyId }: { className?: string, 
 }
 /** [Component] 서비스 전체 목록 테이블 폼(Form) */
 export function ServiceTableForm(): JSX.Element {
-  // 검색 키워드
-  const [keyword, setKeyword] = useState<string>("");
-  // 검색된 데이터 수
-  const [count, setCount] = useState<number>(0);
-  
-  /** [Event handler] 검색된 데이터 수 */
-  const onCount = useCallback((value: number): void => setCount(value), []);
-  /** [Event handler] 검색 */
-  const onSearch = useCallback((value: string): void => setKeyword(value), []);
-
   return (
-    <div>
-      <div className="mb-4 px-6">
-        <Input.Search addonBefore="서비스명" onSearch={onSearch} />
-        <p className="mb-0 text-sm">{`검색 결과 : ${count}개`}</p>
-      </div>
-      <ServiceTable keyword={keyword} onCount={onCount} />
-    </div>
+    <SearchableTableForm type="service">
+      <ServiceTable />
+    </SearchableTableForm>
   );
 }

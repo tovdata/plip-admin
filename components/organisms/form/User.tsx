@@ -5,6 +5,7 @@ import { DescriptionParagraph } from "@/components/atoms/Paragraph";
 import { FormBox } from "@/components/molecules/Box";
 import { UserList } from "@/components/molecules/List";
 import { UserTable } from "@/components/molecules/Table";
+import { SearchableTableForm } from "@/components/organisms/form/Common";
 
 /** [Component] 사용자 목록 폼(Form) */
 export function UserListForm({ companyId, onOpen }: { companyId: string, onOpen: (value: any) => void }): JSX.Element {
@@ -32,23 +33,9 @@ export function UserListForm({ companyId, onOpen }: { companyId: string, onOpen:
 }
 /** [Component] 사용자 목록 테이블 폼(Form) */
 export function UserTableForm(): JSX.Element {
-  // 검색 키워드
-  const [keyword, setKeyword] = useState<string>("");
-  // 검색된 데이터 수
-  const [count, setCount] = useState<number>(0);
-  
-  /** [Event handler] 검색된 데이터 수 */
-  const onCount = useCallback((value: number): void => setCount(value), []);
-  /** [Event handler] 검색 */
-  const onSearch = useCallback((value: string): void => setKeyword(value), []);
-
   return (
-    <div>
-      <div className="mb-4 px-6">
-        <Input.Search addonBefore="사용자명" onSearch={onSearch} />
-        <p className="mb-0 text-sm">{`검색 결과 : ${count}개`}</p>
-      </div>
-      <UserTable keyword={keyword} onCount={onCount} />
-    </div>
+    <SearchableTableForm type="user">
+      <UserTable />
+    </SearchableTableForm>
   );
 }

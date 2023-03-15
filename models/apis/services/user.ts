@@ -1,18 +1,25 @@
+// Data type
+import type { SearchOption } from "@/types";
 // Instance
 import { authApi } from "@/apis/utilities/core";
 // Utilites
 import { catchRequestError } from "@/apis/utilities/error";
-import { isEmptyObject, isEmptyString } from "@/utilities/common";
+import { findApiUrl } from "@/apis/utilities/process";
+import { isEmptyObject } from "@/utilities/common";
 
 /**
  * [API Caller] 사용자 검색
- * @param keyword 키워드
+ * @param option 검색 옵션
  * @returns 검색 결과
  */
-export async function findUsers(keyword?: string): Promise<any> {
+export async function findUsers(option?: SearchOption): Promise<any> {
   try {
+    // 예외 처리 (검색 키워드가 없을 경우)
+    if (isEmptyObject(option)) return [];
+    // 검색 옵션에 따른 URL
+    const url: string = findApiUrl("/users", option as SearchOption);
     // API 호출
-    const { data } = await authApi.get(isEmptyString(keyword) ? "/users?company_name=true" : `/users?keyword=${encodeURIComponent(keyword as string)}&company_name=true`);
+    const { data } = await authApi.get(`${url}&company_name=true`);
     // 응답 처리
     return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {

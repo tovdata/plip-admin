@@ -6,8 +6,6 @@ import type { ComponentType } from "react";
 
 export default function Home() {
   return (
-    <main>
-      <LoginTemplate />
-    </main>
+    <LoginTemplate />
   );
 }

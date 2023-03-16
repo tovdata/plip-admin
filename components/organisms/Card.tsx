@@ -27,7 +27,7 @@ export function ServiceCountCard(): JSX.Element {
 /** [Component] 전체 사용자 수 */
 export function UserCountCard(): JSX.Element {
   // 회사 수 조회
-  const { data: count, isLoading } = useQuery(["company", "count"], getUserCount);
+  const { data: count, isLoading } = useQuery(["user", "count"], getUserCount);
 
   return (
     <StatisticsBox count={count} href="/user/list" loading={isLoading} title="전체 사용자 수" />

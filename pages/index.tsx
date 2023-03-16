@@ -12,8 +12,6 @@ export default function Home() {
   const { tabs } = router.query;
 
   return (
-    <main>
-      <Template tabs={tabs} />
-    </main>
+    <Template tabs={tabs} />
   );
 }

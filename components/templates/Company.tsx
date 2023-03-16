@@ -23,9 +23,6 @@ import { isEmptyString } from "@/utilities/common";
 
 /** [Component] 회사 정보 페이지 템플릿 */
 export function CompanyInfoTemplate({ companyId }: { companyId: string }): JSX.Element {
-  // 라우터
-  const router = useRouter();
-
   // 팝업 표시 상태
   const [open, setOpen] = useState<boolean>(false);
   // 선택된 사용자
@@ -41,8 +38,6 @@ export function CompanyInfoTemplate({ companyId }: { companyId: string }): JSX.E
   // 회사 조회
   const { data: company } = useQuery([companyId, "company", "info"], async () => await getCompany(companyId), { enabled: !isEmptyString(companyId) });
 
-  /** [Event handler] 뒤로 가기 */
-  const onBack = useCallback(async (): Promise<boolean> => router.push("/"), [router]);
   /** [Event handler] 팝업 닫기 */
   const onClose = useCallback((): void => { setOpen(false); setUser(undefined) }, []);
   /** [Event handler] 내부 관리계획 수 변경 */

@@ -1,19 +1,17 @@
-import type { NextPage } from 'next';
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
 // Component
-const Session: ComponentType<any> = dynamic(() => import('@/components/Session'), { loading: () => (<></>), ssr: false });
-const Home: ComponentType<any> = dynamic(() => import('@/components/pages/Home'), { loading: () => (<></>), ssr: false });
-// Type
-import type { ComponentType } from 'react';
+const Template: ComponentType<any> = dynamic(() => import("@/components/templates/Home").then((module: any): any => module.Template));
+// Data type
+import type { ComponentType } from "react";
 
-const App: NextPage = () => {
+export default function Home() {
+  // 라우터
+  const router = useRouter();
+  // 회사 ID
+  const { tabs } = router.query;
+
   return (
-    <Session>
-      {/* <StyledPageContainer> */}
-        <Home />
-      {/* </StyledPageContainer> */}
-    </Session>
-  )
+    <Template tabs={tabs} />
+  );
 }
-
-export default App;

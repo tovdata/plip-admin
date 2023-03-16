@@ -4,34 +4,34 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npx tailwindcss -o /out/styles/globals.css --minify",
     "build": "next build && next export",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@ant-design/charts": "^1.4.2",
-    "babel-plugin-styled-components": "^2.0.7",
-    "babel-preset-next": "^1.4.0",
-    "next": "12.2.3",
-    "react": "18.2.0",
+    "@ant-design/cssinjs": "^1.6.1",
+    "@ant-design/icons": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.1",
+    "@types/node": "18.14.3",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
+    "antd": "^5.3.0",
+    "axios": "^1.3.4",
+    "dayjs": "^1.11.7",
+    "eslint": "8.35.0",
+    "eslint-config-next": "13.2.3",
+    "jsonwebtoken": "^9.0.0",
+    "next": "13.2.3",
+    "react": "^18.2.0",
     "react-dom": "18.2.0",
-    "react-icons": "^4.4.0"
+    "react-query": "^3.39.3",
+    "recoil": "^0.7.7",
+    "typescript": "4.9.5"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^4.0.10",
-    "@types/jsonwebtoken": "^8.5.8",
-    "@types/node": "18.0.6",
-    "@types/react": "18.0.15",
-    "@types/react-dom": "18.0.6",
-    "@types/styled-components": "^5.1.25",
-    "antd": "^4.21.7",
-    "axios": "^0.27.2",
-    "eslint": "8.20.0",
-    "eslint-config-next": "12.2.3",
-    "jsonwebtoken": "^8.5.1",
-    "recoil": "^0.7.4",
-    "styled-components": "^5.3.5",
-    "typescript": "4.7.4",
-    "universal-cookie": "^4.0.4"
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "tailwindcss": "^3.2.7"
   }
 }

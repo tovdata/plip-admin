@@ -1,14 +1,17 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+// Component
+const Template: ComponentType<any> = dynamic(() => import("@/components/templates/Home").then((module: any): any => module.Template));
+// Data type
+import type { ComponentType } from "react";
 
 export default function Home() {
+  // 라우터
+  const router = useRouter();
+  // 회사 ID
+  const { tabs } = router.query;
+
   return (
-    <>
-      
-    </>
-  )
+    <Template tabs={tabs} />
+  );
 }

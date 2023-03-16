@@ -1,8 +1,12 @@
+import dynamic from "next/dynamic";
 // Component
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";
-import { CompanyTable } from "@/components/molecules/Table";
 import { DescriptionGroup } from "@/components/molecules/Group";
 import { SearchableTableForm } from "@/components/organisms/form/Common";
+// Component (dynamic)
+const CompanyTable: ComponentType<any> = dynamic(() => import("@/components/molecules/Table").then((module: any): any => module.CompanyTable), { loading: () => (<></>), ssr: false });
+// Data type
+import type { ComponentType } from "react";
 // Utilities
 import { transformToDate } from "@/utilities/common";
 
@@ -10,9 +14,9 @@ import { transformToDate } from "@/utilities/common";
 export function CompanyInfoForm({ company }: { company: any }): JSX.Element {
   return (
     <div className="grid grid-cols-12 pb-5 px-6">
-      <DescriptionGroup className="col-span-3" label="회사명">{company?.name}</DescriptionGroup>
-      <DescriptionGroup className="col-span-3" label="생성 일자">{transformToDate(company?.created_at)}</DescriptionGroup>
-      <DescriptionGroup className="col-span-3" label="개인정보 보호책임자">
+      <DescriptionGroup className="col-span-3 text-sm" label="회사명">{company?.name}</DescriptionGroup>
+      <DescriptionGroup className="col-span-3 text-sm" label="생성 일자">{transformToDate(company?.created_at)}</DescriptionGroup>
+      <DescriptionGroup className="col-span-3 text-sm" label="개인정보 보호책임자">
         <div className="flex flex-wrap items-end">
           <p className="mr-2 my-0">
             <>{company?.m_name}</>

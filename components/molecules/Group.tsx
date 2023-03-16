@@ -40,7 +40,7 @@ export function FormInputGroup({ children, label, name, rules }: {  children?: R
 export function LastModifiedInfoGroup({ className, datetime, label, user }: { className?: string, datetime?: number, label: string, user?: string }): JSX.Element {
   // 클래스
   const combineClassName: string = useMemo(() => {
-    const cn: string = "font-semibold mb-1 mt-0";
+    const cn: string = "font-semibold mb-1 mt-0 text-sm";
     return className ? `${cn} ${className}` : cn;
   }, [className]);
 

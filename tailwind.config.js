@@ -14,6 +14,9 @@ module.exports = {
         "2xs": "0.5rem",
         "table-sm": "0.813rem"
       },
+      height: {
+        "5.5": "1.375rem"
+      },
       maxHeight: {
         "144.5": "578px"
       },

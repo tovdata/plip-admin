@@ -1,19 +1,23 @@
-import { useCallback, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { useCallback, useMemo } from "react";
 import { useQuery } from "react-query";
 // Component
-import { Input } from "antd";
-import { DescriptionParagraph } from "@/components/atoms/Paragraph";
-import { FormBox, PimStatisticsBox } from "@/components/molecules/Box";
-import { DescriptionGroup, LastModifiedInfoGroup, SearchGroup } from "@/components/molecules/Group";
-import { ServiceList } from "@/components/molecules/List";
-import { ServiceTable } from "@/components/molecules/Table";
+import { PimStatisticsBox } from "@/components/molecules/Box";
+import { DescriptionGroup, LastModifiedInfoGroup } from "@/components/molecules/Group";
+import { SearchableTableForm } from "@/components/organisms/form/Common";
+// Component (dynamic)
+const ServiceList: ComponentType<any> = dynamic(() => import("@/components/molecules/List").then((module: any): any => module.ServiceList), { loading: () => (<></>), ssr: false });
+const ServiceTable: ComponentType<any> = dynamic(() => import("@/components/molecules/Table").then((module: any): any => module.ServiceTable), { loading: () => (<></>), ssr: false });
+// Data
+import { PIM_CPI, PIM_DPI, PIM_PI, PIM_PPI } from "@/types";
 // Data type
-import { PIM_CPI, PIM_DPI, PIM_PI, PIM_PPI, PIM_TYPE } from "@/types";
+import type { ComponentType } from "react";
+import type { PIM_TYPE } from "@/types";
 // Query
 import { getLastModified, getPiItems, getPimItems } from "@/apis/services/service";
 // Utilities
 import { isEmptyString, transformToDate } from "@/utilities/common";
-import { SearchableTableForm } from "./Common";
+
 
 /** [Component] 위탁 조회 폼(Form) */
 export function CpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) => void, serviceId: string }): JSX.Element {
@@ -94,27 +98,16 @@ export function PpiInfoForm({ onOpen, serviceId }: { onOpen: (value: PIM_TYPE) =
 export function ServiceInfoForm({ service }: { service: any }): JSX.Element {
   return (
     <div className="grid grid-cols-6 pb-5 px-6">
-      <DescriptionGroup className="col-span-2 lg:col-span-1" label="이름">{service?.name}</DescriptionGroup>
-      <DescriptionGroup className="col-span-2 sm:col-span-1" label="생성일">{transformToDate(service?.create_at)}</DescriptionGroup>
-      <DescriptionGroup className="col-span-2 sm:col-span-3 md:col-span-1" displayEmpty label="URL">{service?.url}</DescriptionGroup>
+      <DescriptionGroup className="col-span-2 lg:col-span-1 text-sm" label="이름">{service?.name}</DescriptionGroup>
+      <DescriptionGroup className="col-span-2 sm:col-span-1 text-sm" label="생성일">{transformToDate(service?.create_at)}</DescriptionGroup>
+      <DescriptionGroup className="col-span-2 md:col-span-1 sm:col-span-3 text-sm" displayEmpty label="URL">{service?.url}</DescriptionGroup>
     </div>
   );
 }
 /** [Component] 서비스 목록 폼(Form) */
-export function ServiceListForm({ className, companyId }: { className?: string, companyId: string }): JSX.Element {
-  // 서비스 수
-  const [count, setCount] = useState<number>(0);
-
-  /** [Event handler] 서비스 수 설정 */
-  const onCount = useCallback((value: number): void => setCount(value), []);
-  
-  // 서비스 수 Element
-  const sElement: React.ReactNode = useMemo(() => (<DescriptionParagraph>{`${count} 개`}</DescriptionParagraph>), [count]);
-
+export function ServiceListForm({ companyId, onCount }: { companyId: string, onCount: (value:number) => void }): JSX.Element {
   return (
-    <FormBox className={className} extra={sElement} title="서비스">
-      <ServiceList companyId={companyId} onCount={onCount} />
-    </FormBox>
+    <ServiceList companyId={companyId} onCount={onCount} />
   );
 }
 /** [Component] 서비스 전체 목록 테이블 폼(Form) */

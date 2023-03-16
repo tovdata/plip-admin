@@ -1,9 +1,14 @@
+import dynamic from "next/dynamic";
 import { useMemo } from "react";
 // Component
 import { Col, Modal, Row } from "antd";
 import { DescriptionGroup } from "@/components/molecules/Group";
-import { CpiTable, PiTable, PpiTable } from "@/components/molecules/Table";
+// Component (dynamic)
+const CpiTable: ComponentType<any> = dynamic(() => import("@/components/molecules/Table").then((module: any): any => module.CpiTable), { loading: () => (<></>), ssr: false });
+const PiTable: ComponentType<any> = dynamic(() => import("@/components/molecules/Table").then((module: any): any => module.CpiTable), { loading: () => (<></>), ssr: false });
+const PpiTable: ComponentType<any> = dynamic(() => import("@/components/molecules/Table").then((module: any): any => module.CpiTable), { loading: () => (<></>), ssr: false });
 // Data type
+import type { ComponentType } from "react";
 import type { PIM_TYPE } from "@/types";
 // Utilities
 import { transformToDate } from "@/utilities/common";

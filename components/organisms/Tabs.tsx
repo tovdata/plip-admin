@@ -1,13 +1,15 @@
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useMemo, useState } from "react";
 // Component
 import { Tabs } from "antd";
 // import { RecentCompanyTable, RecentServiceTable, RecentUserTable } from "@/components/molecules/Table";
-const CompanyTableForm = dynamic(() => import("@/components/organisms/form/Company").then((module: any): any => module.CompanyTableForm), { loading: () => (<></>), ssr: false });
-const ServiceTableForm = dynamic(() => import("@/components/organisms/form/Service").then((module: any): any => module.ServiceTableForm), { loading: () => (<></>), ssr: false });
-const UserTableForm = dynamic(() => import("@/components/organisms/form/User").then((module: any): any => module.UserTableForm), { loading: () => (<></>), ssr: false })
+const CompanyTableForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Company").then((module: any): any => module.CompanyTableForm), { loading: () => (<></>), ssr: false });
+const ServiceTableForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/Service").then((module: any): any => module.ServiceTableForm), { loading: () => (<></>), ssr: false });
+const UserTableForm: ComponentType<any> = dynamic(() => import("@/components/organisms/form/User").then((module: any): any => module.UserTableForm), { loading: () => (<></>), ssr: false })
+// Data type
+import type { ComponentType } from "react";
 // Utilities
 import dayjs from "dayjs";
-import dynamic from "next/dynamic";
 
 // 탭(Tab) 아이템
 const tabItems: any[] = [

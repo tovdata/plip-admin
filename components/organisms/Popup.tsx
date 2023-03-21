@@ -57,7 +57,7 @@ export function PimPopup({ onCancel, open, serviceId, type }: { onCancel: () => 
 export function UserInfoPopup({ onCancel, open, user }: { onCancel: () => void, open: boolean, user: any }): JSX.Element {
   // 팝업 바디(Body) 스타일
   const bodyStyle: React.CSSProperties = useMemo(() => ({ marginTop: 24 }), []);
-
+  
   return (
     <Modal bodyStyle={bodyStyle} destroyOnClose={true} footer={null} onCancel={onCancel} open={open} title="사용자 정보">
       <Row gutter={[16, 16]}>
@@ -81,6 +81,9 @@ export function UserInfoPopup({ onCancel, open, user }: { onCancel: () => void, 
         </Col>
         <Col lg={12} span={24}>
           <DescriptionGroup displayEmpty label="마케팅 여부">{user?.ssa1 ? "동의" : "비동의"}</DescriptionGroup>
+        </Col>
+        <Col lg={12} span={24}>
+          <DescriptionGroup label="누적 로그인 횟수">{user?.login_count ? user.login_count.toLocaleString("ko-KR") : "0"}</DescriptionGroup>
         </Col>
       </Row>
     </Modal>

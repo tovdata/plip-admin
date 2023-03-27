@@ -7,7 +7,6 @@ import { DescriptionParagraph } from "@/components/atoms/Paragraph";
 import type { SearchOption, SearchOptionProps } from "@/types";
 // Utilities
 import { transformToDate } from "@/utilities/common";
-import { isNull } from "util";
 import dayjs from "dayjs";
 
 /** [Component] 설명 그룹 */

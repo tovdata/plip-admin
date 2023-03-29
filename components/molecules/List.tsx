@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 // Component
 import { List } from "antd";
 import { ServiceListItem, UserListItem } from "@/components/molecules/Item";

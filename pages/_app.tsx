@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 // Component
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RecoilRoot } from "recoil";
 import { StyleProvider } from "@ant-design/cssinjs"
 // Data type
@@ -63,6 +64,7 @@ export default function App({ Component, pageProps }: AppProps) {
           </ConfigProvider>
         </StyleProvider>
       </RecoilRoot>
+      <ReactQueryDevtools initialIsOpen={false}/>
     </QueryClientProvider>
   );
 }

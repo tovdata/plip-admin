@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 // Component
 import { Table } from "antd";
 import Link from "next/link";

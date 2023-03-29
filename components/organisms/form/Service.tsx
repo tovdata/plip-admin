@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useCallback, useMemo } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 // Component
 import { PimStatisticsBox } from "@/components/molecules/Box";
 import { DescriptionGroup, LastModifiedInfoGroup } from "@/components/molecules/Group";

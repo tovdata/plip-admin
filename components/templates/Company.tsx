@@ -1,7 +1,6 @@
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 // Component
 import { Container } from "@/components/atoms/Container";
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";

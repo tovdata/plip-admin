@@ -87,7 +87,8 @@ export function CpiTable({ serviceId }: { serviceId: string }): JSX.Element {
 /** [Component] 회사 목록 테이블 */
 export function CompanyTable({ onCount, option }: { onCount?: (value: number) => void, option?: SearchOption }): JSX.Element {
   // 회사 목록 조회
-  const { data: companies, isFetched, refetch } = useQuery(["company", "list"], async () => await findCompanies(option));
+  // useQuery에서 Promise를 await하면 ErrorBoundary에서 잡지 못하여 fetching 함수에서 await 하도록 수정했습니다.
+  const { data: companies, isFetched, refetch } = useQuery(["company", "list"], () => findCompanies(option));
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForCompany).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/company/info/${record.id}`}>{value}</Link>) }) : value), []);
 

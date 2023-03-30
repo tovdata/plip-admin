@@ -25,7 +25,7 @@ export async function findCompanies(option?: SearchOption): Promise<any[]> {
     // 데이터 가공 및 반환
     return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);  // useQuery에서 Promise를 await하면 ErrorBoundary에서 잡지 못하여 fetching 함수에서 await 합니다
     return [];
   }
 }
@@ -44,7 +44,7 @@ export async function getBatchCompanies(size: number = 20, offset?: number) {
     // 데이터 가공 및 반환
     return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    catchRequestError(err);
     return [];
   }
 }
@@ -75,7 +75,7 @@ export async function getCompanyCount(): Promise<number> {
     // 응답 처리
     return isEmptyObject(data) ? 0 : data.length;
   } catch (err: any) {
-    catchRequestError(err, false);
+    catchRequestError(err);
     return 0;
   }
 }
@@ -107,7 +107,7 @@ export async function getManager(companyId: string): Promise<any> {
     // 응답 처리
     return isEmptyObject(data) ? null : { name: data.m_name, email: data.m_email, position: data.m_position };
   } catch (err: any) {
-    catchRequestError(err, false);
+    catchRequestError(err);
     return null;
   }
 }

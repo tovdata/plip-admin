@@ -30,7 +30,10 @@ authApi.interceptors.request.use(async (config: AxiosRequestConfig<any>): Promis
     // 토큰 복호화
     const decoded: any = decodeAccessToken(token);
     // 토큰 존재 여부 확인
-    if (decoded === undefined) return Promise.reject(createResponseError("Invalid access token (not found)", 401, config));
+    if (decoded === undefined ){
+      window.location.href = '/login';
+      return null;
+    }
     // 토큰이 만료된 경우, 갱신
     if (isAccessTokenExpired(decoded.exp, true)) {
       // 토큰 유효 확인

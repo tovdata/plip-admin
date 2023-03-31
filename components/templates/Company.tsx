@@ -35,7 +35,7 @@ export function CompanyInfoTemplate({ companyId }: { companyId: string }): JSX.E
   const [userCount, setUserCount] = useState<number>(0);
 
   // 회사 조회
-  const { data: company } = useQuery([companyId, "company", "info"], async () => await getCompany(companyId), { enabled: !isEmptyString(companyId) });
+  const { data: company } = useQuery([companyId, "company", "info"], () => getCompany(companyId), { enabled: !isEmptyString(companyId) });
 
   /** [Event handler] 팝업 닫기 */
   const onClose = useCallback((): void => { setOpen(false); setUser(undefined) }, []);

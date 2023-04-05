@@ -23,7 +23,7 @@ export async function findServices(option?: SearchOption): Promise<any[]> {
     // 응답 처리
     return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.create_at - a.create_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }
@@ -39,7 +39,7 @@ export async function getLastModified(serviceId: string): Promise<any> {
     // 응답 처리
     return isEmptyObject(data) ? null : data;
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return null;
   }
 }
@@ -71,7 +71,7 @@ export async function getPiItems(serviceId: string): Promise<any> {
       return items;
     }
   } catch (err: any) {
-    catchRequestError(err);
+    await catchRequestError(err);
     return { essentials: [], selections: [] };
   }
 }
@@ -91,7 +91,7 @@ export async function getPimItems(serviceId: string, type: "cfni" | "cpi" | "dpi
     // 응답 처리
     return isEmptyObject(data) ? [] : Object.keys(data).map((key: string, index: number): any => ({ index, ...data[key] }));
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }
@@ -107,7 +107,7 @@ export async function getService(serviceId: string): Promise<any> {
     // 응답 처리
     return isEmptyObject(data) ? null : data;
   } catch (err: any) {
-    catchRequestError(err);
+    await catchRequestError(err);
     return null;
   }
 }
@@ -122,7 +122,7 @@ export async function getServiceCount(): Promise<number> {
     // 응답 처리
     return isEmptyObject(data) ? 0 : data.length;
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return 0;
   }
 }
@@ -138,7 +138,7 @@ export async function getServicesByCompany(companyId?: string): Promise<any[]> {
     // 응답 처리
     return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.create_at - a.create_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }

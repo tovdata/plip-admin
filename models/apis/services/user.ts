@@ -23,7 +23,7 @@ export async function findUsers(option?: SearchOption): Promise<any> {
     // 응답 처리
     return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
-    catchRequestError(err);
+    await catchRequestError(err);
     return null;
   }
 }
@@ -38,7 +38,7 @@ export async function getUserCount(): Promise<number> {
     // 응답 처리
     return isEmptyObject(data) ? 0 : data.length;
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return 0;
   }
 }
@@ -54,7 +54,7 @@ export async function getUsersByCompany(companyId: string): Promise<any[]> {
     // 응답 처리
     return isEmptyObject(data) ? [] : data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }

@@ -18,7 +18,7 @@ export async function getConsents(serviceId: string): Promise<any[]> {
     // 응답 처리
     return data.list.sort((a: any, b: any): number => b.published_at - a.published_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }
@@ -43,7 +43,7 @@ export async function getIpps(companyId: string): Promise<any[]> {
     // 가공 데이터 반환
     return list.sort((a: any, b: any): number => b.enforced_at - a.enforced_at).map((item: any, index: number): any => ({ ...item, index }));
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }
@@ -68,7 +68,7 @@ export async function getPipps(serviceId: string): Promise<any[]> {
     // 가공 데이터 반환
     return list.sort((a: any, b: any): number => b.published_at - a.published_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }

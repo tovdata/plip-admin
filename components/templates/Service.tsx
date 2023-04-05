@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useCallback, useMemo, useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 // Component
 import { Container } from "@/components/atoms/Container";
 import { DescriptionParagraph } from "@/components/atoms/Paragraph";
@@ -34,11 +34,11 @@ export function ServiceInfoTemplate({ serviceId }: { serviceId: string }): JSX.E
   const [pippCount, setPippCount] = useState<number>(0);
 
   // 서비스 조회
-  const { data: service } = useQuery([serviceId, "service", "info"], async () => await getService(serviceId), { enabled: !isEmptyString(serviceId) });
+  const { data: service } = useQuery([serviceId, "service", "info"], () => getService(serviceId), { enabled: !isEmptyString(serviceId) });
   // 회사 ID
   const companyId: string = useMemo(() => service ? service.company_id : "", [service]);
   // 회사 이름 조회
-  const { data: companyName } = useQuery([companyId, "company", "name"], async () => await getCompanyName(companyId), { enabled: !isEmptyString(companyId) });
+  const { data: companyName } = useQuery([companyId, "company", "name"], () => getCompanyName(companyId), { enabled: !isEmptyString(companyId) });
 
   /** [Event handler] 팝업 닫기 */
   const onClose = useCallback((): void => setOpen(false), []);

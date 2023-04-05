@@ -4,14 +4,13 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RecoilRoot } from "recoil";
 import { StyleProvider } from "@ant-design/cssinjs"
+import { Authorization } from "@/components/templates/layout/Auth";
 // Data type
 import type { ThemeConfig } from "antd";
 import type { AppProps } from "next/app";
 // Style
 import '@/styles/globals.css';
 import { ConfigProvider } from "antd";
-import { useRouter } from "next/router";
-import AuthLayout from "@/components/templates/layout/Auth";
 
 // Local font
 const font = localFont({
@@ -43,7 +42,7 @@ const queryClient: QueryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 0,  // error를 바로 캐치하여 반응하기 위해 0으로 설정하였습니다.
-      useErrorBoundary: true,  // useQuery를 발생하는 모든 오류를 AuthLayout에서 받을 수 있도록 defaultOption으로 설정했습니다.
+      // useErrorBoundary: true,  // useQuery를 발생하는 모든 오류를 AuthLayout에서 받을 수 있도록 defaultOption으로 설정했습니다.
       refetchOnWindowFocus: false
     }
   }
@@ -57,17 +56,16 @@ const theme: ThemeConfig = {
 
 /** [Component] 메인 */
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter()
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <StyleProvider hashPriority="high">
           <ConfigProvider theme={theme}>
-            <AuthLayout>
               <main className={`bg-inherit ${font.className}`}>
-                <Component {...pageProps} />
+                <Authorization>
+                  <Component {...pageProps} />
+                </Authorization>
               </main>
-            </AuthLayout>
           </ConfigProvider>
         </StyleProvider>
       </RecoilRoot>

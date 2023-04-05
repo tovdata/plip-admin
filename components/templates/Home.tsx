@@ -7,20 +7,20 @@ import { CompanyCountCard, ServiceCountCard, UserCountCard } from "@/components/
 // Component (dynamic)
 const MainTabs: ComponentType<any> = dynamic(() => import("@/components/organisms/Tabs").then((module: any): any => module.MainTabs), { loading: () => (<></>), ssr: false });
 // Data type
-import type { ComponentType } from "react";
+import type { ComponentType } from 'react';
 // Icon
 import { RightOutlined } from "@ant-design/icons";
 
 /** [Componet] 템플릿 */
-export function Template({ tabs }: { tabs?: string }): JSX.Element {
+export function Template({ tabs, onDenied }: { tabs?: string, onDenied?: () => void }): JSX.Element {
   return (
     <Container>
       <div className="grid grid-cols-12 gap-4 mb-4">
         <div className="col-span-12 lg:col-span-3 md:col-span-4 sm:col-span-6">
-          <CompanyCountCard />
+          <CompanyCountCard onDenied={onDenied} />
         </div>
         <div className="col-span-12 lg:col-span-3 md:col-span-4 sm:col-span-6">
-          <ServiceCountCard />
+          <ServiceCountCard onDenied={onDenied} />
         </div>
         <div className="col-span-12 lg:col-span-3 md:col-span-4 sm:col-span-6">
           <UserCountCard />

@@ -89,11 +89,11 @@ export function CompanyInfoTemplate({ companyId }: { companyId: string }): JSX.E
   );
 }
 /** [Component] 회사 전체 목록 페이지 템플릿 */
-export function CompanyListTemplate(): JSX.Element {
+export function CompanyListTemplate({ ...props }): JSX.Element {
   return (
     <Container>
       <FormBox title="전체 회사 목록">
-        <CompanyTableForm />
+        <CompanyTableForm {...props} />
       </FormBox>
     </Container>
   );

@@ -1,31 +1,28 @@
-import { PropsWithChildren, useEffect, useState } from 'react'
 import { useRouter } from 'next/router';
+import React, { useCallback, useEffect, useState } from 'react';
 // Component
-import { QueryErrorBoundary } from "@suspensive/react-query";
+import { Modal } from 'antd';
 
-type ERROR_NAME = string | null;  // Error name을 위한 type 입니다.
-
-const AuthLayout = ({ children }: PropsWithChildren) => {
+/** [Component] 인증 */
+export const Authorization: React.FC<any> = ({ children }: { children: React.ReactNode }) => {
+  // 라우터
   const router = useRouter();
-  const [error, setError] = useState<ERROR_NAME>(null)
+  // 팝업 상태
+  const [open, setOpen] = useState<boolean>(false);
 
-  useEffect(() => {
-    if (error === "UNAUTHORIZED") router.push('/login');  // 로그인 권한이 없는 에러일 때 login 페이지로 route 시킵니다.
-  }, [error])
-  
+  /** [Event handler] 거부 확인 */
+  const onDenied = useCallback((): void => !open ? setOpen(true) : undefined, []);
+  /** [Event hook] 권한 없음에 대한 팝업 열기 */
+  useEffect((): void => {
+    if (open) {
+      Modal.warn({
+        title: "로그인이 만료되었습니다. 다시 로그인 해주세요.",
+        onOk: (): Promise<boolean> => router.push('/login')
+      });
+    }
+  }, [open]);
+
   return (
-    <QueryErrorBoundary
-      fallback={queryError => {
-        setError(queryError.error.name);
-        queryError.reset();
-        return(
-          <></>  // 즉시 로그인 페이지로 보내기 위한 더미 컴포넌트 입니다.
-        )
-      }}
-    >
-      {children}
-    </QueryErrorBoundary>
-  )
+    <>{children ? React.cloneElement((children as JSX.Element), { onDenied }) : (<></>)}</>
+  );
 }
-
-export default AuthLayout

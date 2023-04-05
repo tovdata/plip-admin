@@ -25,8 +25,7 @@ export async function findCompanies(option?: SearchOption): Promise<any[]> {
     // 데이터 가공 및 반환
     return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
-    await catchRequestError(err);  // useQuery에서 Promise를 await하면 ErrorBoundary에서 잡지 못하여 fetching 함수에서 await 합니다
-    return [];
+    return catchRequestError(err);
   }
 }
 /**
@@ -60,7 +59,7 @@ export async function getCompany(companyId: string): Promise<any> {
     // 응답 처리
     return isEmptyObject(data) ? null : data;
   } catch (err: any) {
-    await catchRequestError(err);
+    catchRequestError(err, false);
     return null;
   }
 }
@@ -75,8 +74,8 @@ export async function getCompanyCount(): Promise<number> {
     // 응답 처리
     return isEmptyObject(data) ? 0 : data.length;
   } catch (err: any) {
-    await catchRequestError(err);
-    return 0;
+    console.log("에러인데?")
+    return catchRequestError(err);
   }
 }
 /**

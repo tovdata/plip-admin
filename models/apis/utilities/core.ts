@@ -39,14 +39,17 @@ authApi.interceptors.request.use(async (config: AxiosRequestConfig<any>): Promis
       // 토큰 유효 확인
       if (decoded.sub === undefined) {
         setAccessToken(undefined);
-        return Promise.reject(createResponseError("Invalid access token", 401, config));
+        window.location.href = '/login';
+        return null;
       }
       // 토큰 갱신
       const updated: string | undefined = await updateAccessToken(decoded.sub);
       // 에러 처리
       if (updated === undefined) {
         setAccessToken(undefined);
-        return Promise.reject(createResponseError("Refresh token has expired", 401, config));
+        // 리프레쉬 토큰 만료 시
+        window.location.href = '/login';
+        return null;
       }
       // 갱신된 토큰 설정
       setAccessToken(updated);

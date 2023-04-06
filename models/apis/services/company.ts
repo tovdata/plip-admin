@@ -74,7 +74,6 @@ export async function getCompanyCount(): Promise<number> {
     // 응답 처리
     return isEmptyObject(data) ? 0 : data.length;
   } catch (err: any) {
-    console.log("에러인데?")
     return catchRequestError(err);
   }
 }

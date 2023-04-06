@@ -1,21 +1,18 @@
 import { useRouter } from "next/router";
 import { useCallback } from "react";
-import { useSetRecoilState } from "recoil";
 // Component
 import { Form, Input } from "antd";
 import { LoginButton } from "@/components/atoms/Button";
 import { FormInputGroup } from "@/components/molecules/Group";
 // Query
 import { signin } from "@/models/apis/services/auth";
-// Status
-import { accessTokenSelector } from "@/status";
+// Utilities
+import { setAccessToken } from "@/utilities/token";
 
 /** [Component] 로그인 폼(Form) */
 export function LoginForm(): JSX.Element {
   // 라우터
   const router = useRouter();
-  // 액세스 토큰
-  const setAccessToken: any = useSetRecoilState(accessTokenSelector);
 
   /** [Event handler] 로그인 */
   const onSignin = useCallback(async (values: any): Promise<void> => {

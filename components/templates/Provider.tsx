@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSetRecoilState } from 'recoil';
 // Component
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Data
@@ -18,7 +17,7 @@ const GlobalQueryProvider: React.FC<any> = ({ children }: { children: React.Reac
         onError: (err: unknown): void => {
           // 권한 인증 처리
           if ((err as Error).name === ERROR_CODE['401']) {
-            setAuthPopup(true);
+            setAuthPopup({ open: true });
           }
         },
         retry: (failureCount: number, err: unknown): boolean => {

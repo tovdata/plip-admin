@@ -10,7 +10,7 @@ export const Authorization: React.FC<any> = ({ children }: { children: React.Rea
   // 라우터
   const router = useRouter();
   // 팝업 표시 상태
-  const open = useAuthPopupValue();
+  const { open } = useAuthPopupValue();
 
   /** [Event hook] 권한 없음에 대한 팝업 열기 */
   useEffect((): void => {

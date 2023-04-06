@@ -11,6 +11,7 @@ import type { AppProps } from "next/app";
 // Style
 import '@/styles/globals.css';
 import { ConfigProvider } from "antd";
+import { useAuthPopupSetter, useAuthPopupValue } from "@/models/jotai/atoms/authPopup";
 
 // Local font
 const font = localFont({
@@ -37,16 +38,6 @@ const font = localFont({
   variable: "--font-pretendard"
 });
 
-// Query client
-const queryClient: QueryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 0,  // error를 바로 캐치하여 반응하기 위해 0으로 설정하였습니다.
-      // useErrorBoundary: true,  // useQuery를 발생하는 모든 오류를 AuthLayout에서 받을 수 있도록 defaultOption으로 설정했습니다.
-      refetchOnWindowFocus: false
-    }
-  }
-});
 // Ant-design theme
 const theme: ThemeConfig = {
   token: {
@@ -56,6 +47,24 @@ const theme: ThemeConfig = {
 
 /** [Component] 메인 */
 export default function App({ Component, pageProps }: AppProps) {
+  // 로그인 권한에 따른 팝업 상태
+  const setAuthPopup = useAuthPopupSetter();
+
+  // Query client
+  const queryClient: QueryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 0,
+        refetchOnWindowFocus: false,
+        onError: (error: any) => {
+          if ((error as Error).name === 'UNAUTHORIZED') {
+            setAuthPopup({open: true})
+          }
+        }
+      }
+    }
+  });
+
   return (
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>

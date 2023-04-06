@@ -2,17 +2,15 @@ import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
 // Component
 import { Modal } from 'antd';
+import { useAuthPopupSetter, useAuthPopupValue } from '@/models/jotai/atoms/authPopup';
 
 /** [Component] 인증 */
 export const Authorization: React.FC<any> = ({ children }: { children: React.ReactNode }) => {
   // 라우터
   const router = useRouter();
-  // 팝업 상태
-  const [open, setOpen] = useState<boolean>(false);
-
-  /** [Event handler] 거부 확인 */
-  const onDenied = useCallback((): void => !open ? setOpen(true) : undefined, []);
-  /** [Event hook] 권한 없음에 대한 팝업 열기 */
+  // 로그인 권한에 따른 팝업 상태
+  const { open }  = useAuthPopupValue();
+  
   useEffect((): void => {
     if (open) {
       Modal.warn({
@@ -23,6 +21,6 @@ export const Authorization: React.FC<any> = ({ children }: { children: React.Rea
   }, [open]);
 
   return (
-    <>{children ? React.cloneElement((children as JSX.Element), { onDenied }) : (<></>)}</>
+    <>{children ? React.cloneElement((children as JSX.Element)) : (<></>)}</>
   );
 }

@@ -14,8 +14,6 @@ import { setAccessToken } from "@/utilities/token";
 export function LoginForm(): JSX.Element {
   // 라우터
   const router = useRouter();
-  // 액세스 토큰
-  // const setAccessToken: any = useSetRecoilState(accessTokenSelector);
 
   /** [Event handler] 로그인 */
   const onSignin = useCallback(async (values: any): Promise<void> => {

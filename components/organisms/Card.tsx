@@ -5,7 +5,6 @@ import { StatisticsBox } from "@/components/molecules/Box";
 import { getCompanyCount } from "@/models/apis/services/company";
 import { getServiceCount } from "@/models/apis/services/service";
 import { getUserCount } from "@/models/apis/services/user";
-import { useEffect } from "react";
 
 /** [Component] 전체 회사 수 */
 export function CompanyCountCard(): JSX.Element {

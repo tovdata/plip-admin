@@ -30,10 +30,10 @@ export function CompanyInfoForm({ company }: { company: any }): JSX.Element {
   );
 }
 /** [Component] 회사 목록 테이블 폼(Form) */
-export function CompanyTableForm({ onDenied }: { onDenied?: () => void }): JSX.Element {
+export function CompanyTableForm(): JSX.Element {
   return (
     <SearchableTableForm type="company">
-      <CompanyTable onDenied={onDenied} />
+      <CompanyTable />
     </SearchableTableForm>
   );
 }

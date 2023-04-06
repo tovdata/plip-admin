@@ -1,18 +1,15 @@
 import localFont from "next/font/local";
 // Component
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RecoilRoot } from "recoil";
 import { StyleProvider } from "@ant-design/cssinjs"
-import { Authorization } from "@/components/templates/layout/Auth";
+import Authorization from '@/components/templates/Auth';
+import GlobalQueryProvider from '@/components/templates/Provider';
 // Data type
 import type { ThemeConfig } from "antd";
 import type { AppProps } from "next/app";
 // Style
 import '@/styles/globals.css';
 import { ConfigProvider } from "antd";
-// Status
-import { useAuthPopupSetter } from "@/models/jotai/atoms/authPopup";
 
 // Local font
 const font = localFont({
@@ -41,6 +38,11 @@ const font = localFont({
 
 // Ant-design theme
 const theme: ThemeConfig = {
+  components: {
+    Modal: {
+      fontFamily: font.style.fontFamily
+    }
+  },
   token: {
     fontFamily: font.style.fontFamily
   }
@@ -48,38 +50,19 @@ const theme: ThemeConfig = {
 
 /** [Component] 메인 */
 export default function App({ Component, pageProps }: AppProps) {
-  // 로그인 권한에 따른 팝업 상태
-  const setAuthPopup = useAuthPopupSetter();
-
-  // Query client
-  const queryClient: QueryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: 0,
-        refetchOnWindowFocus: false,
-        onError: (error: any) => {
-          if ((error as Error).name === 'UNAUTHORIZED') {
-            setAuthPopup({open: true})
-          }
-        }
-      }
-    }
-  });
-
   return (
-    <QueryClientProvider client={queryClient}>
+    <ConfigProvider theme={theme}>
       <RecoilRoot>
-        <StyleProvider hashPriority="high">
-          <ConfigProvider theme={theme}>
-              <main className={`bg-inherit ${font.className}`}>
-                <Authorization>
-                  <Component {...pageProps} />
-                </Authorization>
-              </main>
-          </ConfigProvider>
-        </StyleProvider>
+        <GlobalQueryProvider>
+          <StyleProvider hashPriority="high">
+            <main className={`bg-inherit ${font.className}`}>
+              <Authorization>
+                <Component {...pageProps} />
+              </Authorization>
+            </main>
+          </StyleProvider>
+        </GlobalQueryProvider>
       </RecoilRoot>
-      <ReactQueryDevtools initialIsOpen={false}/>
-    </QueryClientProvider>
+    </ConfigProvider>
   );
 }

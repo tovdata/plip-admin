@@ -85,9 +85,9 @@ export function CpiTable({ serviceId }: { serviceId: string }): JSX.Element {
   );
 }
 /** [Component] 회사 목록 테이블 */
-export function CompanyTable({ onCount, onDenied, option }: { onCount?: (value: number) => void, onDenied?: () => void, option?: SearchOption }): JSX.Element {
+export function CompanyTable({ onCount, option }: { onCount?: (value: number) => void, onDenied?: () => void, option?: SearchOption }): JSX.Element {
   // 회사 목록 조회
-  const { data: companies, isFetched, refetch, error, isError } = useQuery(["company", "list"], () => findCompanies(option));
+  const { data: companies, isFetched, refetch } = useQuery(["company", "list"], () => findCompanies(option));
 
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForCompany).map((value: any): any => value.key === "name" ? ({ ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/company/info/${record.id}`}>{value}</Link>) }) : value), []);
@@ -101,11 +101,6 @@ export function CompanyTable({ onCount, onDenied, option }: { onCount?: (value: 
     };
     fetchData();
   }, [option]);
-  useEffect(() => {
-    if (isFetched && isError) {
-      if ((error as Error).name === "UNAUTHORIZED") onDenied?.();
-    }
-  }, [error, isError, isFetched]);
 
   return (
     <Table columns={columns} dataSource={companies} loading={!isFetched} pagination={false} rowKey="id" showSorterTooltip={false} scroll={{ y: 440 }} />

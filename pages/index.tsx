@@ -5,13 +5,13 @@ const Template: ComponentType<any> = dynamic(() => import("@/components/template
 // Data type
 import type { ComponentType } from "react";
 
-export default function Home({ ...props }) {
+export default function Home() {
   // 라우터
   const router = useRouter();
   // 회사 ID
   const { tabs } = router.query;
 
   return (
-    <Template tabs={tabs} {...props} />
+    <Template tabs={tabs} />
   );
 }

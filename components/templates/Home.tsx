@@ -12,7 +12,7 @@ import type { ComponentType } from 'react';
 import { RightOutlined } from "@ant-design/icons";
 
 /** [Componet] 템플릿 */
-export function Template({ tabs, onDenied }: { tabs?: string, onDenied?: () => void }): JSX.Element {
+export function Template({ tabs }: { tabs?: string }): JSX.Element {
   return (
     <Container>
       <div className="grid grid-cols-12 gap-4 mb-4">

@@ -12,15 +12,15 @@ import type { ComponentType } from 'react';
 import { RightOutlined } from "@ant-design/icons";
 
 /** [Componet] 템플릿 */
-export function Template({ tabs, onDenied }: { tabs?: string, onDenied?: () => void }): JSX.Element {
+export function Template({ tabs }: { tabs?: string }): JSX.Element {
   return (
     <Container>
       <div className="grid grid-cols-12 gap-4 mb-4">
         <div className="col-span-12 lg:col-span-3 md:col-span-4 sm:col-span-6">
-          <CompanyCountCard onDenied={onDenied} />
+          <CompanyCountCard />
         </div>
         <div className="col-span-12 lg:col-span-3 md:col-span-4 sm:col-span-6">
-          <ServiceCountCard onDenied={onDenied} />
+          <ServiceCountCard />
         </div>
         <div className="col-span-12 lg:col-span-3 md:col-span-4 sm:col-span-6">
           <UserCountCard />

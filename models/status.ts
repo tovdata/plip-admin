@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import { atom, selector } from "recoil";
-import { SearchOption, SearchOptionProps } from "./types";
 
 /**
  * [Internal Function] Timestamp 생성
@@ -27,13 +26,18 @@ const localStorageEffect = (key: string) => ({ setSelf, onSet }: any): void => {
 /** [Atom] 액세스 토큰 */
 const accessTokenAtom = atom<string | undefined>({
   default: undefined,
-  key: `$accessTokenAtom/${getTimestamp()}`,
+  key: `accessTokenAtom/${getTimestamp()}`,
   effects: [localStorageEffect("pa-auth")]
 });
 /** [Atom] 회사 ID */
 const companyIdAtom = atom<string | undefined>({
   default: undefined,
-  key: `$companyIdAtom/${getTimestamp()}`,
+  key: `companyIdAtom/${getTimestamp()}`,
+});
+/** [Atom] 권한없음 */
+const unauthorization = atom<boolean>({
+  default: false,
+  key: `unauthorization/${getTimestamp()}`
 });
 
 /** [Selector] 액세스 토큰 */
@@ -47,4 +51,10 @@ export const companyIdSelector = selector<string>({
   key: `companyIdSelector/${getTimestamp()}`,
   get: ({ get }) => get(companyIdAtom) === undefined ? "" : get(companyIdAtom) as string,
   set: ({ set }, value) => value === "" ? set(companyIdAtom, undefined) : set(companyIdAtom, value)
+});
+/** [Selector] 권한없음 */
+export const unauthorizationSelector = selector<boolean>({
+  key: `unauthorizationSelector/${getTimestamp()}`,
+  get: ({ get }) => get(unauthorization),
+  set: ({ set }, value) => set(unauthorization, value)
 });

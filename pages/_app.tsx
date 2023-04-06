@@ -1,10 +1,9 @@
 import localFont from "next/font/local";
 // Component
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { RecoilRoot } from "recoil";
 import { StyleProvider } from "@ant-design/cssinjs"
-import { Authorization } from "@/components/templates/layout/Auth";
+import Authorization from '@/components/templates/Auth';
+import GlobalQueryProvider from '@/components/templates/Provider';
 // Data type
 import type { ThemeConfig } from "antd";
 import type { AppProps } from "next/app";
@@ -37,18 +36,13 @@ const font = localFont({
   variable: "--font-pretendard"
 });
 
-// Query client
-const queryClient: QueryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 0,  // error를 바로 캐치하여 반응하기 위해 0으로 설정하였습니다.
-      // useErrorBoundary: true,  // useQuery를 발생하는 모든 오류를 AuthLayout에서 받을 수 있도록 defaultOption으로 설정했습니다.
-      refetchOnWindowFocus: false
-    }
-  }
-});
 // Ant-design theme
 const theme: ThemeConfig = {
+  components: {
+    Modal: {
+      fontFamily: font.style.fontFamily
+    }
+  },
   token: {
     fontFamily: font.style.fontFamily
   }
@@ -57,19 +51,18 @@ const theme: ThemeConfig = {
 /** [Component] 메인 */
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
+    <ConfigProvider theme={theme}>
       <RecoilRoot>
-        <StyleProvider hashPriority="high">
-          <ConfigProvider theme={theme}>
-              <main className={`bg-inherit ${font.className}`}>
-                <Authorization>
-                  <Component {...pageProps} />
-                </Authorization>
-              </main>
-          </ConfigProvider>
-        </StyleProvider>
+        <GlobalQueryProvider>
+          <StyleProvider hashPriority="high">
+            <main className={`bg-inherit ${font.className}`}>
+              <Authorization>
+                <Component {...pageProps} />
+              </Authorization>
+            </main>
+          </StyleProvider>
+        </GlobalQueryProvider>
       </RecoilRoot>
-      <ReactQueryDevtools initialIsOpen={false}/>
-    </QueryClientProvider>
+    </ConfigProvider>
   );
 }

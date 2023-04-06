@@ -1,6 +1,5 @@
 import localFont from "next/font/local";
 // Component
-import { RecoilRoot } from "recoil";
 import { StyleProvider } from "@ant-design/cssinjs"
 import Authorization from '@/components/templates/Auth';
 import GlobalQueryProvider from '@/components/templates/Provider';
@@ -52,7 +51,6 @@ const theme: ThemeConfig = {
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <ConfigProvider theme={theme}>
-      <RecoilRoot>
         <GlobalQueryProvider>
           <StyleProvider hashPriority="high">
             <main className={`bg-inherit ${font.className}`}>
@@ -62,7 +60,6 @@ export default function App({ Component, pageProps }: AppProps) {
             </main>
           </StyleProvider>
         </GlobalQueryProvider>
-      </RecoilRoot>
     </ConfigProvider>
   );
 }

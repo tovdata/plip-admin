@@ -11,7 +11,8 @@ import type { AppProps } from "next/app";
 // Style
 import '@/styles/globals.css';
 import { ConfigProvider } from "antd";
-import { useAuthPopupSetter, useAuthPopupValue } from "@/models/jotai/atoms/authPopup";
+// Status
+import { useAuthPopupSetter } from "@/models/jotai/atoms/authPopup";
 
 // Local font
 const font = localFont({

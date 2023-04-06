@@ -1,8 +1,9 @@
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 // Component
 import { Modal } from 'antd';
-import { useAuthPopupSetter, useAuthPopupValue } from '@/models/jotai/atoms/authPopup';
+// Status
+import { useAuthPopupValue } from '@/models/jotai/atoms/authPopup';
 
 /** [Component] 인증 */
 export const Authorization: React.FC<any> = ({ children }: { children: React.ReactNode }) => {
@@ -10,7 +11,7 @@ export const Authorization: React.FC<any> = ({ children }: { children: React.Rea
   const router = useRouter();
   // 로그인 권한에 따른 팝업 상태
   const { open }  = useAuthPopupValue();
-  
+
   useEffect((): void => {
     if (open) {
       Modal.warn({

@@ -5,12 +5,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 // Data
 import { ERROR_CODE } from "@/models/apis/utilities/error";
 // Status
-import { unauthorizationSelector } from '@/models/status';
+import { useAuthPopupSetter } from '@/models/jotai/atoms/authPopup';
 
 /** [Component] 인증 */
 const GlobalQueryProvider: React.FC<any> = ({ children }: { children: React.ReactNode }) => {
-  // 권한 없음 여부 함수
-  const setUnauthorization = useSetRecoilState(unauthorizationSelector); 
+  // 로그인 권한에 따른 팝업 상태
+  const setAuthPopup = useAuthPopupSetter();
   // Query client
   const queryClient: QueryClient = new QueryClient({
     defaultOptions: {
@@ -18,7 +18,7 @@ const GlobalQueryProvider: React.FC<any> = ({ children }: { children: React.Reac
         onError: (err: unknown): void => {
           // 권한 인증 처리
           if ((err as Error).name === ERROR_CODE['401']) {
-            setUnauthorization(true);
+            setAuthPopup(true);
           }
         },
         retry: (failureCount: number, err: unknown): boolean => {

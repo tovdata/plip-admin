@@ -171,7 +171,7 @@ export function ServiceTable({ onCount, option }: { onCount?: (value: number) =>
   // 컬럼 데이터 가공
   const columns: any[] = useMemo(() => setColumns(TableHeaderForService).map((value: any): any => {
     if (value.key === "name") return { ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/service/info/${record.id}`}>{value}</Link>) };
-    else if (value.key === "company_name") return { ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/service/info/${record.company_id}`}>{value}</Link>) };
+    else if (value.key === "company_name") return { ...value, render: (value: string, record: any): JSX.Element => (<Link className="text-gray-800" href={`/company/info/${record.company_id}`}>{value}</Link>) };
     else return value;
   }), []);
 

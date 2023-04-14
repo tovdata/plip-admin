@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 // Component
 import { StatisticsBox } from "@/components/molecules/Box";
 // Query

@@ -67,7 +67,7 @@ export const TableHeaderForPpi: TableHeader[] = [
 ];
 // 국외 제공 테이블 헤더
 export const TableHeaderForPpiForeign: TableHeader[] = [
-  { dataIndex: "company", key: "company", title: "업체명" },
+  { dataIndex: "subject", key: "company", title: "업체명" },
   { dataIndex: "country", key: "country", title: "국가" },
   { dataIndex: "location", key: "location", title: "위치(주소)" },
   { dataIndex: "method", key: "method", title: "일시 및 방법" },

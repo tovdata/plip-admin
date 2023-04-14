@@ -32,6 +32,7 @@ export async function updateAccessToken(id: string): Promise<string | undefined>
     // 응답 처리
     return !isEmptyObject(data) ? data.AccessToken : undefined;
   } catch (err: any) {
-    return catchRequestError(err);
+    catchRequestError(err);
+    return undefined;
   }
 }

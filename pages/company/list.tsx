@@ -4,8 +4,8 @@ const CompanyListTemplate: ComponentType<any> = dynamic(() => import("@/componen
 // Data type
 import type { ComponentType } from "react";
 
-export default function Page() {
+export default function Page({ ...props }) {
   return (
-    <CompanyListTemplate />
+    <CompanyListTemplate { ...props } />
   );
 }

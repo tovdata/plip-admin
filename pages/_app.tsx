@@ -1,14 +1,17 @@
+import dynamic from "next/dynamic";
 import localFont from "next/font/local";
 // Component
-import { QueryClient, QueryClientProvider } from "react-query";
-import { RecoilRoot } from "recoil";
-import { StyleProvider } from "@ant-design/cssinjs"
+import { ConfigProvider } from 'antd';
+import { StyleProvider } from '@ant-design/cssinjs';
+// Component (dynamic)
+const Authorization: ComponentType<any> = dynamic(() => import('@/components/templates/Auth'));
+const GlobalQueryProvider: ComponentType<any> = dynamic(() => import('@/components/templates/Provider'));
 // Data type
-import type { ThemeConfig } from "antd";
-import type { AppProps } from "next/app";
+import type { ThemeConfig } from 'antd';
+import type { AppProps } from 'next/app';
+import type { ComponentType } from 'react';
 // Style
 import '@/styles/globals.css';
-import { ConfigProvider } from "antd";
 
 // Local font
 const font = localFont({
@@ -35,16 +38,13 @@ const font = localFont({
   variable: "--font-pretendard"
 });
 
-// Query client
-const queryClient: QueryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false
-    }
-  }
-});
 // Ant-design theme
 const theme: ThemeConfig = {
+  components: {
+    Modal: {
+      fontFamily: font.style.fontFamily
+    }
+  },
   token: {
     fontFamily: font.style.fontFamily
   }
@@ -53,16 +53,16 @@ const theme: ThemeConfig = {
 /** [Component] 메인 */
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <RecoilRoot>
+    <ConfigProvider theme={theme}>
+      <GlobalQueryProvider>
         <StyleProvider hashPriority="high">
-          <ConfigProvider theme={theme}>
-            <main className={`bg-inherit ${font.className}`}>
+          <main className={`bg-inherit ${font.className}`}>
+            <Authorization>
               <Component {...pageProps} />
-            </main>
-          </ConfigProvider>
+            </Authorization>
+          </main>
         </StyleProvider>
-      </RecoilRoot>
-    </QueryClientProvider>
+      </GlobalQueryProvider>
+    </ConfigProvider>
   );
 }

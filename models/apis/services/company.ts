@@ -25,8 +25,7 @@ export async function findCompanies(option?: SearchOption): Promise<any[]> {
     // 데이터 가공 및 반환
     return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
-    catchRequestError(err, false);
-    return [];
+    return catchRequestError(err);
   }
 }
 /**
@@ -44,7 +43,7 @@ export async function getBatchCompanies(size: number = 20, offset?: number) {
     // 데이터 가공 및 반환
     return data.sort((a: any, b: any): number => b.created_at - a.created_at);
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return [];
   }
 }
@@ -60,7 +59,7 @@ export async function getCompany(companyId: string): Promise<any> {
     // 응답 처리
     return isEmptyObject(data) ? null : data;
   } catch (err: any) {
-    catchRequestError(err);
+    catchRequestError(err, false);
     return null;
   }
 }
@@ -75,8 +74,7 @@ export async function getCompanyCount(): Promise<number> {
     // 응답 처리
     return isEmptyObject(data) ? 0 : data.length;
   } catch (err: any) {
-    catchRequestError(err, false);
-    return 0;
+    return catchRequestError(err);
   }
 }
 /**
@@ -91,7 +89,7 @@ export async function getCompanyName(companyId: string): Promise<string> {
     // 응답 처리
     return isEmptyObject(data) ? null : data.name ?? "";
   } catch (err: any) {
-    catchRequestError(err);
+    await catchRequestError(err);
     return "";
   }
 }
@@ -107,7 +105,7 @@ export async function getManager(companyId: string): Promise<any> {
     // 응답 처리
     return isEmptyObject(data) ? null : { name: data.m_name, email: data.m_email, position: data.m_position };
   } catch (err: any) {
-    catchRequestError(err, false);
+    await catchRequestError(err);
     return null;
   }
 }
